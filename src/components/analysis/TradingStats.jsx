@@ -152,7 +152,7 @@ const TradingStats = ({ data }) => {
               Balance
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
-              {Object.keys(data).length > 0 && data.balance} USD
+              {Object.keys(data).length > 0 && data.balance.toFixed(2)} USD
             </td>
             <td className="w-[20%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
               Broker Server
@@ -166,7 +166,7 @@ const TradingStats = ({ data }) => {
               Equity
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
-              {Object.keys(data).length > 0 && data.equity} USD
+              {Object.keys(data).length > 0 && data.equity.toFixed(2)} USD
             </td>
             <td className="w-[20%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
               Leverage

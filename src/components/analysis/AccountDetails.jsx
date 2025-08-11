@@ -50,11 +50,11 @@ const AccountDetails = ({ data }) => {
         </p>
         <p className="text-[12px] text-white mt-[5px]">Balance</p>
         <p className="text-white text-[18px] font-[700]">
-          {Object.keys(data).length > 0 && data.balance} <small>USD</small>
+          {Object.keys(data).length > 0 && data.balance.toFixed(2)} <small>USD</small>
         </p>
         <p className="text-[12px] text-white mt-[5px]">Equity</p>
         <p className="text-white text-[18px] font-[700]">
-          {Object.keys(data).length > 0 && data.equity} <small>USD</small>
+          {Object.keys(data).length > 0 && data.equity.toFixed(2)} <small>USD</small>
         </p>
         <p className="text-[12px] text-white mt-[5px]">Equity Percentage</p>
         <p className="text-white text-[18px] font-[700]">

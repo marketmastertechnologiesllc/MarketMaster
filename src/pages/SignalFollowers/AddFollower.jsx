@@ -108,6 +108,7 @@ function AddFollower() {
     try {
       // Replace with actual API call
       // await api.post('/followers', formData);
+      console.log(formData);
       showToast('Follower added successfully!', 'success');
       navigate('/signal-followers');
     } catch (error) {
