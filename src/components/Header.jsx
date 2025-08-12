@@ -74,7 +74,7 @@ function Header() {
   };
 
   return (
-    <div className="flex flex-row items-center justify-between h-[70px] text-[#EEE] p-[15px] bg-[#1D2127]">
+    <div className="flex flex-row items-center justify-between h-[70px] bg-[#0f0f0f] text-white p-[15px]">
       <img className="h-10 w-10" src={Logo} alt="" />
       <div className="flex flex-row gap-x-2">
         {!isAuthenticated ? (
@@ -164,11 +164,11 @@ function Header() {
               </ul>
             </div>
             <Avatar
-              alt="Remy Sharp"
+              alt={`${user.fullName.toUpperCase()} avatar`}
               src="/static/images/avatar/2.jpg"
               sx={{ position: 'relative' }}
             />
-            <Typography sx={{ color: '#ccc' }}>{user.fullName}</Typography>
+            <Typography sx={{ color: '#e9d8c8' }}>{user.fullName}</Typography>
             <Box
               onClick={() => {
                 if (isNotificationOpen) setIsNotificationOpen(false);
@@ -257,11 +257,11 @@ function Header() {
         ) : (
           <div className="flex items-center justify-center gap-3">
             <Avatar
-              alt="Remy Sharp"
+              alt={`${user.fullName.toUpperCase()} avatar`}
               src="/static/images/avatar/2.jpg"
               sx={{ position: 'relative' }}
             />
-            <Typography sx={{ color: '#ccc' }}>{user.fullName}</Typography>
+            <Typography sx={{ color: '#e9d8c8' }}>{user.fullName}</Typography>
             <Box
               onClick={() => setIsOpen(!isOpen)}
               className="cursor-pointer text-[#ccc] z-[1204]"

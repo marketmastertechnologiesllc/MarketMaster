@@ -143,6 +143,7 @@ function Dashboard() {
 
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showFilterItems, setShowFilterItems] = React.useState(true);
+  const filterModalRef = React.useRef(null);
 
   // React.useEffect(() => {
   //   _intervalRef3.current = setInterval(async () => {
@@ -267,16 +268,34 @@ function Dashboard() {
     sessionStorage.setItem('dashboard', JSON.stringify(config));
   };
 
+  // Handle click outside to close filter modal
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterModalRef.current && !filterModalRef.current.contains(event.target)) {
+        setShowFilterModal(false);
+      }
+    };
+
+    if (showFilterModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showFilterModal]);
+
   return (
     <div className="w-auto text-[#E9D8C8] pb-[100px]">
       <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        spacing={{ xs: 2, sm: 1 }}
         display={'flex'}
         justifyContent={'space-between'}
+        sx={{ gap: { xs: 2, sm: 1 } }}
       >
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center sm:justify-start">
           <StyledButton
             variant="contained"
             size="small"
@@ -285,7 +304,8 @@ function Dashboard() {
               textTransform: 'none',
               color: '#FFFFFF',
               fontWeight: 500,
-              padding: '8px 16px',
+              padding: { xs: '4px 8px', sm: '8px 12px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
             }}
             onClick={() => handleTabClick('1')}
           >
@@ -314,8 +334,8 @@ function Dashboard() {
             History
           </StyledButton> */}
         </div>
-        <div className="flex gap-2">
-          <StyledButton
+        <div className="flex gap-2 justify-center sm:justify-end">
+          {/* <StyledButton
             variant="contained"
             size="small"
             startIcon={<FilterAltIcon />}
@@ -324,12 +344,13 @@ function Dashboard() {
               backgroundColor: '#11B3AE!important',
               color: '#FFFFFF',
               fontWeight: 500,
-              padding: '8px 16px',
+              padding: { xs: '6px 12px', sm: '8px 16px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
             }}
           >
             Filter
-          </StyledButton>
-          <div className="relative">
+          </StyledButton> */}
+          <div className="relative" ref={filterModalRef}>
             <StyledButton
               variant="contained"
               size="small"
@@ -340,82 +361,104 @@ function Dashboard() {
                 backgroundColor: '#11B3AE!important',
                 color: '#FFFFFF',
                 fontWeight: 500,
-                padding: '8px 16px',
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 position: 'relative',
               }}
             >
               Columns
             </StyledButton>
-            <div
-              className={`text-center absolute z-50 top-full mt-2 p-4 w-[280px] bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-[-20px] ${!showFilterModal && 'hidden'
-                }`}
-            >
-              <div
-                className="fixed opacity-0 top-0 left-0 right-0 bottom-0"
-                onClick={() => setShowFilterModal(false)}
-              ></div>
-              <div className="text-[#E9D8C8] font-medium mb-3">Toggle visible columns</div>
-              <div className="relative">
-                <StyledButton
-                  onClick={() => setShowFilterItems((prev) => !prev)}
-                  className="w-full p-3 mt-1 rounded-lg text-[0.95rem] bg-[#11B3AE] hover:bg-[#0F9A95] text-white font-medium transition-all duration-200"
-                >
-                  All selected ({headers[activeTab].length})
-                </StyledButton>
-                <div
-                  className={`absolute w-full bg-[#0B1220] border border-[#11B3AE] rounded-lg mt-1 shadow-lg ${!showFilterItems && 'hidden'
-                    }`}
-                >
-                  <div
-                    className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].reduce(
-                      (count, { checked }) => count + checked,
-                      0
-                    ) === headers[activeTab].length && 'bg-[#11B3AE] bg-opacity-30'
-                      }`}
+            {showFilterModal && (
+              <div className="absolute z-50 top-full mt-2 p-4 w-[280px] text-white bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-0 sm:right-0 xs:right-[-50px]">
+                <div className="text-[#E9D8C8] font-medium mb-3 text-sm sm:text-base">Toggle visible columns</div>
+                <div className="space-y-2">
+                  <StyledButton
+                    onClick={() => setShowFilterItems((prev) => !prev)}
+                    sx={{
+                      width: '100%',
+                      padding: { xs: '2px 4px', sm: '4px' },
+                      borderRadius: '8px',
+                      fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF !important',
+                      fontWeight: 500,
+                      textTransform: 'none',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                        color: '#FFFFFF !important',
+                      },
+                    }}
                   >
-                    <input
-                      type="checkbox"
-                      checked={
-                        headers[activeTab].reduce(
+                    All selected ({headers[activeTab].length})
+                  </StyledButton>
+                  {showFilterItems && (
+                    <div className="bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
+                      <div
+                        className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].reduce(
                           (count, { checked }) => count + checked,
                           0
-                        ) === headers[activeTab].length
-                      }
-                      // onClick={handleViewAll}
-                      onChange={handleViewAll}
-                      className="accent-[#11B3AE]"
-                    />
-                    <div className="text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
-                      View all
-                    </div>
-                  </div>
-                  {headers[activeTab].map((item, i) => (
-                    <div
-                      key={`input_${i}`}
-                      className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
-                        }`}
-                    >
-                      <input
-                        name={item.id}
-                        onChange={handleVisibleChange}
-                        checked={item.checked}
-                        type="checkbox"
-                        className="accent-[#11B3AE]"
-                      />
-                      <div className="text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
-                        {item.label}
+                        ) === headers[activeTab].length && 'bg-[#11B3AE] bg-opacity-30'
+                          }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            headers[activeTab].reduce(
+                              (count, { checked }) => count + checked,
+                              0
+                            ) === headers[activeTab].length
+                          }
+                          onChange={handleViewAll}
+                          className="accent-[#11B3AE]"
+                        />
+                        <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
+                          View all
+                        </div>
                       </div>
+                      {headers[activeTab].map((item, i) => (
+                        <div
+                          key={`input_${i}`}
+                          className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
+                            }`}
+                        >
+                          <input
+                            name={item.id}
+                            onChange={handleVisibleChange}
+                            checked={item.checked}
+                            type="checkbox"
+                            className="accent-[#11B3AE]"
+                          />
+                          <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
+                            {item.label}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
+                  <StyledButton
+                    onClick={resetColumns}
+                    sx={{
+                      width: '100%',
+                      padding: { xs: '2px 4px', sm: '4px' },
+                      borderRadius: '8px',
+                      fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF !important',
+                      fontWeight: 500,
+                      textTransform: 'none',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                        color: '#FFFFFF !important',
+                      },
+                    }}
+                  >
+                    Reset Columns
+                  </StyledButton>
                 </div>
-                <StyledButton
-                  onClick={resetColumns}
-                  className="w-full p-3 mt-2 rounded-lg text-white text-[0.95rem] bg-[#11B3AE] hover:bg-[#0F9A95] font-medium transition-all duration-200"
-                >
-                  Reset Columns
-                </StyledButton>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </Stack>

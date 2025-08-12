@@ -103,7 +103,9 @@ const DefaultLayout = () => {
                       pr: '24px', // keep right padding when drawer closed,
                       display: 'flex',
                       justifyContent: 'space-between',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      background: 'radial-gradient(120% 150% at 10% 0%, rgba(17,179,174,.25) 0%, rgba(17,179,174,0) 60%), #0f0f0f',
+                      color: '#e9d8c8',
                     }}
                   >
                     <Grid container alignItems='center'>
@@ -119,7 +121,7 @@ const DefaultLayout = () => {
                       >
                         <MenuIcon />
                       </IconButton>
-                      <BreadCrumb/>
+                      <BreadCrumb />
                     </Grid>
                     <Button
                       variant="contained"

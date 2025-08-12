@@ -178,20 +178,44 @@ export default function TradesTable({ headers }) {
   }, []);
 
   return (
-    <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] shadow-2xl pb-[20px]">
-      <div className="flex justify-between w-full pb-4">
+    <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+      <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
         <div className="flex items-center gap-3">
           <FormControl size="small">
             <Select
               displayEmpty
               value={rowsPerPage}
               onChange={handleChangeRowsPerPage}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: '#0B1220',
+                    border: '1px solid rgba(17, 179, 174, 0.3)',
+                    borderRadius: '8px',
+                    maxHeight: '200px',
+                    '& .MuiMenuItem-root': {
+                      color: '#E9D8C8',
+                      '&:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: '#11B3AE',
+                        color: '#FFFFFF',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
               input={
                 <OutlinedInput
                   sx={{
-                    width: '80px',
+                    width: { xs: '70px', sm: '80px' },
                     color: '#E9D8C8',
                     borderRadius: '8px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     '& .MuiOutlinedInput-notchedOutline': {
                       borderColor: 'rgba(17, 179, 174, 0.3)',
                     },
@@ -200,6 +224,10 @@ export default function TradesTable({ headers }) {
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                       borderColor: '#11B3AE',
+                      boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                    },
+                    '& .MuiSelect-icon': {
+                      color: '#E9D8C8',
                     },
                   }}
                 />
@@ -211,7 +239,13 @@ export default function TradesTable({ headers }) {
               <MenuItem value={100}>100</MenuItem>
             </Select>
           </FormControl>
-          <Typography sx={{ color: '#E9D8C8', fontWeight: 500 }}>records per page</Typography>
+          <Typography sx={{ 
+            color: '#E9D8C8', 
+            fontWeight: 500,
+            fontSize: { xs: '0.875rem', sm: '1rem' }
+          }}>
+            records per page
+          </Typography>
         </div>
         <Search>
           <SearchIconWrapper>
@@ -229,17 +263,18 @@ export default function TradesTable({ headers }) {
           overflow: 'hidden',
           backgroundColor: 'transparent',
           boxShadow: 'none',
-          borderRadius: '12px',
-          border: '1px solid rgba(17, 179, 174, 0.2)',
         }}
       >
         <TableContainer
           sx={{
             borderRadius: '12px',
             backgroundColor: 'rgba(255, 255, 255, 0.02)',
+            maxWidth: '100%',
+            overflowX: 'auto',
             '.MuiTable-root': {
               borderColor: 'rgba(17, 179, 174, 0.2)',
               borderWidth: '1px',
+              minWidth: { xs: '600px', sm: 'auto' },
             },
           }}
         >
@@ -247,6 +282,7 @@ export default function TradesTable({ headers }) {
             stickyHeader
             aria-label="sticky table"
             sx={{
+              borderRadius: '12px',
               '& .MuiTableCell-root': {
                 color: '#E9D8C8',
                 backgroundColor: 'transparent',
@@ -265,7 +301,9 @@ export default function TradesTable({ headers }) {
               },
             }}
           >
-            <TableHead>
+            <TableHead sx={{
+              borderRadius: '12px',
+            }}>
               <TableRow
                 sx={{
                   '&:last-child td, &:last-child th': {
@@ -423,8 +461,13 @@ export default function TradesTable({ headers }) {
           </Table>
         </TableContainer>
 
-        <div className="flex justify-between items-center mt-4 p-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20">
-          <Typography sx={{ color: '#E9D8C8', fontSize: 14, fontWeight: 500 }}>
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
+          <Typography sx={{ 
+            color: '#E9D8C8', 
+            fontSize: { xs: 12, sm: 14 }, 
+            fontWeight: 500,
+            textAlign: { xs: 'center', sm: 'left' }
+          }}>
             Showing {rowsPerPage * (page - 1) + 1} to{' '}
             {rowsPerPage * page > count ? count : rowsPerPage * page} of {count}{' '}
             entries
@@ -435,6 +478,9 @@ export default function TradesTable({ headers }) {
               '& .MuiPaginationItem-root': {
                 color: '#E9D8C8',
                 borderColor: 'rgba(17, 179, 174, 0.3)',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                minWidth: { xs: '32px', sm: '40px' },
+                height: { xs: '32px', sm: '40px' },
                 '&:hover': {
                   backgroundColor: 'rgba(17, 179, 174, 0.1)',
                   borderColor: 'rgba(17, 179, 174, 0.5)',
@@ -459,6 +505,7 @@ export default function TradesTable({ headers }) {
             shape="rounded"
             showFirstButton
             showLastButton
+            size="small"
           />
         </div>
       </Paper>
