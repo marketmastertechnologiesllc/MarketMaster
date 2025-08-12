@@ -80,6 +80,7 @@ const headers = [
   { id: 'swap', label: 'Swap' },
   { id: 'profit', label: 'Profit' },
   { id: 'comment', label: 'comment' },
+  { id: 'balance', label: 'Balance' },
 ];
 
 export default function CloseTradeTable() {
@@ -279,6 +280,10 @@ export default function CloseTradeTable() {
                         } else if (id === 'duration') {
                           value = value > 3600 ? `${Math.floor(value / 3600)}h ${Math.floor((value % 3600) / 60)}m ${value % 60}s` : value > 60 ? `${Math.floor(value / 60)}m ${value % 60}s` : `${value}s`;
                         } else if (id === 'profit') {
+                          value = formatNumber(value);
+                        } else if (id === 'swap') {
+                          value = formatNumber(value);
+                        } else if (id === 'balance') {
                           value = formatNumber(value);
                         }
                         return (

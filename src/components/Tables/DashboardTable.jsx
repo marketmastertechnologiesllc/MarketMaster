@@ -23,10 +23,17 @@ import { formatNumber } from '../../utils/formatNumber';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -44,10 +51,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -60,6 +68,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         width: '20ch',
       },
     },
+  },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
   },
 }));
 
@@ -121,10 +133,10 @@ export default function TradesTable({ headers }) {
   // };
 
   const _equityPercentageValue = (value) => {
-    if (value >= 100) return <div className="text-[#58c04f]">{value}</div>;
+    if (value >= 100) return <div className="text-[#58c04f] font-medium">{value}</div>;
     else if (value < 100 && value >= 95)
-      return <div className="text-[#5bc0de]">{value}</div>;
-    else if (value < 95 && value >= 85) return <div className='text-[#f1804c]'>{value}</div>; else return <div className="text-[#fa5252]">{value}</div>;
+      return <div className="text-[#11B3AE] font-medium">{value}</div>;
+    else if (value < 95 && value >= 85) return <div className='text-[#E9D8C8] font-medium'>{value}</div>; else return <div className="text-[#fa5252] font-medium">{value}</div>;
   };
 
   React.useEffect(() => {
@@ -166,9 +178,9 @@ export default function TradesTable({ headers }) {
   }, []);
 
   return (
-    <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
-      <div className="flex justify-between w-full pb-3">
-        <div className="flex items-center gap-2">
+    <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] shadow-2xl pb-[20px]">
+      <div className="flex justify-between w-full pb-4">
+        <div className="flex items-center gap-3">
           <FormControl size="small">
             <Select
               displayEmpty
@@ -178,7 +190,17 @@ export default function TradesTable({ headers }) {
                 <OutlinedInput
                   sx={{
                     width: '80px',
-                    color: 'white',
+                    color: '#E9D8C8',
+                    borderRadius: '8px',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(17, 179, 174, 0.3)',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(17, 179, 174, 0.5)',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#11B3AE',
+                    },
                   }}
                 />
               }
@@ -189,7 +211,7 @@ export default function TradesTable({ headers }) {
               <MenuItem value={100}>100</MenuItem>
             </Select>
           </FormControl>
-          <Typography>records per page</Typography>
+          <Typography sx={{ color: '#E9D8C8', fontWeight: 500 }}>records per page</Typography>
         </div>
         <Search>
           <SearchIconWrapper>
@@ -205,19 +227,18 @@ export default function TradesTable({ headers }) {
         sx={{
           width: '100%',
           overflow: 'hidden',
-          backgroundColor: '#2E353E',
+          backgroundColor: 'transparent',
           boxShadow: 'none',
-          '& .MuiPaper-root': {
-            color: '#ccc',
-            backgroundColor: '#2E353E',
-            boxShadow: 'none',
-          },
+          borderRadius: '12px',
+          border: '1px solid rgba(17, 179, 174, 0.2)',
         }}
       >
         <TableContainer
           sx={{
+            borderRadius: '12px',
+            backgroundColor: 'rgba(255, 255, 255, 0.02)',
             '.MuiTable-root': {
-              borderColor: '#282D36',
+              borderColor: 'rgba(17, 179, 174, 0.2)',
               borderWidth: '1px',
             },
           }}
@@ -227,9 +248,20 @@ export default function TradesTable({ headers }) {
             aria-label="sticky table"
             sx={{
               '& .MuiTableCell-root': {
-                color: '#ccc',
-                backgroundColor: '#2E353E',
-                border: '#282D36',
+                color: '#E9D8C8',
+                backgroundColor: 'transparent',
+                borderColor: 'rgba(17, 179, 174, 0.15)',
+                fontSize: '0.875rem',
+              },
+              '& .MuiTableHead-root .MuiTableCell-root': {
+                backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                color: '#FFFFFF',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                borderColor: 'rgba(17, 179, 174, 0.2)',
+              },
+              '& .MuiTableRow-root:hover': {
+                backgroundColor: 'rgba(17, 179, 174, 0.05)',
               },
             }}
           >
@@ -238,7 +270,7 @@ export default function TradesTable({ headers }) {
                 sx={{
                   '&:last-child td, &:last-child th': {
                     border: 1,
-                    borderColor: '#282D36',
+                    borderColor: 'rgba(17, 179, 174, 0.2)',
                   },
                 }}
               >
@@ -249,22 +281,24 @@ export default function TradesTable({ headers }) {
                       key={`dashboard_table_header_${i}`}
                       align="center"
                       sx={{
-                        padding: '5px',
+                        padding: '12px 8px',
+                        fontWeight: 600,
                       }}
                     >
-                      <div className="flex items-center justify-between p-[3px]">
-                        {label === '' ? <p></p> : <p>{label}</p>}
+                      <div className="flex items-center justify-between p-[6px]">
+                        {label === '' ? <p></p> : <p className="font-semibold">{label}</p>}
                         <div className="flex flex-col cursor-pointer">
                           <Icon
                             icon="teenyicons:up-solid"
-                            color="#ccc"
-                            className="mb-[-4px]"
+                            color="#11B3AE"
+                            className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
                             width={11}
                           />
                           <Icon
                             icon="teenyicons:down-solid"
                             width={11}
-                            color="#ccc"
+                            color="#11B3AE"
+                            className="hover:text-[#E9D8C8] transition-colors"
                           />
                         </div>
                       </div>
@@ -276,7 +310,7 @@ export default function TradesTable({ headers }) {
               sx={{
                 '&:last-child td, &:last-child th': {
                   border: 1,
-                  borderColor: '#282D36',
+                  borderColor: 'rgba(17, 179, 174, 0.15)',
                 },
               }}
             >
@@ -288,6 +322,14 @@ export default function TradesTable({ headers }) {
                       role="checkbox"
                       tabIndex={-1}
                       key={`dashboard_table_row_${index}`}
+                      sx={{
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                          transform: 'translateY(-1px)',
+                          boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                        },
+                      }}
                     >
                       {headers
                         .filter((item) => item.checked && item.id !== 'actions')
@@ -315,8 +357,8 @@ export default function TradesTable({ headers }) {
                               key={id}
                               align="left"
                               sx={{
-                                padding: '5px',
-                                paddingLeft: 2,
+                                padding: '12px 16px',
+                                fontSize: '0.875rem',
                               }}
                             >
                               {id === 'connectionStatus' ? (
@@ -330,14 +372,14 @@ export default function TradesTable({ headers }) {
                                   className="font-bold"
                                   color={
                                     row[id] === 'CONNECTED'
-                                      ? 'green'
-                                      : '#D64742'
+                                      ? '#11B3AE'
+                                      : '#fa5252'
                                   }
                                 />
                               ) : id === 'equityPercentage' ? (
                                 _equityPercentageValue(value)
                               ) : (
-                                <div className="truncate">{value}</div>
+                                <div className="truncate font-medium">{value}</div>
                               )}
                             </TableCell>
                           );
@@ -347,7 +389,7 @@ export default function TradesTable({ headers }) {
                           key={row.id + 'goto'}
                           align="center"
                           sx={{
-                            padding: '5px',
+                            padding: '12px 8px',
                           }}
                         >
                           <Link
@@ -357,10 +399,16 @@ export default function TradesTable({ headers }) {
                               size="small"
                               color="inherit"
                               sx={{
-                                backgroundColor: '#0088CC',
-                                borderRadius: '4px',
+                                backgroundColor: '#11B3AE',
+                                borderRadius: '8px',
                                 fontSize: 12,
-                                padding: '8px 6px',
+                                padding: '10px 8px',
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: '#0F9A95',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                },
                               }}
                             >
                               <Icon icon="fa:bar-chart" color="white" />
@@ -375,8 +423,8 @@ export default function TradesTable({ headers }) {
           </Table>
         </TableContainer>
 
-        <div className="flex justify-between items-center">
-          <Typography sx={{ color: '#ccc', fontSize: 13 }}>
+        <div className="flex justify-between items-center mt-4 p-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20">
+          <Typography sx={{ color: '#E9D8C8', fontSize: 14, fontWeight: 500 }}>
             Showing {rowsPerPage * (page - 1) + 1} to{' '}
             {rowsPerPage * page > count ? count : rowsPerPage * page} of {count}{' '}
             entries
@@ -384,6 +432,21 @@ export default function TradesTable({ headers }) {
           <Pagination
             sx={{
               paddingY: 2,
+              '& .MuiPaginationItem-root': {
+                color: '#E9D8C8',
+                borderColor: 'rgba(17, 179, 174, 0.3)',
+                '&:hover': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                  borderColor: 'rgba(17, 179, 174, 0.5)',
+                },
+                '&.Mui-selected': {
+                  backgroundColor: '#11B3AE',
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95',
+                  },
+                },
+              },
             }}
             count={
               count % rowsPerPage === 0

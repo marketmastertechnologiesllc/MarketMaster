@@ -383,7 +383,7 @@ export default function WhitelabelUsers() {
                         {headers.map(({ id }) => {
                           let value = row[id];
                           if (id === 'isPending') {
-                            value = value === true ? 'Pending' : 'None';
+                            value = value === true ? 'Pending' : 'Approved';
                           }
                           return (
                             <TableCell
@@ -395,6 +395,10 @@ export default function WhitelabelUsers() {
                               }}
                             >
                               {value === 'Pending' ? (
+                                <div className="text-[#edbc37] font-bold">
+                                  {value}
+                                </div>
+                              ) : value === 'Approved' ? (
                                 <div className="text-[#5ad462] font-bold">
                                   {value}
                                 </div>

@@ -13,26 +13,31 @@ const PerformanceChart = ({ data }) => {
       };
     }
 
+    // Sort props from past to present based on openTimeAsDateTime
+    const sortedProps = [...props].sort((a, b) => 
+      new Date(a.openTimeAsDateTime) - new Date(b.openTimeAsDateTime)
+    );
+
     let xData = [];
     let yData = [];
     if (type === 'Profit') {
-      xData = props.map((item) => item.openTimeAsDateTime.substr(0, 10));
+      xData = sortedProps.map((item) => item.openTimeAsDateTime.substr(0, 10));
       let cumulativeProfit = 0;
-      yData = props.map((item) => {
+      yData = sortedProps.map((item) => {
         cumulativeProfit += (item.profit + item.commission + item.swap);
         return cumulativeProfit;
       });
     } else if (type === 'Growth') {
-      xData = props.map((item) => item.openTimeAsDateTime.substr(0, 10));
+      xData = sortedProps.map((item) => item.openTimeAsDateTime.substr(0, 10));
       yData = [...yData, 100];
       let cumulativeProfit = 0;
-      yData = props.map((item) => {
+      yData = sortedProps.map((item) => {
         cumulativeProfit += (item.profit + item.commission + item.swap);
         return cumulativeProfit / (item.balance - cumulativeProfit) * 100;
       });
     } else if (type === 'Balance') {
-      xData = props.map((item) => item.openTimeAsDateTime.substr(0, 10));
-      yData = props.map((item) => item.balance);
+      xData = sortedProps.map((item) => item.openTimeAsDateTime.substr(0, 10));
+      yData = sortedProps.map((item) => item.balance);
     }
 
     return { xData, yData };

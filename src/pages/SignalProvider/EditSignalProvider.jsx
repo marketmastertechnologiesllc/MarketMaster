@@ -70,7 +70,7 @@ function EditSignalProvider() {
   const handleCopyButtonClicked = () => {
     try {
       setIsCopied(true);
-      copy(`${BASE_URL}view/${values.strategyLink}`);
+      copy(`${BASE_URL}analysis/analysis-account/${values.accountId}`);
       setTimeout(() => {
         setIsCopied(false);
       }, 2000);
@@ -133,7 +133,7 @@ function EditSignalProvider() {
             <div className="mb-3">
               <label className="font-bold">URL</label>
               <div className="flex gap-3">
-                <p>{`${BASE_URL}view/${values.strategyLink}`}</p>
+                <p>{`${BASE_URL}analysis/analysis-account/${values.accountId}`}</p>
                 <button
                   className={`${
                     isCopied ? 'bg-[#00cc2c] text-[#333]' : 'bg-[#0088cc]'

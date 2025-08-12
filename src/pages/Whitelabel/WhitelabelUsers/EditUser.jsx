@@ -242,7 +242,7 @@ export default function EditUser() {
                 loading={isLoading}
                 onClick={handleUpdateButtonClicked}
               >
-                Update
+                Approve
               </LoadingButton>
             </fieldset>
           </div>

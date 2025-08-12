@@ -65,18 +65,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const headers = [
-  { id: 'positionTicket', label: 'Ticket' },
-  { id: 'openTimeAsDateTime', label: 'OpenTime' },
-  { id: 'symbol', label: 'Symbol' },
-  { id: 'type', label: 'Type' },
-  { id: 'lots', label: 'Lots' },
-  { id: 'openPrice', label: 'OpenPrice' },
-  { id: 'stopLoss', label: 'SL' },
-  { id: 'takeProfit', label: 'TP' },
-  { id: 'commission', label: 'Com' },
-  { id: 'swap', label: 'Swap' },
-  { id: 'profit', label: 'Profit' },
-  { id: 'comment', label: 'comment' },
+  { id: 'positionTicket', label: 'Ticket' },//ticket
+  { id: 'openTimeAsDateTime', label: 'OpenTime' },//openTime
+  { id: 'symbol', label: 'Symbol' },//symbol
+  { id: 'type', label: 'Type' },//type
+  { id: 'lots', label: 'Lots' },//lots
+  { id: 'openPrice', label: 'OpenPrice' },//openPrice
+  { id: 'stopLoss', label: 'SL' },//stopLoss
+  { id: 'takeProfit', label: 'TP' },//takeProfit
+  { id: 'commission', label: 'Com' },//commission
+  { id: 'swap', label: 'Swap' },//swap
+  { id: 'profit', label: 'Profit' },//profit
+  { id: 'comment', label: 'comment' },//comment
 ];
 
 export default function OpenTradeTable() {
@@ -270,6 +270,8 @@ export default function OpenTradeTable() {
                         } else if (id === 'openPrice') {
                           value = formatNumber(value);
                         } else if (id === 'profit') {
+                          value = formatNumber(value);
+                        } else if (id === 'swap') {
                           value = formatNumber(value);
                         }
                         return (

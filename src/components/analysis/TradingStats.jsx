@@ -177,6 +177,20 @@ const TradingStats = ({ data }) => {
           </tr>
           <tr className="w-full">
             <td className="w-[20%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
+              Deposits
+            </td>
+            <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
+              {Object.keys(data).length > 0 && data.deposits} USD
+            </td>
+            <td className="w-[20%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
+              Credit
+            </td>
+            <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
+              {Object.keys(data).length > 0 && data.credit}
+            </td>
+          </tr>
+          <tr className="w-full">
+            <td className="w-[20%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
               Broker
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">

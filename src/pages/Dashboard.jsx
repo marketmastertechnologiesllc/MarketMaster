@@ -109,19 +109,24 @@ const initialHeaders = {
 
 const StyledInfoButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
-    backgroundColor: '#1B5E20',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
   },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
   },
   '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
   },
 }));
 
@@ -263,7 +268,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="w-auto text-[#ccc] pb-[100px]">
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
       <Stack
         direction="row"
         alignItems="center"
@@ -276,8 +281,11 @@ function Dashboard() {
             variant="contained"
             size="small"
             sx={{
-              backgroundColor: activeTab == '1' ? '#0088CC' : '#282d36',
+              backgroundColor: activeTab == '1' ? '#11B3AE' : '#0B1220',
               textTransform: 'none',
+              color: '#FFFFFF',
+              fontWeight: 500,
+              padding: '8px 16px',
             }}
             onClick={() => handleTabClick('1')}
           >
@@ -287,7 +295,7 @@ function Dashboard() {
             variant="contained"
             size="small"
             sx={{
-              backgroundColor: activeTab == '2' ? '#0088CC' : '#282d36',
+              backgroundColor: activeTab == '2' ? '#11B3AE' : '#0B1220',
               textTransform: 'none',
             }}
             onClick={() => handleTabClick('2')}
@@ -298,7 +306,7 @@ function Dashboard() {
             variant="contained"
             size="small"
             sx={{
-              backgroundColor: activeTab == '3' ? '#0088CC' : '#282d36',
+              backgroundColor: activeTab == '3' ? '#11B3AE' : '#0B1220',
               textTransform: 'none',
             }}
             onClick={() => handleTabClick('3')}
@@ -311,7 +319,13 @@ function Dashboard() {
             variant="contained"
             size="small"
             startIcon={<FilterAltIcon />}
-            sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
+            sx={{ 
+              textTransform: 'none', 
+              backgroundColor: '#11B3AE!important',
+              color: '#FFFFFF',
+              fontWeight: 500,
+              padding: '8px 16px',
+            }}
           >
             Filter
           </StyledButton>
@@ -323,37 +337,40 @@ function Dashboard() {
               startIcon={<VisibilityOffIcon />}
               sx={{
                 textTransform: 'none',
-                backgroundColor: '#0088CC!important',
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                padding: '8px 16px',
                 position: 'relative',
               }}
             >
               Columns
             </StyledButton>
             <div
-              className={`text-center absolute z-50 top-full mt-2 p-2 w-[220px] bg-[#2E353E] right-[-20px] ${!showFilterModal && 'hidden'
+              className={`text-center absolute z-50 top-full mt-2 p-4 w-[280px] bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-[-20px] ${!showFilterModal && 'hidden'
                 }`}
             >
               <div
                 className="fixed opacity-0 top-0 left-0 right-0 bottom-0"
                 onClick={() => setShowFilterModal(false)}
               ></div>
-              Toggle visible columns
+              <div className="text-[#E9D8C8] font-medium mb-3">Toggle visible columns</div>
               <div className="relative">
                 <StyledButton
                   onClick={() => setShowFilterItems((prev) => !prev)}
-                  className="w-full p-2 mt-1 rounded text-[0.95rem] bg-[#232830] hover:bg-[#272c35]"
+                  className="w-full p-3 mt-1 rounded-lg text-[0.95rem] bg-[#11B3AE] hover:bg-[#0F9A95] text-white font-medium transition-all duration-200"
                 >
-                  All selected({headers[activeTab].length})
+                  All selected ({headers[activeTab].length})
                 </StyledButton>
                 <div
-                  className={`absolute w-full bg-[#2b313b] ${!showFilterItems && 'hidden'
+                  className={`absolute w-full bg-[#0B1220] border border-[#11B3AE] rounded-lg mt-1 shadow-lg ${!showFilterItems && 'hidden'
                     }`}
                 >
                   <div
-                    className={`flex pl-6  hover:bg-[#232830] gap-1 cursor-pointer ${headers[activeTab].reduce(
+                    className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].reduce(
                       (count, { checked }) => count + checked,
                       0
-                    ) === headers[activeTab].length && 'bg-[#0099E6]'
+                    ) === headers[activeTab].length && 'bg-[#11B3AE] bg-opacity-30'
                       }`}
                   >
                     <input
@@ -366,15 +383,16 @@ function Dashboard() {
                       }
                       // onClick={handleViewAll}
                       onChange={handleViewAll}
+                      className="accent-[#11B3AE]"
                     />
-                    <div className="text-[0.9rem] p-1 cursor-pointer font-bold">
+                    <div className="text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
                       View all
                     </div>
                   </div>
                   {headers[activeTab].map((item, i) => (
                     <div
                       key={`input_${i}`}
-                      className={`flex pl-6  hover:bg-[#232830] gap-1 cursor-pointer ${item.checked && 'bg-[#0099E6]'
+                      className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
                         }`}
                     >
                       <input
@@ -382,8 +400,9 @@ function Dashboard() {
                         onChange={handleVisibleChange}
                         checked={item.checked}
                         type="checkbox"
+                        className="accent-[#11B3AE]"
                       />
-                      <div className="text-[0.9rem] p-1 cursor-pointer">
+                      <div className="text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
                         {item.label}
                       </div>
                     </div>
@@ -391,7 +410,7 @@ function Dashboard() {
                 </div>
                 <StyledButton
                   onClick={resetColumns}
-                  className="w-full p-2 mt-1 rounded text-white text-[0.95rem] bg-[#0088CC] hover:bg-[#454c5a]"
+                  className="w-full p-3 mt-2 rounded-lg text-white text-[0.95rem] bg-[#11B3AE] hover:bg-[#0F9A95] font-medium transition-all duration-200"
                 >
                   Reset Columns
                 </StyledButton>
