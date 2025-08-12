@@ -287,181 +287,198 @@ function Dashboard() {
 
   return (
     <div className="w-auto text-[#E9D8C8] pb-[100px]">
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        alignItems={{ xs: 'stretch', sm: 'center' }}
-        spacing={{ xs: 2, sm: 1 }}
-        display={'flex'}
-        justifyContent={'space-between'}
-        sx={{ gap: { xs: 2, sm: 1 } }}
-      >
-        <div className="flex gap-2 justify-center sm:justify-start">
-          <StyledButton
-            variant="contained"
-            size="small"
-            sx={{
-              backgroundColor: activeTab == '1' ? '#11B3AE' : '#0B1220',
-              textTransform: 'none',
-              color: '#FFFFFF',
-              fontWeight: 500,
-              padding: { xs: '4px 8px', sm: '8px 12px' },
-              fontSize: { xs: '0.875rem', sm: '1rem' },
-            }}
-            onClick={() => handleTabClick('1')}
-          >
-            Accounts
-          </StyledButton>
-          {/* <StyledButton
-            variant="contained"
-            size="small"
-            sx={{
-              backgroundColor: activeTab == '2' ? '#11B3AE' : '#0B1220',
-              textTransform: 'none',
-            }}
-            onClick={() => handleTabClick('2')}
-          >
-            Trades
-          </StyledButton>
-          <StyledButton
-            variant="contained"
-            size="small"
-            sx={{
-              backgroundColor: activeTab == '3' ? '#11B3AE' : '#0B1220',
-              textTransform: 'none',
-            }}
-            onClick={() => handleTabClick('3')}
-          >
-            History
-          </StyledButton> */}
-        </div>
-        <div className="flex gap-2 justify-center sm:justify-end">
-          {/* <StyledButton
-            variant="contained"
-            size="small"
-            startIcon={<FilterAltIcon />}
-            sx={{ 
-              textTransform: 'none', 
-              backgroundColor: '#11B3AE!important',
-              color: '#FFFFFF',
-              fontWeight: 500,
-              padding: { xs: '6px 12px', sm: '8px 16px' },
-              fontSize: { xs: '0.875rem', sm: '1rem' },
-            }}
-          >
-            Filter
-          </StyledButton> */}
-          <div className="relative" ref={filterModalRef}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          alignItems={{ xs: 'stretch', sm: 'center' }}
+          spacing={{ xs: 2, sm: 1 }}
+          display={'flex'}
+          justifyContent={'space-between'}
+          sx={{ gap: { xs: 2, sm: 1 } }}
+        >
+          <div className="flex gap-2 justify-center sm:justify-start">
             <StyledButton
               variant="contained"
               size="small"
-              onClick={() => setShowFilterModal((prev) => !prev)}
-              startIcon={<VisibilityOffIcon />}
               sx={{
+                backgroundColor: activeTab == '1' ? '#11B3AE' : 'rgba(255, 255, 255, 0.1)',
                 textTransform: 'none',
-                backgroundColor: '#11B3AE!important',
-                color: '#FFFFFF',
+                color: activeTab == '1' ? '#FFFFFF' : '#E9D8C8',
                 fontWeight: 500,
                 padding: { xs: '4px 8px', sm: '8px 12px' },
                 fontSize: { xs: '0.875rem', sm: '1rem' },
-                position: 'relative',
+                border: activeTab == '1' ? '1px solid #11B3AE' : '1px solid rgba(17, 179, 174, 0.3)',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: activeTab == '1' ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
+              }}
+              onClick={() => handleTabClick('1')}
+            >
+              Accounts
+            </StyledButton>
+            {/* <StyledButton
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: activeTab == '2' ? '#11B3AE' : '#0B1220',
+                textTransform: 'none',
+              }}
+              onClick={() => handleTabClick('2')}
+            >
+              Trades
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: activeTab == '3' ? '#11B3AE' : '#0B1220',
+                textTransform: 'none',
+              }}
+              onClick={() => handleTabClick('3')}
+            >
+              History
+            </StyledButton> */}
+          </div>
+          <div className="flex gap-2 justify-center sm:justify-end">
+            {/* <StyledButton
+              variant="contained"
+              size="small"
+              startIcon={<FilterAltIcon />}
+              sx={{ 
+                textTransform: 'none', 
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                padding: { xs: '6px 12px', sm: '8px 16px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
               }}
             >
-              Columns
-            </StyledButton>
-            {showFilterModal && (
-              <div className="absolute z-50 top-full mt-2 p-4 w-[280px] text-white bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-0 sm:right-0 xs:right-[-50px]">
-                <div className="text-[#E9D8C8] font-medium mb-3 text-sm sm:text-base">Toggle visible columns</div>
-                <div className="space-y-2">
-                  <StyledButton
-                    onClick={() => setShowFilterItems((prev) => !prev)}
-                    sx={{
-                      width: '100%',
-                      padding: { xs: '2px 4px', sm: '4px' },
-                      borderRadius: '8px',
-                      fontSize: { xs: '0.875rem', sm: '0.95rem' },
-                      backgroundColor: '#11B3AE',
-                      color: '#FFFFFF !important',
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      transition: 'all 0.2s ease-in-out',
-                      '&:hover': {
-                        backgroundColor: '#0F9A95',
+              Filter
+            </StyledButton> */}
+            <div className="relative" ref={filterModalRef}>
+              <StyledButton
+                variant="contained"
+                size="small"
+                onClick={() => setShowFilterModal((prev) => !prev)}
+                startIcon={<VisibilityOffIcon />}
+                sx={{
+                  textTransform: 'none',
+                  backgroundColor: '#11B3AE!important',
+                  color: '#FFFFFF',
+                  fontWeight: 500,
+                  padding: { xs: '4px 8px', sm: '8px 12px' },
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  position: 'relative',
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
+                }}
+              >
+                Columns
+              </StyledButton>
+              {showFilterModal && (
+                <div className="absolute z-50 top-full mt-2 p-4 w-[280px] text-white bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-0 sm:right-0 xs:right-[-50px]">
+                  <div className="text-[#E9D8C8] font-medium mb-3 text-sm sm:text-base">Toggle visible columns</div>
+                  <div className="space-y-2">
+                    <StyledButton
+                      onClick={() => setShowFilterItems((prev) => !prev)}
+                      sx={{
+                        width: '100%',
+                        padding: { xs: '4px 8px', sm: '8px 12px' },
+                        borderRadius: '8px',
+                        fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                        backgroundColor: '#11B3AE',
                         color: '#FFFFFF !important',
-                      },
-                    }}
-                  >
-                    All selected ({headers[activeTab].length})
-                  </StyledButton>
-                  {showFilterItems && (
-                    <div className="bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
-                      <div
-                        className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].reduce(
-                          (count, { checked }) => count + checked,
-                          0
-                        ) === headers[activeTab].length && 'bg-[#11B3AE] bg-opacity-30'
-                          }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={
-                            headers[activeTab].reduce(
-                              (count, { checked }) => count + checked,
-                              0
-                            ) === headers[activeTab].length
-                          }
-                          onChange={handleViewAll}
-                          className="accent-[#11B3AE]"
-                        />
-                        <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
-                          View all
-                        </div>
-                      </div>
-                      {headers[activeTab].map((item, i) => (
+                        fontWeight: 500,
+                        textTransform: 'none',
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                          color: '#FFFFFF !important',
+                          transform: 'translateY(-1px)',
+                        },
+                      }}
+                    >
+                      All selected ({headers[activeTab].length})
+                    </StyledButton>
+                    {showFilterItems && (
+                      <div className="bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
                         <div
-                          key={`input_${i}`}
-                          className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
+                          className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].reduce(
+                            (count, { checked }) => count + checked,
+                            0
+                          ) === headers[activeTab].length && 'bg-[#11B3AE] bg-opacity-30'
                             }`}
                         >
                           <input
-                            name={item.id}
-                            onChange={handleVisibleChange}
-                            checked={item.checked}
                             type="checkbox"
+                            checked={
+                              headers[activeTab].reduce(
+                                (count, { checked }) => count + checked,
+                                0
+                              ) === headers[activeTab].length
+                            }
+                            onChange={handleViewAll}
                             className="accent-[#11B3AE]"
                           />
-                          <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
-                            {item.label}
+                          <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
+                            View all
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                  <StyledButton
-                    onClick={resetColumns}
-                    sx={{
-                      width: '100%',
-                      padding: { xs: '2px 4px', sm: '4px' },
-                      borderRadius: '8px',
-                      fontSize: { xs: '0.875rem', sm: '0.95rem' },
-                      backgroundColor: '#11B3AE',
-                      color: '#FFFFFF !important',
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      transition: 'all 0.2s ease-in-out',
-                      '&:hover': {
-                        backgroundColor: '#0F9A95',
+                        {headers[activeTab].map((item, i) => (
+                          <div
+                            key={`input_${i}`}
+                            className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
+                              }`}
+                          >
+                            <input
+                              name={item.id}
+                              onChange={handleVisibleChange}
+                              checked={item.checked}
+                              type="checkbox"
+                              className="accent-[#11B3AE]"
+                            />
+                            <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
+                              {item.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <StyledButton
+                      onClick={resetColumns}
+                      sx={{
+                        width: '100%',
+                        padding: { xs: '4px 8px', sm: '8px 12px' },
+                        borderRadius: '8px',
+                        fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                        backgroundColor: '#11B3AE',
                         color: '#FFFFFF !important',
-                      },
-                    }}
-                  >
-                    Reset Columns
-                  </StyledButton>
+                        fontWeight: 500,
+                        textTransform: 'none',
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                          color: '#FFFFFF !important',
+                          transform: 'translateY(-1px)',
+                        },
+                      }}
+                    >
+                      Reset Columns
+                    </StyledButton>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </Stack>
+        </Stack>
       {activeTab === '1' && <DashboardTable headers={headers['1']} />}
       {/* {activeTab === '2' && <TradesTable headers={headers['2']} />}
       {activeTab === '3' && <HistoryTable headers={headers['3']} />} */}

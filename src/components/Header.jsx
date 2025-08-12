@@ -74,20 +74,20 @@ function Header() {
   };
 
   return (
-    <div className="flex flex-row items-center justify-between h-[70px] bg-[#0f0f0f] text-white p-[15px]">
+    <div className="flex flex-row items-center justify-between h-[70px] bg-[#0B1220] text-[#E9D8C8] p-[15px] border-b border-[rgba(17,179,174,0.3)] shadow-[0_4px_12px_rgba(17,179,174,0.1)]">
       <img className="h-10 w-10" src={Logo} alt="" />
       <div className="flex flex-row gap-x-2">
         {!isAuthenticated ? (
           <>
             <Link
               to={'/auth/login'}
-              className="bg-[#0088cc] border-[#0088cc] inline-block py-1.5 px-3 rounded-md mb-0 text-sm font-normal cursor-pointer border"
+              className="bg-[#11B3AE] border-[#11B3AE] inline-block py-1.5 px-3 rounded-md mb-0 text-sm font-normal cursor-pointer border text-white transition-all duration-200 hover:bg-[#0F9A95] hover:transform hover:translate-y-[-1px] hover:shadow-[0_4px_12px_rgba(17,179,174,0.3)]"
             >
               Login
             </Link>
             <Link
               to={'/auth/signup'}
-              className="bg-[#0088cc] border-[#0088cc] inline-block py-1.5 px-3 rounded-md mb-0 text-sm font-normal cursor-pointer border"
+              className="bg-[#11B3AE] border-[#11B3AE] inline-block py-1.5 px-3 rounded-md mb-0 text-sm font-normal cursor-pointer border text-white transition-all duration-200 hover:bg-[#0F9A95] hover:transform hover:translate-y-[-1px] hover:shadow-[0_4px_12px_rgba(17,179,174,0.3)]"
             >
               SignUp
             </Link>
@@ -100,16 +100,27 @@ function Header() {
               sx={{ mr: '5px' }}
               onClick={handleNotificationButtonClicked}
             >
-              <NotificationsIcon sx={{ fontSize: 30 }} />
+              <NotificationsIcon 
+                sx={{ 
+                  fontSize: 30,
+                  color: '#E9D8C8',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    color: '#11B3AE',
+                    transform: 'translateY(-1px)',
+                  }
+                }} 
+              />
             </Badge>
             <div
               id="notificationDropdown"
-              className={`z-[1205] right-[200px] top-[70px] absolute bg-[#282D36] divide-gray-100 rounded shadow w-44 dark:bg-[#282D36] dark:divide-gray-600 ${
+              className={`z-[1205] right-[200px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-44 border border-[rgba(17,179,174,0.3)] ${
                 !isNotificationOpen && 'hidden'
               }`}
             >
               <ul
-                className="py-1 text-sm text-[#ccc] dark:text-gray-200"
+                className="py-1 text-sm text-[#E9D8C8]"
                 aria-labelledby="avatarButton"
               >
                 {data.length > 0 ? (
@@ -122,7 +133,7 @@ function Header() {
                     return (
                       <li
                         key={idx}
-                        className="flex justify-between font-medium text-[#ccc] truncate p-2 text-right text-base rounded cursor-pointer hover:bg-[#0088CC]"
+                        className="flex justify-between font-medium text-[#E9D8C8] truncate p-2 text-right text-base rounded cursor-pointer hover:bg-[#11B3AE] hover:text-white transition-all duration-200"
                         onClick={() =>
                           handleNotificationUserClicked(item.users.id)
                         }
@@ -141,26 +152,10 @@ function Header() {
                     );
                   }).filter(Boolean) // Remove null items from the array
                 ) : (
-                  <li className="flex justify-center font-medium text-[#ccc] truncate p-2 text-base rounded">
+                  <li className="flex justify-center font-medium text-[#E9D8C8] truncate p-2 text-base rounded">
                     No Notifications
                   </li>
                 )}
-                {/* <li>
-                  <Link
-                    to={'/profile'}
-                    className="block px-2 py-2 hover:bg-blue-100 dark:hover:bg-[#0088CC] dark:hover:text-white m-1 rounded"
-                  >
-                    <div className="flex flex-row gap-2">
-                      <Icon
-                        icon="fa:building"
-                        color="#ccc"
-                        width="20"
-                        height="20"
-                      />
-                      Profile Manager
-                    </div>
-                  </Link>
-                </li> */}
               </ul>
             </div>
             <Avatar
@@ -168,13 +163,13 @@ function Header() {
               src="/static/images/avatar/2.jpg"
               sx={{ position: 'relative' }}
             />
-            <Typography sx={{ color: '#e9d8c8' }}>{user.fullName}</Typography>
+            <Typography sx={{ color: '#E9D8C8', fontWeight: 500 }}>{user.fullName}</Typography>
             <Box
               onClick={() => {
                 if (isNotificationOpen) setIsNotificationOpen(false);
                 setIsOpen(!isOpen);
               }}
-              className="cursor-pointer text-[#ccc] z-[1204]"
+              className="cursor-pointer text-[#E9D8C8] z-[1204] transition-all duration-200 hover:text-[#11B3AE] hover:transform hover:translate-y-[-1px]"
             >
               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </Box>
@@ -190,45 +185,29 @@ function Header() {
             ></div>
             <div
               id="userDropdown"
-              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#282D36] divide-gray-100 rounded shadow w-44 dark:bg-[#282D36] dark:divide-gray-600 ${
+              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-44 border border-[rgba(17,179,174,0.3)] ${
                 !isOpen && 'hidden'
               }`}
             >
-              <div className="px-4 py-3 text-sm dark:text-white">
-                <div className="font-medium text-[#ccc] truncate">
+              <div className="px-4 py-3 text-sm">
+                <div className="font-medium text-[#E9D8C8] truncate">
                   {user.email}
                 </div>
               </div>
-              <hr className="bg-[#1D2127] h-[1px] border-0 my-0 mx-1" />
+              <hr className="bg-[rgba(17,179,174,0.3)] h-[1px] border-0 my-0 mx-1" />
               <ul
-                className="py-1 text-sm text-[#ccc] dark:text-gray-200"
+                className="py-1 text-sm text-[#E9D8C8]"
                 aria-labelledby="avatarButton"
               >
-                {/* <li>
-                  <Link
-                    to={'/profile'}
-                    className="block px-2 py-2 hover:bg-blue-100 dark:hover:bg-[#0088CC] dark:hover:text-white m-1 rounded"
-                  >
-                    <div className="flex flex-row gap-2">
-                      <Icon
-                        icon="fa:building"
-                        color="#ccc"
-                        width="20"
-                        height="20"
-                      />
-                      Profile Manager
-                    </div>
-                  </Link>
-                </li> */}
                 <li>
                   <Link
                     to={'/profile'}
-                    className="block px-2 py-2 hover:bg-[#0088CC] dark:hover:bg-[#0088CC] dark:hover:text-white m-1 rounded"
+                    className="block px-2 py-2 hover:bg-[#11B3AE] hover:text-white m-1 rounded transition-all duration-200"
                   >
                     <div className="flex flex-row gap-2">
                       <Icon
                         icon="majesticons:user"
-                        color="#ccc"
+                        color="#E9D8C8"
                         width="20"
                         height="20"
                       />
@@ -237,15 +216,15 @@ function Header() {
                   </Link>
                 </li>
               </ul>
-              <hr className="bg-[#1D2127] h-[1px] border-0 my-0 mx-1" />
+              <hr className="bg-[rgba(17,179,174,0.3)] h-[1px] border-0 my-0 mx-1" />
               <div
-                className="cursor-pointer rounded px-2 py-2 text-sm text-gray-700 hover:bg-[#0088CC] dark:hover:bg-[#0088CC] dark:text-gray-200 dark:hover:text-white m-1"
+                className="cursor-pointer rounded px-2 py-2 text-sm text-[#E9D8C8] hover:bg-[#11B3AE] hover:text-white m-1 transition-all duration-200"
                 onClick={signOut}
               >
-                <div className="flex flex-row gap-2 items-center text-[#ccc]">
+                <div className="flex flex-row gap-2 items-center">
                   <Icon
                     icon="wpf:shutdown"
-                    color="#ccc"
+                    color="#E9D8C8"
                     width="20"
                     height="20"
                   />
@@ -261,10 +240,10 @@ function Header() {
               src="/static/images/avatar/2.jpg"
               sx={{ position: 'relative' }}
             />
-            <Typography sx={{ color: '#e9d8c8' }}>{user.fullName}</Typography>
+            <Typography sx={{ color: '#E9D8C8', fontWeight: 500 }}>{user.fullName}</Typography>
             <Box
               onClick={() => setIsOpen(!isOpen)}
-              className="cursor-pointer text-[#ccc] z-[1204]"
+              className="cursor-pointer text-[#E9D8C8] z-[1204] transition-all duration-200 hover:text-[#11B3AE] hover:transform hover:translate-y-[-1px]"
             >
               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </Box>
@@ -276,45 +255,29 @@ function Header() {
             ></div>
             <div
               id="userDropdown"
-              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#282D36] divide-gray-100 rounded shadow w-44 dark:bg-[#282D36] dark:divide-gray-600 ${
+              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-44 border border-[rgba(17,179,174,0.3)] ${
                 !isOpen && 'hidden'
               }`}
             >
-              <div className="px-4 py-3 text-sm dark:text-white">
-                <div className="font-medium text-[#ccc] truncate">
+              <div className="px-4 py-3 text-sm">
+                <div className="font-medium text-[#E9D8C8] truncate">
                   {user.email}
                 </div>
               </div>
-              <hr className="bg-[#1D2127] h-[1px] border-0 my-0 mx-1" />
+              <hr className="bg-[rgba(17,179,174,0.3)] h-[1px] border-0 my-0 mx-1" />
               <ul
-                className="py-1 text-sm text-[#ccc] dark:text-gray-200"
+                className="py-1 text-sm text-[#E9D8C8]"
                 aria-labelledby="avatarButton"
               >
-                {/* <li>
-                  <Link
-                    to={'/profile'}
-                    className="block px-2 py-2 hover:bg-blue-100 dark:hover:bg-[#0088CC] dark:hover:text-white m-1 rounded"
-                  >
-                    <div className="flex flex-row gap-2">
-                      <Icon
-                        icon="fa:building"
-                        color="#ccc"
-                        width="20"
-                        height="20"
-                      />
-                      Profile Manager
-                    </div>
-                  </Link>
-                </li> */}
                 <li>
                   <Link
                     to={'/profile'}
-                    className="block px-2 py-2 hover:bg-[#0088CC] dark:hover:bg-[#0088CC] dark:hover:text-white m-1 rounded"
+                    className="block px-2 py-2 hover:bg-[#11B3AE] hover:text-white m-1 rounded transition-all duration-200"
                   >
                     <div className="flex flex-row gap-2">
                       <Icon
                         icon="majesticons:user"
-                        color="#ccc"
+                        color="#E9D8C8"
                         width="20"
                         height="20"
                       />
@@ -323,15 +286,15 @@ function Header() {
                   </Link>
                 </li>
               </ul>
-              <hr className="bg-[#1D2127] h-[1px] border-0 my-0 mx-1" />
+              <hr className="bg-[rgba(17,179,174,0.3)] h-[1px] border-0 my-0 mx-1" />
               <div
-                className="cursor-pointer rounded px-2 py-2 text-sm text-gray-700 hover:bg-[#0088CC] dark:hover:bg-[#0088CC] dark:text-gray-200 dark:hover:text-white m-1"
+                className="cursor-pointer rounded px-2 py-2 text-sm text-[#E9D8C8] hover:bg-[#11B3AE] hover:text-white m-1 transition-all duration-200"
                 onClick={signOut}
               >
-                <div className="flex flex-row gap-2 items-center text-[#ccc]">
+                <div className="flex flex-row gap-2 items-center">
                   <Icon
                     icon="wpf:shutdown"
-                    color="#ccc"
+                    color="#E9D8C8"
                     width="20"
                     height="20"
                   />

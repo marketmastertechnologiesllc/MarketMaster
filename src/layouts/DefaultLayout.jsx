@@ -24,8 +24,8 @@ const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  backgroundColor: '#171717',
-  color: '#CCC',
+  backgroundColor: '#0B1220',
+  color: '#E9D8C8',
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -37,7 +37,7 @@ const AppBar = styled(MuiAppBar, {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    backgroundColor: '#171717',
+    backgroundColor: '#0B1220',
   }),
 }));
 
@@ -48,8 +48,9 @@ const Drawer = styled(MuiDrawer, {
     position: 'relative',
     whiteSpace: 'nowrap',
     width: drawerWidth,
-    backgroundColor: '#171717',
-    color: '#ccc',
+    backgroundColor: '#0B1220',
+    color: '#E9D8C8',
+    borderRight: '1px solid rgba(17, 179, 174, 0.3)',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -85,7 +86,7 @@ const DefaultLayout = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="bg-boxdark-2 text-bodydark h-screen">
+      <div className="bg-[#0B1220] text-[#E9D8C8] h-screen">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="flex h-fit overflow-hidden w-full">
           <div className="relative flex-1">
@@ -104,8 +105,10 @@ const DefaultLayout = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      background: 'radial-gradient(120% 150% at 10% 0%, rgba(17,179,174,.25) 0%, rgba(17,179,174,0) 60%), #0f0f0f',
-                      color: '#e9d8c8',
+                      background: 'radial-gradient(120% 150% at 10% 0%, rgba(17,179,174,.25) 0%, rgba(17,179,174,0) 60%), #0B1220',
+                      color: '#E9D8C8',
+                      borderBottom: '1px solid rgba(17, 179, 174, 0.3)',
+                      boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
                     }}
                   >
                     <Grid container alignItems='center'>
@@ -117,6 +120,11 @@ const DefaultLayout = () => {
                         sx={{
                           marginRight: '36px',
                           ...(open && { display: 'none' }),
+                          '&:hover': {
+                            backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                            transform: 'translateY(-1px)',
+                          },
+                          transition: 'all 0.2s ease-in-out',
                         }}
                       >
                         <MenuIcon />
@@ -126,9 +134,21 @@ const DefaultLayout = () => {
                     <Button
                       variant="contained"
                       startIcon={<HelpIcon />}
-                      color="success"
                       size="small"
-                      sx={{ textTransform: 'none', float: 'right!important' }}
+                      sx={{ 
+                        textTransform: 'none', 
+                        float: 'right!important',
+                        backgroundColor: '#11B3AE',
+                        color: '#FFFFFF',
+                        borderRadius: '8px',
+                        fontWeight: 500,
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                          transform: 'translateY(-1px)',
+                          boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                        },
+                      }}
                     >
                       Help
                     </Button>
@@ -142,7 +162,7 @@ const DefaultLayout = () => {
                     if (!openManual) setOpen(false);
                   }}
                   sx={{
-                    backgroundColor: '#1D2127',
+                    backgroundColor: '#0B1220',
                     position: 'sticky',
                     top: '0px',
                   }}
@@ -153,11 +173,18 @@ const DefaultLayout = () => {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       px: [1],
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                      borderBottom: '1px solid rgba(17, 179, 174, 0.3)',
                     }}
                   >
                     <ListSubheader
                       component="div"
-                      sx={{ color: '#ccc', backgroundColor: '#171717' }}
+                      sx={{ 
+                        color: '#E9D8C8', 
+                        backgroundColor: 'transparent',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                      }}
                     >
                       Navigation
                     </ListSubheader>
@@ -167,6 +194,11 @@ const DefaultLayout = () => {
                       sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                          transform: 'translateY(-1px)',
+                        },
+                        transition: 'all 0.2s ease-in-out',
                       }}
                     >
                       <ChevronLeftIcon />
@@ -177,23 +209,16 @@ const DefaultLayout = () => {
                 <Box
                   component="main"
                   sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? theme.palette.grey[100]
-                        : theme.palette.grey[900],
+                    backgroundColor: '#0B1220',
                     flexGrow: 1,
                     overflowY: 'scroll',
                     height: '100vh',
-                    // maxWidth: '100%',
-                    // overflow: 'unset',
                     width: 'calc(100vw - 240px)',
                   }}
                 >
                   <Toolbar />
                   <div className="m-10">
-                    {/* <Container sx={{ mx: '10px', my:'20px' }}> */}
                     <Outlet />
-                    {/* </Container> */}
                   </div>
                 </Box>
               </Box>
@@ -203,7 +228,7 @@ const DefaultLayout = () => {
       </div>
     );
   } else {
-    <></>;
+    return <></>;
   }
 };
 
