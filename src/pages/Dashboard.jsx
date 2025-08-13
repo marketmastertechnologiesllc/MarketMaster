@@ -239,16 +239,31 @@ function Dashboard() {
       ),
     }));
   };
+
+  /**
+   * Handle click on entire row (checkbox + title)
+   */
+  const handleRowClick = (itemId, currentChecked) => {
+    const index = activeTab;
+    setHeaders((prev) => ({
+      ...prev,
+      [index]: prev[index].map((item) =>
+        item.id === itemId ? { ...item, checked: !currentChecked } : item
+      ),
+    }));
+  };
+
   /**
    * when click view all button
    */
   const handleViewAll = (e) => {
     const index = activeTab;
+    const allChecked = headers[activeTab].every(item => item.checked);
     setHeaders((prev) => ({
       ...prev,
       [index]: prev[index].map((item) => ({
         ...item,
-        checked: e.target.checked,
+        checked: !allChecked,
       })),
     }));
   };
@@ -406,27 +421,21 @@ function Dashboard() {
                         },
                       }}
                     >
-                      All selected ({headers[activeTab].length})
+                      Selected ({headers[activeTab].filter(item => item.checked).length})
                     </StyledButton>
                     {showFilterItems && (
                       <div className="bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
                         <div
-                          className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].reduce(
-                            (count, { checked }) => count + checked,
-                            0
-                          ) === headers[activeTab].length && 'bg-[#11B3AE] bg-opacity-30'
+                          className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers[activeTab].every(item => item.checked) && 'bg-[#11B3AE] bg-opacity-30'
                             }`}
+                          onClick={handleViewAll}
                         >
                           <input
                             type="checkbox"
-                            checked={
-                              headers[activeTab].reduce(
-                                (count, { checked }) => count + checked,
-                                0
-                              ) === headers[activeTab].length
-                            }
+                            checked={headers[activeTab].every(item => item.checked)}
                             onChange={handleViewAll}
                             className="accent-[#11B3AE]"
+                            onClick={(e) => e.stopPropagation()}
                           />
                           <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
                             View all
@@ -437,13 +446,14 @@ function Dashboard() {
                             key={`input_${i}`}
                             className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
                               }`}
+                            onClick={() => handleRowClick(item.id, item.checked)}
                           >
                             <input
                               name={item.id}
-                              onChange={handleVisibleChange}
                               checked={item.checked}
                               type="checkbox"
                               className="accent-[#11B3AE]"
+                              onClick={(e) => e.stopPropagation()}
                             />
                             <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
                               {item.label}

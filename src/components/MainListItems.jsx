@@ -56,9 +56,52 @@ function MainListItems({ open }) {
       sx={{
         width: '100%',
         maxWidth: 240,
-        bgcolor: '#1D2127',
+        bgcolor: '#0B1220',
         flexGrow: 1,
         paddingLeft: '7px',
+        '& .MuiListItemButton-root': {
+          borderRadius: '8px',
+          margin: '2px 8px',
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: 'rgba(17, 179, 174, 0.1)',
+            transform: 'translateX(4px)',
+            boxShadow: '0 2px 8px rgba(17, 179, 174, 0.2)',
+          },
+          '&.Mui-selected': {
+            backgroundColor: '#11B3AE',
+            color: '#FFFFFF',
+            '&:hover': {
+              backgroundColor: '#0F9A95',
+            },
+            '& .MuiListItemIcon-root': {
+              color: '#FFFFFF',
+            },
+          },
+        },
+        '& .MuiListItemIcon-root': {
+          color: '#E9D8C8',
+          transition: 'all 0.2s ease-in-out',
+        },
+        '& .MuiListItemText-primary': {
+          color: '#E9D8C8',
+          fontWeight: 500,
+          fontSize: '0.875rem',
+          transition: 'all 0.2s ease-in-out',
+        },
+        '& .MuiCollapse-root': {
+          backgroundColor: 'rgba(17, 179, 174, 0.05)',
+          borderRadius: '8px',
+          margin: '2px 8px',
+          '& .MuiListItemButton-root': {
+            margin: '1px 8px',
+            paddingLeft: '32px',
+            '&:hover': {
+              backgroundColor: 'rgba(17, 179, 174, 0.1)',
+              transform: 'translateX(2px)',
+            },
+          },
+        },
       }}
       component="nav"
       aria-labelledby="nested-list-subheader"
@@ -66,7 +109,7 @@ function MainListItems({ open }) {
       <Link className="flex flex-row" to={'/dashboard'}>
         <ListItemButton>
           <ListItemIcon>
-            <SpeedIcon sx={{ color: '#CCC' }} />
+            <SpeedIcon sx={{ color: '#E9D8C8' }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
@@ -74,29 +117,44 @@ function MainListItems({ open }) {
       <Link className="flex flex-row" to={'/signals'}>
         <ListItemButton>
           <ListItemIcon>
-            <SignalCellularAltIcon sx={{ color: '#CCC' }} />
+            <SignalCellularAltIcon sx={{ color: '#E9D8C8' }} />
           </ListItemIcon>
           <ListItemText primary="Signals" />
         </ListItemButton>
       </Link>
-      <ListItemButton onClick={handleConfiguratorClick}>
+      <ListItemButton 
+        onClick={handleConfiguratorClick}
+        sx={{
+          '&:hover .MuiListItemIcon-root': {
+            color: '#11B3AE',
+          },
+        }}
+      >
         <ListItemIcon>
-          <SettingsSuggestIcon sx={{ color: '#CCC' }} />
+          <SettingsSuggestIcon sx={{ color: '#E9D8C8' }} />
         </ListItemIcon>
         <ListItemText primary="Configurator" />
-        {openConfigurator ? <ExpandLess /> : <ExpandMore />}
+        {openConfigurator ? (
+          <ExpandLess sx={{ color: '#11B3AE' }} />
+        ) : (
+          <ExpandMore sx={{ color: '#E9D8C8' }} />
+        )}
       </ListItemButton>
       <Collapse
         in={openConfigurator && open}
         timeout="auto"
         unmountOnExit
-        sx={{ backgroundColor: '#191C21' }}
+        sx={{
+          backgroundColor: 'rgba(17, 179, 174, 0.05)',
+          borderRadius: '8px',
+          margin: '2px 8px',
+        }}
       >
         <List component="div" disablePadding>
           <Link className="flex flex-row" to={'/accounts'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <ListIcon sx={{ color: '#ccc' }} />
+                <ListIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Accounts" />
             </ListItemButton>
@@ -104,7 +162,7 @@ function MainListItems({ open }) {
           <Link className="flex flex-row" to={'/trade-copier'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <ShareIcon sx={{ color: '#ccc' }} />
+                <ShareIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Trade Copier" />
             </ListItemButton>
@@ -112,7 +170,7 @@ function MainListItems({ open }) {
           <Link className="flex flex-row" to={'/equity-monitors'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <MonitorHeartIcon sx={{ color: '#ccc' }} />
+                <MonitorHeartIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Equity Monitors" />
             </ListItemButton>
@@ -120,7 +178,7 @@ function MainListItems({ open }) {
           <Link className="flex flex-row" to={'/email-alerts'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <EmailIcon sx={{ color: '#ccc' }} />
+                <EmailIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Email Alerts" />
             </ListItemButton>
@@ -130,7 +188,7 @@ function MainListItems({ open }) {
       <Link className="flex flex-row" to={'/analysis'}>
         <ListItemButton>
           <ListItemIcon>
-            <SearchIcon sx={{ color: '#CCC' }} />
+            <SearchIcon sx={{ color: '#E9D8C8' }} />
           </ListItemIcon>
           <ListItemText primary="Analysis" />
         </ListItemButton>
@@ -141,7 +199,7 @@ function MainListItems({ open }) {
           <Link className="flex flex-row" to={'/signal-followers'}>
             <ListItemButton>
               <ListItemIcon>
-                <ForwardRoundedIcon sx={{ color: '#CCC' }} />
+                <ForwardRoundedIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Signal Followers" />
             </ListItemButton>
@@ -149,29 +207,44 @@ function MainListItems({ open }) {
           <Link className="flex flex-row" to={'/signal-provider'}>
             <ListItemButton>
               <ListItemIcon>
-                <SwapHorizRoundedIcon sx={{ color: '#CCC' }} />
+                <SwapHorizRoundedIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Signal Provider" />
             </ListItemButton>
           </Link>
-          <ListItemButton onClick={handleWhitelabelClick}>
+          <ListItemButton 
+            onClick={handleWhitelabelClick}
+            sx={{
+              '&:hover .MuiListItemIcon-root': {
+                color: '#11B3AE',
+              },
+            }}
+          >
             <ListItemIcon>
-              <LabelIcon sx={{ color: '#CCC' }} />
+              <LabelIcon sx={{ color: '#E9D8C8' }} />
             </ListItemIcon>
             <ListItemText primary="Whitelabel" />
-            {whitelabel ? <ExpandLess /> : <ExpandMore />}
+            {whitelabel ? (
+              <ExpandLess sx={{ color: '#11B3AE' }} />
+            ) : (
+              <ExpandMore sx={{ color: '#E9D8C8' }} />
+            )}
           </ListItemButton>
           <Collapse
             in={whitelabel && open}
             timeout="auto"
             unmountOnExit
-            sx={{ backgroundColor: '#191C21' }}
+            sx={{
+              backgroundColor: 'rgba(17, 179, 174, 0.05)',
+              borderRadius: '8px',
+              margin: '2px 8px',
+            }}
           >
             <List component="div" disablePadding>
               <Link className="flex flex-row" to={'/whitelabel/dashboard'}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <SpeedIcon sx={{ color: '#ccc' }} />
+                    <SpeedIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
                   <ListItemText primary="Dashboard" />
                 </ListItemButton>
@@ -179,7 +252,7 @@ function MainListItems({ open }) {
               <Link className="flex flex-row" to={'/whitelabel/users'}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <GroupsIcon sx={{ color: '#ccc' }} />
+                    <GroupsIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
                   <ListItemText primary="Users" />
                 </ListItemButton>
@@ -187,7 +260,7 @@ function MainListItems({ open }) {
               <Link className="flex flex-row" to={'/whitelabel/homepage'}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <HouseIcon sx={{ color: '#ccc' }} />
+                    <HouseIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
                   <ListItemText primary="Homepage" />
                 </ListItemButton>
@@ -195,7 +268,7 @@ function MainListItems({ open }) {
               <Link className="flex flex-row" to={'/whitelabel/settings'}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <SettingsSuggestIcon sx={{ color: '#ccc' }} />
+                    <SettingsSuggestIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
                   <ListItemText primary="Settings" />
                 </ListItemButton>
@@ -204,24 +277,39 @@ function MainListItems({ open }) {
           </Collapse>
         </>
       }
-      <ListItemButton onClick={handleHelpCenterClick}>
+      <ListItemButton 
+        onClick={handleHelpCenterClick}
+        sx={{
+          '&:hover .MuiListItemIcon-root': {
+            color: '#11B3AE',
+          },
+        }}
+      >
         <ListItemIcon>
-          <LayersIcon sx={{ color: '#CCC' }} />
+          <LayersIcon sx={{ color: '#E9D8C8' }} />
         </ListItemIcon>
         <ListItemText primary="Help Center" />
-        {openHelpCenter ? <ExpandLess /> : <ExpandMore />}
+        {openHelpCenter ? (
+          <ExpandLess sx={{ color: '#11B3AE' }} />
+        ) : (
+          <ExpandMore sx={{ color: '#E9D8C8' }} />
+        )}
       </ListItemButton>
       <Collapse
         in={openHelpCenter && open}
         timeout="auto"
         unmountOnExit
-        sx={{ backgroundColor: '#191C21' }}
+        sx={{
+          backgroundColor: 'rgba(17, 179, 174, 0.05)',
+          borderRadius: '8px',
+          margin: '2px 8px',
+        }}
       >
         <List component="div" disablePadding>
           <Link className="flex flex-row" to={'/knowledge-base'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <LibraryBooksIcon sx={{ color: '#ccc' }} />
+                <LibraryBooksIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Knowledge Base" />
             </ListItemButton>
@@ -229,7 +317,7 @@ function MainListItems({ open }) {
           <Link className="flex flex-row" to={'/contact-support'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <ChatBubbleIcon sx={{ color: '#ccc' }} />
+                <ChatBubbleIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
               <ListItemText primary="Contact Support" />
             </ListItemButton>
