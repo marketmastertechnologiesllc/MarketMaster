@@ -79,14 +79,14 @@ function StopsAndLimits() {
   };
 
   return (
-    <div>
-      <div className="mb-[20px] rounded bg-[#282D36] text-white">
-        <header className="p-[18px]">
-          <h2 className="mt-[5px] text-[20px] font-normal">Stops & Limits</h2>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
+      <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+        <header className="p-[18px] bg-[#0B1220] rounded-t-xl border-b border-[#11B3AE] border-opacity-20">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Stops & Limits</h2>
         </header>
-        <div className="p-[15px] bg-[#2E353E] box-border">
-          <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
-            <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+        <div className="p-[15px] bg-[#0B1220] box-border">
+          <div className="border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px] flex justify-start">
+            <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Skip Pending Orders
             </label>
             <div className="w-1/2 px-[15px]">
@@ -94,16 +94,16 @@ function StopsAndLimits() {
                 name="skipPendingOrders"
                 value={values.skipPendingOrders}
                 required
-                className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
+                className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[40px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200 hover:border-[#11B3AE] hover:border-opacity-50"
                 onChange={handleInputChange}
               >
-                <option value={false}>No</option>
-                <option value={true}>Yes</option>
+                <option value={false} className="bg-[#0B1220] text-[#E9D8C8]">No</option>
+                <option value={true} className="bg-[#0B1220] text-[#E9D8C8]">Yes</option>
               </select>
             </div>
           </div>
-          <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#242830]">
-            <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+          <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
+            <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Copy Stop Loss
             </label>
             <div className="w-1/2 px-[15px]">
@@ -111,16 +111,16 @@ function StopsAndLimits() {
                 name="copyStopLoss"
                 value={values.copyStopLoss}
                 required
-                className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
+                className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[40px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200 hover:border-[#11B3AE] hover:border-opacity-50"
                 onChange={handleInputChange}
               >
-                <option value={false}>No</option>
-                <option value={true}>Yes</option>
+                <option value={false} className="bg-[#0B1220] text-[#E9D8C8]">No</option>
+                <option value={true} className="bg-[#0B1220] text-[#E9D8C8]">Yes</option>
               </select>
             </div>
           </div>
           <div className="flex justify-start">
-            <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+            <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Copy Take Profit
             </label>
             <div className="w-1/2 px-[15px]">
@@ -128,16 +128,16 @@ function StopsAndLimits() {
                 name="copyTakeProfit"
                 value={values.copyTakeProfit}
                 required
-                className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
+                className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[40px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200 hover:border-[#11B3AE] hover:border-opacity-50"
                 onChange={handleInputChange}
               >
-                <option value={false}>No</option>
-                <option value={true}>Yes</option>
+                <option value={false} className="bg-[#0B1220] text-[#E9D8C8]">No</option>
+                <option value={true} className="bg-[#0B1220] text-[#E9D8C8]">Yes</option>
               </select>
             </div>
           </div>
         </div>
-        <footer className="px-[15px] py-[10px]">
+        <footer className="px-[15px] py-[10px] bg-[#0B1220] rounded-b-xl border-t border-[#11B3AE] border-opacity-20">
           <div className="grid grid-cols-12 gap-3">
             <div className="col-start-4 col-span-4 pl-3.5">
               <LoadingButton
@@ -145,7 +145,17 @@ function StopsAndLimits() {
                 size="small"
                 sx={{
                   textTransform: 'none',
-                  backgroundColor: '#0088CC!important',
+                  backgroundColor: '#11B3AE!important',
+                  color: '#FFFFFF',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
                 }}
                 onClick={handleUpdateButtonClicked}
                 loading={isLoading}

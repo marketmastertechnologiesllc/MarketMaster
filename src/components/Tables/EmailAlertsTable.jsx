@@ -7,6 +7,12 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Pagination from '@mui/material/Pagination';
 
 const columns = [
   { id: 'accountName', label: 'Account Name', minWidth: 140 },
@@ -104,21 +110,20 @@ export default function EmailAlertsTable() {
       sx={{
         width: '100%',
         overflow: 'hidden',
-        backgroundColor: '#2E353E',
+        backgroundColor: 'transparent',
         boxShadow: 'none',
-        '& .MuiPaper-root': {
-          color: '#ccc',
-          backgroundColor: '#2E353E',
-          boxShadow: 'none',
-        },
       }}
     >
       <TableContainer
         sx={{
-          maxHeight: 440,
+          borderRadius: '12px',
+          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+          maxWidth: '100%',
+          overflowX: 'auto',
           '.MuiTable-root': {
-            borderColor: '#282D36',
+            borderColor: 'rgba(17, 179, 174, 0.2)',
             borderWidth: '1px',
+            minWidth: { xs: '600px', sm: 'auto' },
           },
         }}
       >
@@ -126,28 +131,45 @@ export default function EmailAlertsTable() {
           stickyHeader
           aria-label="sticky table"
           sx={{
+            borderRadius: '12px',
             '& .MuiTableCell-root': {
-              color: '#ccc',
-              backgroundColor: '#2E353E',
-              border: '#282D36',
+              color: '#E9D8C8',
+              backgroundColor: 'transparent',
+              borderColor: 'rgba(17, 179, 174, 0.15)',
+              fontSize: '0.875rem',
+            },
+            '& .MuiTableHead-root .MuiTableCell-root': {
+              backgroundColor: 'rgba(17, 179, 174, 0.1)',
+              color: '#FFFFFF',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              borderColor: 'rgba(17, 179, 174, 0.2)',
+            },
+            '& .MuiTableRow-root:hover': {
+              backgroundColor: 'rgba(17, 179, 174, 0.05)',
             },
           }}
         >
-          <TableHead>
+          <TableHead sx={{
+            borderRadius: '12px',
+          }}>
             <TableRow
               sx={{
                 '&:last-child td, &:last-child th': {
                   border: 1,
-                  borderColor: '#282D36',
+                  borderColor: 'rgba(17, 179, 174, 0.2)',
                 },
               }}
             >
               {columns.map((column, index) => (
                 <TableCell
-                  key={`eamil_alert_table_header_${index}`}
+                  key={`email_alert_table_header_${index}`}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
-                  sx={{ padding: '5px' }}
+                  sx={{
+                    padding: '12px 8px',
+                    fontWeight: 600,
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -158,7 +180,7 @@ export default function EmailAlertsTable() {
             sx={{
               '&:last-child td, &:last-child th': {
                 border: 1,
-                borderColor: '#282D36',
+                borderColor: 'rgba(17, 179, 174, 0.15)',
               },
             }}
           >
@@ -170,13 +192,15 @@ export default function EmailAlertsTable() {
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={`eamil_alert_table_row_${index}`}
-                    // sx={{
-                    //   '&:last-child td, &:last-child th': {
-                    //     border: 1,
-                    //     borderColor: '#282D36',
-                    //   },
-                    // }}
+                    key={`email_alert_table_row_${index}`}
+                    sx={{
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                      },
+                    }}
                   >
                     {columns.map((column) => {
                       const value = row[column.id];
@@ -184,11 +208,14 @@ export default function EmailAlertsTable() {
                         <TableCell
                           key={column.id}
                           align={column.align}
-                          sx={{ padding: '5px' }}
+                          sx={{
+                            padding: '12px 16px',
+                            fontSize: '0.875rem',
+                          }}
                         >
-                          {column.format && typeof value === 'number'
+                          <div className="truncate font-medium">{column.format && typeof value === 'number'
                             ? column.format(value)
-                            : value}
+                            : value}</div>
                         </TableCell>
                       );
                     })}
@@ -198,42 +225,121 @@ export default function EmailAlertsTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        labelRowsPerPage="records per page"
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        color=""
-        sx={{
-          marginTop: '10px',
-          '& .MuiTablePagination-displayedRows': {
-            color: '#ccc',
-            // bgcolor: '#282D36',
-          },
-          '& .MuiTablePagination-selectLabel': {
-            color: '#ccc',
-            // bgcolor: '#282D36',
-          },
-          '& .MuiTablePagination-select': {
-            color: '#ccc',
-            bgcolor: '#282D36',
-            borderRadius: '4px',
-            height: '25px',
-            width: '20px',
-            paddingRight: '28px',
-            paddingTop: '10px',
-          },
-          '& .MuiTablePagination-actions': {
-            color: '#ccc',
-            bgcolor: '#282D36',
-            borderRadius: '4px',
-          },
-        }}
-      />
+
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
+        <div className="flex items-center gap-3">
+          <FormControl size="small">
+            <Select
+              displayEmpty
+              value={rowsPerPage}
+              onChange={handleChangeRowsPerPage}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: '#0B1220',
+                    border: '1px solid rgba(17, 179, 174, 0.3)',
+                    borderRadius: '8px',
+                    maxHeight: '200px',
+                    '& .MuiMenuItem-root': {
+                      color: '#E9D8C8',
+                      '&:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: '#11B3AE',
+                        color: '#FFFFFF',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
+              input={
+                <OutlinedInput
+                  sx={{
+                    width: { xs: '70px', sm: '80px' },
+                    color: '#E9D8C8',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(17, 179, 174, 0.3)',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(17, 179, 174, 0.5)',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#11B3AE',
+                      boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                    },
+                    '& .MuiSelect-icon': {
+                      color: '#E9D8C8',
+                    },
+                  }}
+                />
+              }
+            >
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography sx={{ 
+            color: '#E9D8C8', 
+            fontWeight: 500,
+            fontSize: { xs: '0.875rem', sm: '1rem' }
+          }}>
+            records per page
+          </Typography>
+        </div>
+        <Typography sx={{ 
+          color: '#E9D8C8', 
+          fontSize: { xs: 12, sm: 14 }, 
+          fontWeight: 500,
+          textAlign: { xs: 'center', sm: 'left' }
+        }}>
+          Showing {rowsPerPage * page + 1} to
+          {rowsPerPage * (page + 1) > rows.length ? rows.length : rowsPerPage * (page + 1)} of {rows.length}
+          entries
+        </Typography>
+        <Pagination
+          sx={{
+            paddingY: 2,
+            '& .MuiPaginationItem-root': {
+              color: '#E9D8C8',
+              borderColor: 'rgba(17, 179, 174, 0.3)',
+              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+              minWidth: { xs: '32px', sm: '40px' },
+              height: { xs: '32px', sm: '40px' },
+              '&:hover': {
+                backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                borderColor: 'rgba(17, 179, 174, 0.5)',
+              },
+              '&.Mui-selected': {
+                backgroundColor: '#11B3AE',
+                color: '#FFFFFF',
+                '&:hover': {
+                  backgroundColor: '#0F9A95',
+                },
+              },
+            },
+          }}
+          count={
+            rows.length % rowsPerPage === 0
+              ? rows.length / rowsPerPage
+              : Math.floor(rows.length / rowsPerPage) + 1
+          }
+          page={page + 1}
+          onChange={(e, value) => handleChangePage(e, value - 1)}
+          variant="outlined"
+          shape="rounded"
+          showFirstButton
+          showLastButton
+          size="small"
+        />
+      </div>
     </Paper>
   );
 }

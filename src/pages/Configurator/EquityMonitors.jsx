@@ -11,10 +11,17 @@ import EquityMonitorsTable from '../../components/Tables/EquityMonitorsTable';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -32,10 +39,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -49,16 +57,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
   },
   '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
   },
 }));
 
@@ -70,21 +87,33 @@ function EquityMonitors() {
   };
 
   return (
-    <div className="w-auto text-[#ccc]">
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
       <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        spacing={{ xs: 2, sm: 1 }}
         display={'flex'}
         justifyContent={'space-between'}
+        sx={{ gap: { xs: 2, sm: 1 } }}
       >
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center sm:justify-start">
           <StyledButton
             variant="contained"
             size="small"
             sx={{
               textTransform: 'none',
-              backgroundColor: activeTab == 1 ? '#0088CC' : '#282d36',
+              backgroundColor: activeTab == 1 ? '#11B3AE' : '#0B1220',
+              color: '#FFFFFF',
+              fontWeight: 500,
+              padding: { xs: '4px 8px', sm: '8px 12px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: activeTab == 1 ? '#0F9A95' : '#0B1220',
+                transform: 'translateY(-1px)',
+                boxShadow: activeTab == 1 ? '0 4px 12px rgba(17, 179, 174, 0.3)' : '0 4px 12px rgba(11, 18, 32, 0.3)',
+              },
             }}
             onClick={() => handleTabClick(1)}
           >
@@ -95,23 +124,43 @@ function EquityMonitors() {
             size="small"
             sx={{
               textTransform: 'none',
-              backgroundColor: activeTab == 2 ? '#0088CC' : '#282d36',
+              backgroundColor: activeTab == 2 ? '#11B3AE' : '#0B1220',
+              color: '#FFFFFF',
+              fontWeight: 500,
+              padding: { xs: '4px 8px', sm: '8px 12px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: activeTab == 2 ? '#0F9A95' : '#0B1220',
+                transform: 'translateY(-1px)',
+                boxShadow: activeTab == 2 ? '0 4px 12px rgba(17, 179, 174, 0.3)' : '0 4px 12px rgba(11, 18, 32, 0.3)',
+              },
             }}
             onClick={() => handleTabClick(2)}
           >
             Concluded
           </StyledButton>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center sm:justify-end">
           <StyledButton
             variant="contained"
             size="small"
             startIcon={<AddIcon />}
             sx={{
               textTransform: 'none',
-              height: '30px',
-              mr: '5px',
-              backgroundColor: '#0088CC!important',
+              backgroundColor: '#11B3AE',
+              color: '#FFFFFF',
+              fontWeight: 500,
+              padding: { xs: '4px 8px', sm: '8px 12px' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: '#0F9A95',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+              },
             }}
           >
             Create Monitor
@@ -119,8 +168,8 @@ function EquityMonitors() {
         </div>
       </Stack>
       {activeTab === 1 && (
-        <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
-          <div className="flex justify-end w-full pb-3">
+        <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+          <div className="flex justify-end w-full pb-4">
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -135,8 +184,8 @@ function EquityMonitors() {
         </div>
       )}
       {activeTab === 2 && (
-        <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
-          <div className="flex justify-end w-full pb-3">
+        <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+          <div className="flex justify-end w-full pb-4">
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />

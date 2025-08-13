@@ -1,8 +1,21 @@
 import * as React from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { styled } from '@mui/material/styles';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+
+const StyledButton = styled(LoadingButton)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#0F9A95',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+    transform: 'translateY(-1px)',
+  },
+}));
 
 function DisableSymbols() {
   const { showToast } = useToast();
@@ -50,48 +63,48 @@ function DisableSymbols() {
   };
 
   return (
-    <div className="mb-[20px] rounded bg-[#282D36] text-white">
-      <header className="p-[18px]">
+    <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+      <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
         <div className="flex justify-between">
-          <h2 className="mt-[5px] text-[20px] font-normal">Disable Symbols</h2>
-          <div className="inline-flex rounded">
-            <button className="bg-[#0088cc] hover:bg-[#0099E6] rounded-l inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-white transition-all">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Disable Symbols</h2>
+          <div className="inline-flex rounded-lg overflow-hidden">
+            <button className="bg-[#11B3AE] hover:bg-[#0F9A95] inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-white transition-all duration-200">
               Enable all
             </button>
-            <button className="hover:bg-[#242830] rounded-r inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium transition-all">
+            <button className="bg-[#0B1220] hover:bg-[#11B3AE] hover:bg-opacity-20 inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-[#E9D8C8] transition-all duration-200 border-l border-[#11B3AE] border-opacity-30">
               Disable all
             </button>
           </div>
         </div>
-        <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#47a447]">{  }</span> Enabled symbols
+        <strong className="text-[#E9D8C8] text-[13px] font-medium">
+          <span className="text-[#11B3AE]">{  }</span> Enabled symbols
         </strong>{' '}
         |{' '}
-        <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#d2322d]"> 0 </span> Disabled symbols
+        <strong className="text-[#E9D8C8] text-[13px] font-medium">
+          <span className="text-[#fa5252]"> 0 </span> Disabled symbols
         </strong>
       </header>
-      <div className="p-[18px] bg-[#2E353E]">
+      <div className="p-[18px] bg-[#0B1220] border-b border-[#11B3AE] border-opacity-20">
         <div className="flex justify-between">
-          <h2 className="mt-[5px] text-[20px] font-normal">Forex symbols</h2>
-          <div className="inline-flex rounded">
-            <button className="bg-[#0088cc] hover:bg-[#0099E6] rounded-l inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-white transition-all">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Forex symbols</h2>
+          <div className="inline-flex rounded-lg overflow-hidden">
+            <button className="bg-[#11B3AE] hover:bg-[#0F9A95] inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-white transition-all duration-200">
               Enable
             </button>
-            <button className="bg-[#282D36] hover:bg-[#242830] rounded-r inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium transition-all">
+            <button className="bg-[#0B1220] hover:bg-[#11B3AE] hover:bg-opacity-20 inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-[#E9D8C8] transition-all duration-200 border-l border-[#11B3AE] border-opacity-30">
               Disable
             </button>
           </div>
         </div>
       </div>
-      <div className="box-border px-[20px] bg-[#2E353E]">
-        <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
-          <h2 className="text-[20px] font-normal pr-3">No suffix</h2>
-          <div className="flex items-center justify-center rounded">
-            <button className="bg-[#0088cc] hover:bg-[#0099E6] rounded-l items-center justify-center py-[1px] px-[5px] text-center text-xs font-medium text-white transition-all">
+      <div className="box-border px-[20px] bg-[#0B1220]">
+        <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
+          <h2 className="text-[20px] font-normal pr-3 text-[#E9D8C8]">No suffix</h2>
+          <div className="flex items-center justify-center rounded-lg overflow-hidden">
+            <button className="bg-[#11B3AE] hover:bg-[#0F9A95] items-center justify-center py-[1px] px-[5px] text-center text-xs font-medium text-white transition-all duration-200">
               Enable
             </button>
-            <button className="bg-[#282D36] hover:bg-[#242830] rounded-r items-center justify-center py-[1px] px-[5px] text-center text-xs font-medium transition-all">
+            <button className="bg-[#0B1220] hover:bg-[#11B3AE] hover:bg-opacity-20 items-center justify-center py-[1px] px-[5px] text-center text-xs font-medium text-[#E9D8C8] transition-all duration-200 border-l border-[#11B3AE] border-opacity-30">
               Disable
             </button>
           </div>

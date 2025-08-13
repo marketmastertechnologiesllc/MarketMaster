@@ -439,7 +439,7 @@ export default function TradesTable({ headers }) {
                               sx={{
                                 backgroundColor: '#11B3AE',
                                 borderRadius: '8px',
-                                fontSize: 12,
+                                fontSize: 14,
                                 padding: '10px 8px',
                                 transition: 'all 0.2s ease-in-out',
                                 '&:hover': {

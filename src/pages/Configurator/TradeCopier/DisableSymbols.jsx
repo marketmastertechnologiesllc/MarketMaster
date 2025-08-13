@@ -48,8 +48,9 @@ function DisableSymbols() {
             type="checkbox"
             checked={checked}
             onChange={(e) => handleCheckChange(key, e.target.checked)}
+            className="w-4 h-4 text-[#11B3AE] bg-[#0B1220] border-[#11B3AE] border-opacity-30 rounded focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
           />
-          <span className="text-[13px] text-center">{key}</span>
+          <span className="text-[13px] text-center text-[#E9D8C8] font-medium">{key}</span>
         </label>
       </div>
     ));
@@ -125,27 +126,27 @@ function DisableSymbols() {
   };
 
   return (
-    <div className="rounded bg-[#282D36] text-white sticky">
-      <header className="p-[18px]">
+    <div className="rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] sticky">
+      <header className="p-[18px] bg-[#0B1220] rounded-t-xl border-b border-[#11B3AE] border-opacity-20">
         <div className="flex justify-between">
-          <h2 className="mt-[5px] text-[20px] font-normal">Disable Symbols</h2>
-          <div className="inline-flex rounded">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Disable Symbols</h2>
+          <div className="inline-flex rounded-lg overflow-hidden">
             <button
               onClick={enableAll}
-              className="bg-[#0088cc] hover:bg-[#0099E6] rounded-l inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-white transition-all"
+              className="bg-[#11B3AE] hover:bg-[#0F9A95] rounded-l-lg inline-flex items-center justify-center py-2 px-4 text-center text-sm font-medium text-white transition-all duration-200 hover:shadow-[0_4px_12px_rgba(17,179,174,0.3)]"
             >
               Enable all
             </button>
             <button
               onClick={disableAll}
-              className="hover:bg-[#242830] rounded-r inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium transition-all"
+              className="bg-[#0B1220] hover:bg-[#11B3AE] hover:bg-opacity-10 rounded-r-lg inline-flex items-center justify-center py-2 px-4 text-center text-sm font-medium text-[#E9D8C8] transition-all duration-200 border border-[#11B3AE] border-opacity-30 hover:border-opacity-50"
             >
               Disable all
             </button>
           </div>
         </div>
-        <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#47a447]">
+        <strong className="text-[#E9D8C8] text-[13px] font-medium">
+          <span className="text-[#11B3AE]">
             {allSymbols.reduce(
               (count, item) => count + (item.checked ? 1 : 0),
               0
@@ -154,8 +155,8 @@ function DisableSymbols() {
           Enabled symbols
         </strong>{' '}
         |{' '}
-        <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#d2322d]">
+        <strong className="text-[#E9D8C8] text-[13px] font-medium">
+          <span className="text-[#fa5252]">
             {allSymbols.reduce(
               (count, item) => count + (!item.checked ? 1 : 0),
               0
@@ -164,38 +165,38 @@ function DisableSymbols() {
           Disabled symbols
         </strong>
       </header>
-      <div className="p-[18px] bg-[#2E353E]">
+      <div className="p-[18px] bg-[#0B1220] border-b border-[#11B3AE] border-opacity-20">
         <div className="flex justify-between">
-          <h2 className="mt-[5px] text-[20px] font-normal">Forex symbols</h2>
-          <div className="inline-flex rounded">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Forex symbols</h2>
+          <div className="inline-flex rounded-lg overflow-hidden">
             <button
               onClick={enableAll}
-              className="bg-[#0088cc] hover:bg-[#0099E6] rounded-l inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium text-white transition-all"
+              className="bg-[#11B3AE] hover:bg-[#0F9A95] rounded-l-lg inline-flex items-center justify-center py-2 px-4 text-center text-sm font-medium text-white transition-all duration-200 hover:shadow-[0_4px_12px_rgba(17,179,174,0.3)]"
             >
               Enable
             </button>
             <button
               onClick={disableAll}
-              className="bg-[#282D36] hover:bg-[#242830] rounded-r inline-flex items-center justify-center py-1.5 px-3 text-center text-sm font-medium transition-all"
+              className="bg-[#0B1220] hover:bg-[#11B3AE] hover:bg-opacity-10 rounded-r-lg inline-flex items-center justify-center py-2 px-4 text-center text-sm font-medium text-[#E9D8C8] transition-all duration-200 border border-[#11B3AE] border-opacity-30 hover:border-opacity-50"
             >
               Disable
             </button>
           </div>
         </div>
       </div>
-      <div className="box-border px-[20px] bg-[#2E353E] h-[500px] overflow-y-scroll">
+      <div className="box-border px-[20px] bg-[#0B1220] h-[500px] overflow-y-scroll">
         <div className="flex justify-start p-[20px] mb-[10px]">
-          <h2 className="text-[14px] font-normal pr-3">No suffix</h2>
-          <div className="flex items-center justify-center rounded">
+          <h2 className="text-[14px] font-normal pr-3 text-[#E9D8C8]">No suffix</h2>
+          <div className="flex items-center justify-center rounded-lg overflow-hidden">
             <button
               onClick={enableAll}
-              className="bg-[#0088cc] hover:bg-[#0099E6] rounded-l items-center justify-center py-[1px] px-[5px] text-center text-xs font-medium text-white transition-all"
+              className="bg-[#11B3AE] hover:bg-[#0F9A95] rounded-l-lg items-center justify-center py-1 px-2 text-center text-xs font-medium text-white transition-all duration-200 hover:shadow-[0_4px_12px_rgba(17,179,174,0.3)]"
             >
               Enable
             </button>
             <button
               onClick={disableAll}
-              className="bg-[#282D36] hover:bg-[#242830] rounded-r items-center justify-center py-[1px] px-[5px] text-center text-xs font-medium transition-all"
+              className="bg-[#0B1220] hover:bg-[#11B3AE] hover:bg-opacity-10 rounded-r-lg items-center justify-center py-1 px-2 text-center text-xs font-medium text-[#E9D8C8] transition-all duration-200 border border-[#11B3AE] border-opacity-30 hover:border-opacity-50"
             >
               Disable
             </button>
@@ -203,15 +204,24 @@ function DisableSymbols() {
         </div>
         <div className="grid grid-cols-12 pb-[15px]">{renderSymbols()}</div>
       </div>
-      <footer className="px-[15px] py-[10px]">
+      <footer className="px-[15px] py-[10px] bg-[#0B1220] rounded-b-xl border-t border-[#11B3AE] border-opacity-20">
         <div className="grid grid-cols-12 gap-3">
           <div className="col-start-1 col-span-4 pl-3.5">
             <LoadingButton
               variant="contained"
               sx={{
                 textTransform: 'none',
-                backgroundColor: '#0088CC!important',
-                alignItems: 'center',
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                borderRadius: '8px',
+                padding: '8px 16px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
               onClick={handleUpdateClicked}
               loading={isLoading}

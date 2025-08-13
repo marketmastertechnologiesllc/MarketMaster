@@ -29,10 +29,17 @@ import api from '../../../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -50,10 +57,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -67,23 +75,32 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
+  },
 }));
 
 const StyledInfoButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
-    backgroundColor: '#1B5E20',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
   },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
   },
   '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
   },
 }));
 
@@ -99,18 +116,16 @@ const GlobalStyle = styled('style')(`
   }
 `);
 
-const headers = [
-  // { id: 'strategyId', label: 'Strategy ID' },
-  { id: 'strategyName', label: 'Strategy Name' },
-  { id: 'strategyDescription', label: 'Strategy Description' },
-  // { id: 'accountId', label: 'Account ID' },
-  { id: 'accountName', label: 'Account Name' },
-  { id: 'accountLogin', label: 'Login' },
-  { id: 'accountPlatform', label: 'Platform' },
-  { id: 'accountServer', label: 'Server' },
-  // { id: 'created_at', label: 'Created At' },
-  // { id: 'updated_at', label: 'Updated At' },
+const initialHeaders = [
+  { id: 'strategyName', label: 'Strategy Name', checked: true },
+  { id: 'strategyDescription', label: 'Strategy Description', checked: true },
+  { id: 'accountName', label: 'Account Name', checked: true },
+  { id: 'accountLogin', label: 'Login', checked: true },
+  { id: 'accountPlatform', label: 'Platform', checked: true },
+  { id: 'accountServer', label: 'Server', checked: true },
+  { id: 'actions', label: 'Actions', checked: true },
 ];
+
 export default function TradesTable() {
   const { showToast } = useToast();
   const { user } = useAuth();
@@ -128,9 +143,27 @@ export default function TradesTable() {
   const [deleteTradeCopierModalShow, setDeleteTradeCopierModalShow] = React.useState(false);
   const [selectedTradeCopierData, setSelectedTradeCopierData] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const [headers, setHeaders] = React.useState(initialHeaders);
+  const [showFilterModal, setShowFilterModal] = React.useState(false);
+  const [showFilterItems, setShowFilterItems] = React.useState(true);
+  const [isCreateButtonLoading, setIsCreateButtonLoading] = React.useState(false);
+  const filterModalRef = React.useRef(null);
 
   const handleConfigButtonClicked = (subscriberId, strategyId) => {
     navigate(`/trade-copier/edit/${subscriberId}/${strategyId}`);
+  };
+
+  const handleCreateCopierClick = async () => {
+    try {
+      setIsCreateButtonLoading(true);
+      // Simulate a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
+      navigate('/trade-copier/create-new-trade-copier');
+    } catch (error) {
+      console.error('Navigation error:', error);
+    } finally {
+      setIsCreateButtonLoading(false);
+    }
   };
 
   const handleToggleTradeCopier = async (strategyId, accountId) => {
@@ -207,6 +240,66 @@ export default function TradesTable() {
     setDeleteTradeCopierModalShow(true);
   };
 
+  /**
+   * when visible items is changed...
+   * @param {*} e
+   */
+  const handleVisibleChange = (e) => {
+    const { name, checked } = e.target;
+    setHeaders((prev) =>
+      prev.map((item) =>
+        item.id === name ? { ...item, checked } : item
+      )
+    );
+  };
+
+  /**
+   * Handle click on entire row (checkbox + title)
+   */
+  const handleRowClick = (itemId, currentChecked) => {
+    setHeaders((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, checked: !currentChecked } : item
+      )
+    );
+  };
+
+  /**
+   * when click view all button
+   */
+  const handleViewAll = (e) => {
+    const allChecked = headers.every(item => item.checked);
+    setHeaders((prev) =>
+      prev.map((item) => ({
+        ...item,
+        checked: !allChecked,
+      }))
+    );
+  };
+
+  const resetColumns = () => {
+    setHeaders((prev) =>
+      prev.map((item) => ({ ...item, checked: true }))
+    );
+  };
+
+  // Handle click outside to close filter modal
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterModalRef.current && !filterModalRef.current.contains(event.target)) {
+        setShowFilterModal(false);
+      }
+    };
+
+    if (showFilterModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showFilterModal]);
+
   React.useEffect(() => {
     let config = JSON.parse(sessionStorage.getItem('tradeCopier'));
 
@@ -241,7 +334,7 @@ export default function TradesTable() {
   }, []);
 
   return (
-    <div>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
       <GlobalStyle />
       {deleteTradeCopierModalShow && (
         <DeleteTradeCopierModal
@@ -261,39 +354,194 @@ export default function TradesTable() {
         display={'flex'}
         justifyContent={'space-between'}
       >
-        <Link to={'/trade-copier/create-new-trade-copier'}>
-          <StyledButton
-            variant="contained"
-            size="small"
-            startIcon={<AddIcon />}
-            sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
-          >
-            Create Copier
-          </StyledButton>
-        </Link>
         <StyledButton
           variant="contained"
           size="small"
-          startIcon={<VisibilityOffIcon />}
-          sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
+          startIcon={<AddIcon />}
+          onClick={handleCreateCopierClick}
+          loading={isCreateButtonLoading}
+          sx={{ 
+            textTransform: 'none', 
+            backgroundColor: '#11B3AE!important',
+            color: '#FFFFFF',
+            fontWeight: 500,
+            padding: '8px 16px',
+            borderRadius: '8px',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              backgroundColor: '#0F9A95!important',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+            },
+          }}
         >
-          Columns
+          Create Copier
         </StyledButton>
+        <div className="relative" ref={filterModalRef}>
+          <StyledButton
+            variant="contained"
+            size="small"
+            onClick={() => setShowFilterModal((prev) => !prev)}
+            startIcon={<VisibilityOffIcon />}
+            sx={{ 
+              textTransform: 'none', 
+              backgroundColor: '#11B3AE!important',
+              color: '#FFFFFF',
+              fontWeight: 500,
+              padding: '8px 16px',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: '#0F9A95!important',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+              },
+            }}
+          >
+            Columns
+          </StyledButton>
+          {showFilterModal && (
+            <div className="absolute z-50 top-full mt-2 p-4 w-[280px] text-white bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-0">
+              <div className="text-[#E9D8C8] font-medium mb-3 text-sm sm:text-base">Toggle visible columns</div>
+              <div className="space-y-2">
+                <StyledButton
+                  onClick={() => setShowFilterItems((prev) => !prev)}
+                  sx={{
+                    width: '100%',
+                    padding: { xs: '4px 8px', sm: '8px 12px' },
+                    borderRadius: '8px',
+                    fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                    backgroundColor: '#11B3AE',
+                    color: '#FFFFFF !important',
+                    fontWeight: 500,
+                    textTransform: 'none',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      backgroundColor: '#0F9A95',
+                      color: '#FFFFFF !important',
+                      transform: 'translateY(-1px)',
+                    },
+                  }}
+                >
+                  Selected ({headers.filter(item => item.checked).length})
+                </StyledButton>
+                {showFilterItems && (
+                  <div className="bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
+                    <div
+                      className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers.every(item => item.checked) && 'bg-[#11B3AE] bg-opacity-30'
+                        }`}
+                      onClick={handleViewAll}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={headers.every(item => item.checked)}
+                        onChange={handleViewAll}
+                        className="accent-[#11B3AE]"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
+                        View all
+                      </div>
+                    </div>
+                    {headers.map((item, i) => (
+                      <div
+                        key={`input_${i}`}
+                        className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
+                          }`}
+                        onClick={() => handleRowClick(item.id, item.checked)}
+                      >
+                        <input
+                          name={item.id}
+                          checked={item.checked}
+                          type="checkbox"
+                          className="accent-[#11B3AE]"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
+                          {item.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <StyledButton
+                  onClick={resetColumns}
+                  sx={{
+                    width: '100%',
+                    padding: { xs: '4px 8px', sm: '8px 12px' },
+                    borderRadius: '8px',
+                    fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                    backgroundColor: '#11B3AE',
+                    color: '#FFFFFF !important',
+                    fontWeight: 500,
+                    textTransform: 'none',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      backgroundColor: '#0F9A95',
+                      color: '#FFFFFF !important',
+                      transform: 'translateY(-1px)',
+                    },
+                  }}
+                >
+                  Reset Columns
+                </StyledButton>
+              </div>
+            </div>
+          )}
+        </div>
       </Stack>
 
-      <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
-        <div className="flex justify-between w-full pb-3">
-          <div className="flex items-center gap-2">
+      <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+        <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
+          <div className="flex items-center gap-3">
             <FormControl size="small">
               <Select
                 displayEmpty
                 value={rowsPerPage}
                 onChange={handleChangeRowsPerPage}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#0B1220',
+                      border: '1px solid rgba(17, 179, 174, 0.3)',
+                      borderRadius: '8px',
+                      maxHeight: '200px',
+                      '& .MuiMenuItem-root': {
+                        color: '#E9D8C8',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: '#11B3AE',
+                          color: '#FFFFFF',
+                          '&:hover': {
+                            backgroundColor: '#0F9A95',
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
                 input={
                   <OutlinedInput
                     sx={{
-                      width: '80px',
-                      color: 'white',
+                      width: { xs: '70px', sm: '80px' },
+                      color: '#E9D8C8',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(17, 179, 174, 0.3)',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(17, 179, 174, 0.5)',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#11B3AE',
+                        boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiSelect-icon': {
+                        color: '#E9D8C8',
+                      },
                     }}
                   />
                 }
@@ -304,7 +552,13 @@ export default function TradesTable() {
                 <MenuItem value={100}>100</MenuItem>
               </Select>
             </FormControl>
-            <Typography>records per page</Typography>
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontWeight: 500,
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}>
+              records per page
+            </Typography>
           </div>
           <Search>
             <SearchIconWrapper>
@@ -317,189 +571,263 @@ export default function TradesTable() {
           </Search>
         </div>
 
-        <TableContainer
-          aria-label="unified table"
+        <Paper
           sx={{
-            '& .MuiTableCell-root': {
-              color: '#ccc',
-              backgroundColor: '#2E353E',
-              border: '#282D36',
-            },
+            width: '100%',
+            overflow: 'hidden',
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
           }}
         >
-          <Table>
-            <TableHead>
-              <TableRow
-                sx={{
-                  '&:last-child td, &:last-child th': {
-                    border: 1,
-                    borderColor: '#282D36',
-                  },
-                }}
-              >
-                {headers.map(({ label, id }, index) => (
-                  <TableCell
-                    key={`header_${index}`}
-                    align="center"
-                    sx={{
-                      padding: '5px',
-                    }}
-                  >
-                    <div className="flex items-center justify-between p-[3px]">
-                      {label}
-                      <div className="flex flex-col width={11} cursor-pointer">
-                        <Icon
-                          icon="teenyicons:up-solid"
-                          color="#ccc"
-                          className="mb-[-4px]"
-                          width={11}
-                        />
-                        <Icon
-                          icon="teenyicons:down-solid"
-                          width={11}
-                          color="#ccc"
-                        />
-                      </div>
-                    </div>
-                  </TableCell>
-                ))}
-                <TableCell
-                  key={'option'}
-                  align="center"
-                  sx={{
-                    padding: '5px',
-                  }}
-                >
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody
+          <TableContainer
+            sx={{
+              borderRadius: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.02)',
+              maxWidth: '100%',
+              overflowX: 'auto',
+              '.MuiTable-root': {
+                borderColor: 'rgba(17, 179, 174, 0.2)',
+                borderWidth: '1px',
+                minWidth: { xs: '600px', sm: 'auto' },
+              },
+            }}
+          >
+            <Table
+              stickyHeader
+              aria-label="unified table"
               sx={{
-                '&:last-child td, &:last-child th': {
-                  border: 1,
-                  borderColor: '#282D36',
+                borderRadius: '12px',
+                '& .MuiTableCell-root': {
+                  color: '#E9D8C8',
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(17, 179, 174, 0.15)',
+                  fontSize: '0.875rem',
+                },
+                '& .MuiTableHead-root .MuiTableCell-root': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  borderColor: 'rgba(17, 179, 174, 0.2)',
+                },
+                '& .MuiTableRow-root:hover': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.05)',
                 },
               }}
             >
-              {data && data.length > 0 && data.map((row, index) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={`unified_data_${index}`}>
-
-
-                    {headers.map(({ id }) => {
-                      let value = row[id];
-                      if (id === 'strategyName') {
-                        value = row.strategyName + ' (' + row.strategyLogin + ')';
-                      }
-                      return (
-                        <TableCell
-                          key={id}
-                          align="left"
-                          sx={{
-                            padding: '5px',
-                            paddingLeft: 2,
-                          }}
-                        >
-                          <div className="truncate">{value}</div>
-                        </TableCell>
-                      );
-                    })}
-                    {row.strategyId && (
+              <TableHead sx={{
+                borderRadius: '12px',
+              }}>
+                <TableRow
+                  sx={{
+                    '&:last-child td, &:last-child th': {
+                      border: 1,
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
+                    },
+                  }}
+                >
+                  {headers
+                    .filter((item) => item.checked && item.id !== 'actions')
+                    .map(({ label, id }, i) => (
                       <TableCell
-                        key={row.id + 'option'}
-                        align="left"
+                        key={`header_${i}`}
+                        align="center"
                         sx={{
-                          width: '0',
-                          padding: '5px',
+                          padding: '12px 8px',
+                          fontWeight: 600,
                         }}
                       >
-                        <div className="flex gap-1">
-                          <IconButton
-                            size="small"
-                            color="inherit"
-                            loading={isLoading}
-                            sx={{
-                              backgroundColor: row.enabled ? '#D64742' : '#2e7d32',
-                              borderRadius: '4px',
-                              fontSize: 24,
-                              paddingX: '6px',
-                            }}
-                            onClick={() => {
-                              handleToggleTradeCopier(row.strategyId, row.accountId);
-                            }}
-                          >
-                            {isLoading ? <Icon icon="mdi:loading" color="white" style={{ animation: 'spin 1s linear infinite' }} /> : row.enabled ? <Icon icon="mdi:pause" color="white" /> : <Icon icon="mdi:play" color="white" />}
-                          </IconButton>
-                          {/* <IconButton
-                            size="small"
-                            color="inherit"
-                            sx={{
-                              backgroundColor: '#0099E6',
-                              borderRadius: '4px',
-                              fontSize: 13,
-                              paddingX: '11px',
-                            }}
-                            onClick={() =>
-                              handleConfigButtonClicked(
-                                row.subscriberId,
-                                row.strategyId
-                              )
-                            }
-                          >
-                            <Icon icon="fa:cogs" color="white" />
-                          </IconButton> */}
-                          <IconButton
-                            size="small"
-                            color="inherit"
-                            sx={{
-                              backgroundColor: '#D64742',
-                              borderRadius: '4px',
-                              fontSize: 13,
-                              padding: '10px 11px!important',
-                            }}
-                            onClick={() =>
-                              handleDeleteTradeCopierButtonClicked({
-                                strategyId: row.strategyId,
-                                accountId: row.accountId,
-                              })
-                            }
-                          >
-                            <Icon icon="ion:trash-sharp" color="white" />
-                          </IconButton>
+                        <div className="flex items-center justify-between p-[6px]">
+                          {label}
+                          <div className="flex flex-col cursor-pointer">
+                            <Icon
+                              icon="teenyicons:up-solid"
+                              color="#11B3AE"
+                              className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
+                              width={11}
+                            />
+                            <Icon
+                              icon="teenyicons:down-solid"
+                              width={11}
+                              color="#11B3AE"
+                              className="hover:text-[#E9D8C8] transition-colors"
+                            />
+                          </div>
                         </div>
                       </TableCell>
-                    )}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    ))}
+                  {headers.find(({ id }) => id === 'actions')?.checked && (
+                    <TableCell
+                      key={'option'}
+                      align="center"
+                      sx={{
+                        padding: '12px 8px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Actions
+                    </TableCell>
+                  )}
+                </TableRow>
+              </TableHead>
+              <TableBody
+                sx={{
+                  '&:last-child td, &:last-child th': {
+                    border: 1,
+                    borderColor: 'rgba(17, 179, 174, 0.15)',
+                  },
+                }}
+              >
+                {data && data.length > 0 && data.map((row, index) => {
+                  return (
+                    <TableRow 
+                      hover 
+                      role="checkbox" 
+                      tabIndex={-1} 
+                      key={`unified_data_${index}`}
+                      sx={{
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                          transform: 'translateY(-1px)',
+                          boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                        },
+                      }}
+                    >
+                      {headers
+                        .filter((item) => item.checked && item.id !== 'actions')
+                        .map(({ id }) => {
+                          let value = row[id];
+                          if (id === 'strategyName') {
+                            value = row.strategyName + ' (' + row.strategyLogin + ')';
+                          }
+                          return (
+                            <TableCell
+                              key={id}
+                              align="left"
+                              sx={{
+                                padding: '12px 16px',
+                                fontSize: '0.875rem',
+                              }}
+                            >
+                              <div className="truncate font-medium">{value}</div>
+                            </TableCell>
+                          );
+                        })}
+                      {headers.find(({ id }) => id === 'actions')?.checked && row.strategyId && (
+                        <TableCell
+                          key={row.id + 'option'}
+                          align="left"
+                          sx={{
+                            width: '0',
+                            padding: '12px 8px',
+                          }}
+                        >
+                          <div className="flex gap-1">
+                            <IconButton
+                              size="small"
+                              color="inherit"
+                              loading={isLoading}
+                              sx={{
+                                backgroundColor: row.enabled ? '#fa5252' : '#11B3AE',
+                                borderRadius: '8px',
+                                fontSize: 24,
+                                paddingX: '7px',
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: row.enabled ? '#e03131' : '#0F9A95',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                },
+                              }}
+                              onClick={() => {
+                                handleToggleTradeCopier(row.strategyId, row.accountId);
+                              }}
+                            >
+                              {isLoading ? <Icon icon="mdi:loading" color="white" style={{ animation: 'spin 1s linear infinite' }} /> : row.enabled ? <Icon icon="mdi:pause" color="white" /> : <Icon icon="mdi:play" color="white" />}
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="inherit"
+                              sx={{
+                                backgroundColor: '#fa5252',
+                                borderRadius: '8px',
+                                fontSize: 18,
+                                padding: '10px 10px!important',
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: '#e03131',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(250, 82, 82, 0.3)',
+                                },
+                              }}
+                              onClick={() =>
+                                handleDeleteTradeCopierButtonClicked({
+                                  strategyId: row.strategyId,
+                                  accountId: row.accountId,
+                                })
+                              }
+                            >
+                              <Icon icon="ion:trash-sharp" color="white" />
+                            </IconButton>
+                          </div>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-        <div className="flex justify-between items-center">
-          <Typography sx={{ color: '#ccc', fontSize: 13 }}>
-            Showing {rowsPerPage * (page - 1) + 1} to{' '}
-            {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
-            {count} entries
-          </Typography>
-          <Pagination
-            sx={{
-              paddingY: 2,
-            }}
-            count={
-              count % rowsPerPage === 0
-                ? count / rowsPerPage
-                : Math.floor(count / rowsPerPage) + 1
-            }
-            page={page}
-            onChange={handlePageChange}
-            variant="outlined"
-            shape="rounded"
-            showFirstButton
-            showLastButton
-          />
-        </div>
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontSize: { xs: 12, sm: 14 }, 
+              fontWeight: 500,
+              textAlign: { xs: 'center', sm: 'left' }
+            }}>
+              Showing {rowsPerPage * (page - 1) + 1} to{' '}
+              {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
+              {count} entries
+            </Typography>
+            <Pagination
+              sx={{
+                paddingY: 2,
+                '& .MuiPaginationItem-root': {
+                  color: '#E9D8C8',
+                  borderColor: 'rgba(17, 179, 174, 0.3)',
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  minWidth: { xs: '32px', sm: '40px' },
+                  height: { xs: '32px', sm: '40px' },
+                  '&:hover': {
+                    backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: '#11B3AE',
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      backgroundColor: '#0F9A95',
+                    },
+                  },
+                },
+              }}
+              count={
+                count % rowsPerPage === 0
+                  ? count / rowsPerPage
+                  : Math.floor(count / rowsPerPage) + 1
+              }
+              page={page}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+              showFirstButton
+              showLastButton
+              size="small"
+            />
+          </div>
+        </Paper>
       </div>
     </div>
   );

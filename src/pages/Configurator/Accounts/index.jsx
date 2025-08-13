@@ -1,12 +1,15 @@
 import * as React from 'react';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import Button from '@mui/material/Button';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-
-import { styled, alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -20,9 +23,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { LoadingButton } from '@mui/lab';
 
@@ -36,10 +37,17 @@ import useSocket from '../../../hooks/useSocket';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -57,10 +65,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -74,51 +83,60 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
   },
   '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
   },
 }));
 
-const headers = [
-  { id: 'accountId', label: 'AccountId' },
-  { id: 'copyFactoryRoles', label: 'CopyFactoryRoles' },
-  // { id: 'openTime', label: 'E' },
-  // { id: 'symbol', label: 'Symbol' },
-  // { id: 'type', label: 'Type' },
-  // { id: 'volume', label: 'Lots' },
-  { id: 'platform', label: 'Platform' },
-  { id: 'login', label: 'Login' },
-  { id: 'name', label: 'Name' },
-  { id: 'server', label: 'Server' },
+const initialHeaders = [
+  { id: 'accountId', label: 'Account ID', checked: true },
+  { id: 'copyFactoryRoles', label: 'Copy Factory Roles', checked: true },
+  { id: 'platform', label: 'Platform', checked: true },
+  { id: 'login', label: 'Login', checked: true },
+  { id: 'name', label: 'Name', checked: true },
+  { id: 'server', label: 'Server', checked: true },
+  { id: 'actions', label: 'Actions', checked: true },
 ];
 
-export default function TradesTable() {
+export default function Accounts() {
   const { showToast } = useToast();
   const { socket } = useSocket();
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const [headers, setHeaders] = React.useState(initialHeaders);
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
   });
   const [count, setCount] = React.useState(0);
   const [page, setPage] = React.useState(1);
-  // const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
-  const [deleteAccountModalShow, setDeleteAccountModalShow] =
-    React.useState(false);
+  const [deleteAccountModalShow, setDeleteAccountModalShow] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selectedAccountData, setSelectedAccountData] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const [showFilterModal, setShowFilterModal] = React.useState(false);
+  const [showFilterItems, setShowFilterItems] = React.useState(true);
+  const [isDataLoading, setIsDataLoading] = React.useState(true);
+  const filterModalRef = React.useRef(null);
 
   const handleChangeRowsPerPage = (e) => {
     let config = JSON.parse(sessionStorage.getItem('accounts'));
@@ -192,6 +210,66 @@ export default function TradesTable() {
     }
   };
 
+  /**
+   * when visible items is changed...
+   * @param {*} e
+   */
+  const handleVisibleChange = (e) => {
+    const { name, checked } = e.target;
+    setHeaders((prev) =>
+      prev.map((item) =>
+        item.id === name ? { ...item, checked } : item
+      )
+    );
+  };
+
+  /**
+   * Handle click on entire row (checkbox + title)
+   */
+  const handleRowClick = (itemId, currentChecked) => {
+    setHeaders((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, checked: !currentChecked } : item
+      )
+    );
+  };
+
+  /**
+   * when click view all button
+   */
+  const handleViewAll = (e) => {
+    const allChecked = headers.every(item => item.checked);
+    setHeaders((prev) =>
+      prev.map((item) => ({
+        ...item,
+        checked: !allChecked,
+      }))
+    );
+  };
+
+  const resetColumns = () => {
+    setHeaders((prev) =>
+      prev.map((item) => ({ ...item, checked: true }))
+    );
+  };
+
+  // Handle click outside to close filter modal
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterModalRef.current && !filterModalRef.current.contains(event.target)) {
+        setShowFilterModal(false);
+      }
+    };
+
+    if (showFilterModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showFilterModal]);
+
   React.useEffect(() => {
     let config = JSON.parse(sessionStorage.getItem('accounts'));
 
@@ -214,22 +292,27 @@ export default function TradesTable() {
     });
 
     async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      const res = await api.get(
-        `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
+      try {
+        setIsDataLoading(true);
+        const { page, pagecount, sort, type } = config;
+        const res = await api.get(
+          `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        );
+        setData(res.data.data);
+        setCount(res.data.count);
+      } catch (error) {
+        console.error('Error fetching accounts data:', error);
+        showToast('Failed to load accounts data. Please try again.', 'error');
+      } finally {
+        setIsDataLoading(false);
+      }
     }
 
     fetchData();
   }, []);
 
   return (
-    <div>
-      {/* {exclamationModalShow && (
-        <InfoModal setExclamationModalShow={setExclamationModalShow} />
-      )} */}
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
       {deleteAccountModalShow && (
         <DeleteAccountModal
           deleteAccountModalShow={setDeleteAccountModalShow}
@@ -240,65 +323,237 @@ export default function TradesTable() {
           isLoading={isLoading}
         />
       )}
+      
       <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        spacing={{ xs: 2, sm: 1 }}
         display={'flex'}
         justifyContent={'space-between'}
+        sx={{ gap: { xs: 2, sm: 1 } }}
       >
-        <div className="flex gap-2">
-          {/* <IconButton
-            size="small"
-            color="inherit"
-            sx={{ backgroundColor: '#2e7d32', borderRadius: '4px' }}
-            onClick={() => setExclamationModalShow(true)}
-          >
-            <PriorityHighIcon fontSize="small" sx={{ color: 'white' }} />
-          </IconButton> */}
-
+        <div className="flex gap-2 justify-center sm:justify-start">
           <Link to="/accounts/add-account">
-            <Button
+            <StyledButton
               variant="contained"
               size="small"
               startIcon={<AddIcon />}
               sx={{
+                backgroundColor: '#11B3AE',
                 textTransform: 'none',
-                backgroundColor: '#0088CC!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                border: '1px solid #11B3AE',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
             >
               Add Account
-            </Button>
+            </StyledButton>
           </Link>
         </div>
-        { user.role != 'Admin' && <LoadingButton
-          variant="contained"
-          size="small"
-          sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
-          onClick={handleSendProviderRequest}
-          loading={isLoading}
-        >
-          Send Provider Request
-        </LoadingButton> }
-        {/* </div> */}
+        <div className="flex gap-2 justify-center sm:justify-end">
+          {user.role !== 'Admin' && (
+            <LoadingButton
+              variant="contained"
+              size="small"
+              sx={{
+                textTransform: 'none',
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
+              }}
+              onClick={handleSendProviderRequest}
+              loading={isLoading}
+            >
+              Send Provider Request
+            </LoadingButton>
+          )}
+          <div className="relative" ref={filterModalRef}>
+            <StyledButton
+              variant="contained"
+              size="small"
+              onClick={() => setShowFilterModal((prev) => !prev)}
+              startIcon={<VisibilityOffIcon />}
+              sx={{
+                textTransform: 'none',
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                position: 'relative',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
+              }}
+            >
+              Columns
+            </StyledButton>
+            {showFilterModal && (
+              <div className="absolute z-50 top-full mt-2 p-4 w-[280px] text-white bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-xl right-0 sm:right-0 xs:right-[-50px]">
+                <div className="text-[#E9D8C8] font-medium mb-3 text-sm sm:text-base">Toggle visible columns</div>
+                <div className="space-y-2">
+                  <StyledButton
+                    onClick={() => setShowFilterItems((prev) => !prev)}
+                    sx={{
+                      width: '100%',
+                      padding: { xs: '4px 8px', sm: '8px 12px' },
+                      borderRadius: '8px',
+                      fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF !important',
+                      fontWeight: 500,
+                      textTransform: 'none',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                        color: '#FFFFFF !important',
+                        transform: 'translateY(-1px)',
+                      },
+                    }}
+                  >
+                    Selected ({headers.filter(item => item.checked).length})
+                  </StyledButton>
+                  {showFilterItems && (
+                    <div className="bg-[#0B1220] border border-[#11B3AE] rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
+                      <div
+                        className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 rounded-t-lg ${headers.every(item => item.checked) && 'bg-[#11B3AE] bg-opacity-30'
+                          }`}
+                        onClick={handleViewAll}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={headers.every(item => item.checked)}
+                          onChange={handleViewAll}
+                          className="accent-[#11B3AE]"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer font-medium text-[#E9D8C8]">
+                          View all
+                        </div>
+                      </div>
+                      {headers.map((item, i) => (
+                        <div
+                          key={`input_${i}`}
+                          className={`flex pl-4 py-2 hover:bg-[#11B3AE] hover:bg-opacity-20 gap-2 cursor-pointer transition-all duration-200 ${item.checked && 'bg-[#11B3AE] bg-opacity-30'
+                            }`}
+                          onClick={() => handleRowClick(item.id, item.checked)}
+                        >
+                          <input
+                            name={item.id}
+                            checked={item.checked}
+                            type="checkbox"
+                            className="accent-[#11B3AE]"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <div className="text-[0.8rem] sm:text-[0.9rem] p-1 cursor-pointer text-[#E9D8C8]">
+                            {item.label}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <StyledButton
+                    onClick={resetColumns}
+                    sx={{
+                      width: '100%',
+                      padding: { xs: '4px 8px', sm: '8px 12px' },
+                      borderRadius: '8px',
+                      fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF !important',
+                      fontWeight: 500,
+                      textTransform: 'none',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                        color: '#FFFFFF !important',
+                        transform: 'translateY(-1px)',
+                      },
+                    }}
+                  >
+                    Reset Columns
+                  </StyledButton>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </Stack>
-      <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
-        <div className="flex justify-between w-full pb-3">
-          <div className="flex items-center gap-2">
+
+      <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+        <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
+          <div className="flex items-center gap-3">
             <FormControl size="small">
               <Select
                 displayEmpty
                 value={rowsPerPage}
                 onChange={handleChangeRowsPerPage}
+                disabled={isDataLoading}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#0B1220',
+                      border: '1px solid rgba(17, 179, 174, 0.3)',
+                      borderRadius: '8px',
+                      maxHeight: '200px',
+                      '& .MuiMenuItem-root': {
+                        color: '#E9D8C8',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: '#11B3AE',
+                          color: '#FFFFFF',
+                          '&:hover': {
+                            backgroundColor: '#0F9A95',
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
                 input={
                   <OutlinedInput
                     sx={{
-                      width: '80px',
-                      color: 'white',
-                      // borderColor: 'white!important',
-                      // '&: active': {
-                      //   border: '1px solid black',
-                      // },
+                      width: { xs: '70px', sm: '80px' },
+                      color: isDataLoading ? '#666' : '#E9D8C8',
+                      borderRadius: '8px',
+                      backgroundColor: isDataLoading ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : 'rgba(17, 179, 174, 0.3)',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : 'rgba(17, 179, 174, 0.5)',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : '#11B3AE',
+                        boxShadow: isDataLoading ? 'none' : '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiSelect-icon': {
+                        color: isDataLoading ? '#666' : '#E9D8C8',
+                      },
                     }}
                   />
                 }
@@ -309,7 +564,13 @@ export default function TradesTable() {
                 <MenuItem value={100}>100</MenuItem>
               </Select>
             </FormControl>
-            <Typography>records per page</Typography>
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontWeight: 500,
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}>
+              records per page
+            </Typography>
           </div>
           <Search>
             <SearchIconWrapper>
@@ -318,29 +579,28 @@ export default function TradesTable() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              disabled={isDataLoading}
             />
           </Search>
         </div>
         <Paper
           sx={{
             width: '100%',
-            // marginBottom: 10,
             overflow: 'hidden',
-            backgroundColor: '#2E353E',
+            backgroundColor: 'transparent',
             boxShadow: 'none',
-            '& .MuiPaper-root': {
-              color: '#ccc',
-              backgroundColor: '#2E353E',
-              boxShadow: 'none',
-            },
           }}
         >
           <TableContainer
             sx={{
-              // maxHeight: 440,
+              borderRadius: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.02)',
+              maxWidth: '100%',
+              overflowX: 'auto',
               '.MuiTable-root': {
-                borderColor: '#282D36',
+                borderColor: 'rgba(17, 179, 174, 0.2)',
                 borderWidth: '1px',
+                minWidth: { xs: '600px', sm: 'auto' },
               },
             }}
           >
@@ -348,69 +608,94 @@ export default function TradesTable() {
               stickyHeader
               aria-label="sticky table"
               sx={{
+                borderRadius: '12px',
                 '& .MuiTableCell-root': {
-                  color: '#ccc',
-                  backgroundColor: '#2E353E',
-                  border: '#282D36',
+                  color: '#E9D8C8',
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(17, 179, 174, 0.15)',
+                  fontSize: '0.875rem',
+                },
+                '& .MuiTableHead-root .MuiTableCell-root': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  borderColor: 'rgba(17, 179, 174, 0.2)',
+                },
+                '& .MuiTableRow-root:hover': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.05)',
                 },
               }}
             >
-              <TableHead>
+              <TableHead sx={{
+                borderRadius: '12px',
+              }}>
                 <TableRow
                   sx={{
                     '&:last-child td, &:last-child th': {
                       border: 1,
-                      borderColor: '#282D36',
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
                     },
                   }}
                 >
-                  {headers.map(({ label, id }, index) => (
-                    <TableCell
-                      key={`accounts_table_header_${index}`}
-                      align="center"
-                      // style={{ minWidth: column.minWidth }}
-                      sx={{
-                        padding: '5px',
-                      }}
-                    >
-                      <div className="flex items-center justify-between p-[3px]">
-                        {label}
-                        <div className="flex flex-col width={11} cursor-pointer">
-                          <Icon
-                            icon="teenyicons:up-solid"
-                            color="#ccc"
-                            className="mb-[-4px]"
-                            width={11}
-                          />
-                          <Icon
-                            icon="teenyicons:down-solid"
-                            width={11}
-                            color="#ccc"
-                          />
+                  {headers
+                    .filter((item) => item.checked && item.id !== 'actions')
+                    .map(({ label, id }, index) => (
+                      <TableCell
+                        key={`accounts_table_header_${index}`}
+                        align="center"
+                        sx={{
+                          padding: '12px 8px',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <div className="flex items-center justify-between p-[6px]">
+                          {label === '' ? <p></p> : <p className="font-semibold">{label}</p>}
+                          <div className="flex flex-col cursor-pointer">
+                            <Icon
+                              icon="teenyicons:up-solid"
+                              color="#11B3AE"
+                              className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
+                              width={11}
+                            />
+                            <Icon
+                              icon="teenyicons:down-solid"
+                              width={11}
+                              color="#11B3AE"
+                              className="hover:text-[#E9D8C8] transition-colors"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-                  ))}
-                  <TableCell
-                    key={'option'}
-                    align="center"
-                    // style={{ minWidth: column.minWidth }}
-                    sx={{
-                      padding: '5px',
-                    }}
-                  ></TableCell>
+                      </TableCell>
+                    ))}
                 </TableRow>
               </TableHead>
               <TableBody
                 sx={{
                   '&:last-child td, &:last-child th': {
                     border: 1,
-                    borderColor: '#282D36',
+                    borderColor: 'rgba(17, 179, 174, 0.15)',
                   },
                 }}
               >
-                {data &&
-                  data.length > 0 &&
+                {isDataLoading ? (
+                  <TableRow>
+                    <TableCell 
+                      colSpan={headers.filter(item => item.checked).length} 
+                      align="center"
+                      sx={{
+                        padding: '60px 20px',
+                        border: 'none',
+                      }}
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#11B3AE] mb-4"></div>
+                        <span className="text-[#E9D8C8] text-lg font-medium">Loading accounts...</span>
+                        <span className="text-[#E9D8C8] text-sm opacity-70 mt-1">Please wait while we fetch your account data</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : data && data.length > 0 ? (
                   data.map((row, index) => {
                     return (
                       <TableRow
@@ -418,103 +703,173 @@ export default function TradesTable() {
                         role="checkbox"
                         tabIndex={-1}
                         key={`accounts_table_row_${index}`}
+                        sx={{
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                          },
+                        }}
                       >
-                        {headers.map(({ id }) => {
-                          let value = row[id];
-                          if (id === 'copyFactoryRoles') {
-                            value = '';
-                            row[id].forEach((item) => {
-                              value += item + ', ';
-                            });
-                            value = value.substr(0, value.length - 2);
-                          }
-                          return (
-                            <TableCell
-                              key={id + row.id}
-                              align="left"
-                              sx={{
-                                padding: '5px',
-                                paddingLeft: 2,
-                              }}
-                            >
-                              <div className="truncate">{value}</div>
-                            </TableCell>
-                          );
-                        })}
-                        <TableCell
-                          key={row.id + 'option'}
-                          align="left"
-                          sx={{
-                            width: '0',
-                            padding: '5px',
-                          }}
-                        >
-                          <div className="flex gap-1">
-                            <IconButton
-                              size="small"
-                              color="inherit"
-                              sx={{
-                                backgroundColor: '#0099E6',
-                                borderRadius: '4px',
-                                fontSize: 13,
-                                paddingX: '11px',
-                              }}
-                              onClick={() =>
-                                handleConfigButtonClicked(row.accountId)
-                              }
-                            >
-                              <Icon icon="fa:cogs" color="white" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              color="inherit"
-                              sx={{
-                                backgroundColor: '#D64742',
-                                borderRadius: '4px',
-                                fontSize: 13,
-
-                                padding: '10px 11px!important',
-                              }}
-                              onClick={() =>
-                                handleDeleteAccountButtonClicked({
-                                  accountName: `${row.name}(${row.login})`,
-                                  accountId: row.accountId,
-                                })
-                              }
-                            >
-                              <Icon icon="ion:trash-sharp" color="white" />
-                            </IconButton>
-                          </div>
-                        </TableCell>
+                        {headers
+                          .filter((item) => item.checked && item.id !== 'actions')
+                          .map(({ id }) => {
+                            let value = row[id];
+                            if (id === 'copyFactoryRoles') {
+                              value = '';
+                              row[id].forEach((item) => {
+                                value += item + ', ';
+                              });
+                              value = value.substr(0, value.length - 2);
+                            }
+                            return (
+                              <TableCell
+                                key={id + row.id}
+                                align="left"
+                                sx={{
+                                  padding: '12px 16px',
+                                  fontSize: '0.875rem',
+                                }}
+                              >
+                                <div className="truncate font-medium">{value}</div>
+                              </TableCell>
+                            );
+                          })}
+                        {headers.find(({ id }) => id === 'actions').checked && (
+                          <TableCell
+                            key={row.id + 'actions'}
+                            align="center"
+                            sx={{
+                              padding: '12px 8px',
+                            }}
+                          >
+                            <div className="flex gap-2 justify-center">
+                              <IconButton
+                                size="small"
+                                color="inherit"
+                                sx={{
+                                  backgroundColor: '#11B3AE',
+                                  borderRadius: '8px',
+                                  fontSize: 16,
+                                  padding: '10px 10px',
+                                  transition: 'all 0.2s ease-in-out',
+                                  '&:hover': {
+                                    backgroundColor: '#0F9A95',
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                  },
+                                }}
+                                onClick={() =>
+                                  handleConfigButtonClicked(row.accountId)
+                                }
+                              >
+                                <Icon icon="fa:cogs" color="white" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                color="inherit"
+                                sx={{
+                                  backgroundColor: '#fa5252',
+                                  borderRadius: '8px',
+                                  fontSize: 16,
+                                  padding: '10px 10px',
+                                  transition: 'all 0.2s ease-in-out',
+                                  '&:hover': {
+                                    backgroundColor: '#e03131',
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(250, 82, 82, 0.3)',
+                                  },
+                                }}
+                                onClick={() =>
+                                  handleDeleteAccountButtonClicked({
+                                    accountName: `${row.name}(${row.login})`,
+                                    accountId: row.accountId,
+                                  })
+                                }
+                              >
+                                <Icon icon="ion:trash-sharp" color="white" />
+                              </IconButton>
+                            </div>
+                          </TableCell>
+                        )}
                       </TableRow>
                     );
-                  })}
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell 
+                      colSpan={headers.filter(item => item.checked).length} 
+                      align="center"
+                      sx={{
+                        padding: '60px 20px',
+                        border: 'none',
+                      }}
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <AccountBalanceIcon sx={{ fontSize: 48, color: '#666', mb: 2 }} />
+                        <span className="text-[#E9D8C8] text-lg font-medium">No accounts found</span>
+                        <span className="text-[#E9D8C8] text-sm opacity-70 mt-1">Add your first account to get started</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
 
-          <div className="flex justify-between items-center">
-            <Typography sx={{ color: '#ccc', fontSize: 13 }}>
-              Showing {rowsPerPage * (page - 1) + 1} to{' '}
-              {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
-              {count} entries
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontSize: { xs: 12, sm: 14 }, 
+              fontWeight: 500,
+              textAlign: { xs: 'center', sm: 'left' }
+            }}>
+              {isDataLoading ? (
+                'Loading accounts...'
+              ) : (
+                `Showing ${rowsPerPage * (page - 1) + 1} to
+                ${rowsPerPage * page > count ? count : rowsPerPage * page} of ${count}
+                entries`
+              )}
             </Typography>
-            <Pagination
-              sx={{
-                paddingY: 2,
-              }}
-              count={
-                count % rowsPerPage === 0
-                  ? count / rowsPerPage
-                  : Math.floor(count / rowsPerPage) + 1
-              }
-              page={page}
-              onChange={handlePageChange}
-              variant="outlined"
-              shape="rounded"
-              showFirstButton
-              showLastButton
-            />
+            {!isDataLoading && count > 0 && (
+              <Pagination
+                sx={{
+                  paddingY: 2,
+                  '& .MuiPaginationItem-root': {
+                    color: '#E9D8C8',
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    minWidth: { xs: '32px', sm: '40px' },
+                    height: { xs: '32px', sm: '40px' },
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                      borderColor: 'rgba(17, 179, 174, 0.5)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
+                }}
+                count={
+                  count % rowsPerPage === 0
+                    ? count / rowsPerPage
+                    : Math.floor(count / rowsPerPage) + 1
+                }
+                page={page}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+                showFirstButton
+                showLastButton
+                size="small"
+              />
+            )}
           </div>
         </Paper>
       </div>

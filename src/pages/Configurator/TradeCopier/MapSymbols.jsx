@@ -119,22 +119,29 @@ function MapSymbols() {
   // }, []);
 
   return (
-    <div>
-      <div className="mb-[20px] rounded bg-[#282D36] text-white">
-        <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-          <h2 className="mt-[5px] text-[20px] font-normal">Map Symbols</h2>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
+      <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+        <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t-xl border-b border-[#11B3AE] border-opacity-20">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Map Symbols</h2>
           <Button
             sx={{
               display: 'flex',
-              backgroundColor: '#0099e6!important',
-              height: '33px',
-              borderRadius: '4px',
+              backgroundColor: '#11B3AE!important',
+              color: '#FFFFFF',
+              height: '40px',
+              borderRadius: '8px',
               fontSize: '12px',
               lineHeight: '16px',
-              paddingX: '8px',
+              paddingX: '12px',
               alignItems: 'center',
-              color: '#eee',
+              fontWeight: 500,
               textTransform: 'none',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: '#0F9A95!important',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+              },
             }}
           >
             <Icon
@@ -146,7 +153,7 @@ function MapSymbols() {
             Add Symbol Map
           </Button>
         </header>
-        <div className="p-[15px] bg-[#2E353E] box-border rounded-b"></div>
+        <div className="p-[15px] bg-[#0B1220] box-border rounded-b-xl"></div>
       </div>
     </div>
   );
