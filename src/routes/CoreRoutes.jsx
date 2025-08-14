@@ -32,6 +32,15 @@ const Analysis = Loadable(lazy(() => import('../pages/Analysis')));
 const AccountAnalysis = Loadable(
   lazy(() => import('../pages/Analysis/AccountAnalysis'))
 );
+const PerformanceChartPage = Loadable(
+  lazy(() => import('../pages/Analysis/PerformanceChartPage'))
+);
+const TradingStatsPage = Loadable(
+  lazy(() => import('../pages/Analysis/TradingStatsPage'))
+);
+const TimeAnalysisPage = Loadable(
+  lazy(() => import('../pages/Analysis/TimeAnalysisPage'))
+);
 const SignalFollowers = Loadable(
   lazy(() => import('../pages/SignalFollowers'))
 );
@@ -208,6 +217,21 @@ const coreRoutes = {
       path: '/analysis/analysis-account/:id',
       title: 'Account Analysis',
       element: <AccountAnalysis />,
+    },
+    {
+      path: '/analysis/performance-chart/:accountId',
+      title: 'Performance Chart',
+      element: <PerformanceChartPage />,
+    },
+    {
+      path: '/analysis/trading-stats/:accountId',
+      title: 'Trading Statistics',
+      element: <TradingStatsPage />,
+    },
+    {
+      path: '/analysis/time-analysis/:id',
+      title: 'Time Analysis',
+      element: <TimeAnalysisPage />,
     },
     {
       path: '/profile',
