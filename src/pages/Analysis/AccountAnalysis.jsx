@@ -17,6 +17,9 @@ import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import TradesAnalysis from '../../components/analysis/TradesAnalysis';
 import { useParams } from 'react-router-dom';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
+import OpenTradeTable from '../../components/Tables/OpenTradeTable';
+import CloseTradeTable from '../../components/Tables/CloseTradeTable';
+import AccountAnalysisStats from '../../components/analysis/AccountAnalysisStats';
 
 const StyledButton = styled(LoadingButton)(({ theme }) => ({
   borderRadius: '8px',
@@ -34,11 +37,29 @@ const StyledButton = styled(LoadingButton)(({ theme }) => ({
   },
 }));
 
+const StyledTab = styled('div')(({ theme, active }) => ({
+  display: 'inline-block',
+  padding: '12px 16px',
+  color: active ? '#FFFFFF' : '#E9D8C8',
+  backgroundColor: active ? '#11B3AE' : 'transparent',
+  borderRadius: '8px 8px 0 0',
+  borderTop: `3px solid ${active ? '#11B3AE' : 'transparent'}`,
+  fontWeight: 600,
+  fontSize: '0.875rem',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: active ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+    transform: 'translateY(-1px)',
+  },
+}));
+
 function AccountAnalysis() {
   const { id } = useParams();
   const [details, setDetails] = React.useState({});
   const [accountInfo, setAccountInfo] = React.useState({});
   const [history, setHistory] = React.useState([]);
+  const [activeTab, setActiveTab] = React.useState('accounts');
 
   React.useEffect(() => {
     async function fetcher() {
@@ -81,6 +102,69 @@ function AccountAnalysis() {
     fetcher();
   }, [id]);
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'accounts':
+        return (
+          <>
+            {/* Main content grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Account Details - 1/4 width */}
+              <div className="lg:col-span-1">
+                <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                  <AccountDetails data={details} />
+                </div>
+              </div>
+
+              {/* Performance Chart - 3/4 width */}
+              <div className="lg:col-span-3">
+                <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                  <PerformanceChart data={history} />
+                </div>
+              </div>
+            </div>
+
+            {/* Trading Stats - Full width */}
+            <div className="mt-6">
+              <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                <TradingStats data={accountInfo} />
+              </div>
+            </div>
+
+            {/* Analysis by Time - Full width */}
+            <div className="mt-6">
+              <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                <AnalysisByTime data={history} />
+              </div>
+            </div>
+
+            {/* Trades Analysis - Full width */}
+            <div className="mt-6">
+              <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                <TradesAnalysis />
+              </div>
+            </div>
+          </>
+        );
+      
+      case 'trades':
+        return <OpenTradeTable />;
+      
+      case 'analysis':
+        return (
+          <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+            <AccountAnalysisStats accountData={details} accountInfo={accountInfo} />
+          </div>
+        );
+      
+      case 'history':
+        return <CloseTradeTable />;
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="w-auto text-[#E9D8C8] pb-[100px]">
       {/* Header with back button */}
@@ -105,43 +189,42 @@ function AccountAnalysis() {
         </Typography>
       </div>
 
-      {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Account Details - 1/4 width */}
-        <div className="lg:col-span-1">
-          <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-            <AccountDetails data={details} />
+      {/* Tab Navigation */}
+      <div className="mb-6">
+        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+          <div className="p-4 border-b border-[#11B3AE] border-opacity-20">
+            <div className="flex space-x-1">
+              <StyledTab 
+                active={activeTab === 'accounts'}
+                onClick={() => setActiveTab('accounts')}
+              >
+                Accounts
+              </StyledTab>
+              <StyledTab 
+                active={activeTab === 'trades'}
+                onClick={() => setActiveTab('trades')}
+              >
+                Trades
+              </StyledTab>
+              <StyledTab 
+                active={activeTab === 'analysis'}
+                onClick={() => setActiveTab('analysis')}
+              >
+                Analysis
+              </StyledTab>
+              <StyledTab 
+                active={activeTab === 'history'}
+                onClick={() => setActiveTab('history')}
+              >
+                History
+              </StyledTab>
+            </div>
           </div>
         </div>
-
-        {/* Performance Chart - 3/4 width */}
-        <div className="lg:col-span-3">
-          <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-            <PerformanceChart data={history} />
-          </div>
-        </div>
       </div>
 
-      {/* Trading Stats - Full width */}
-      <div className="mt-6">
-        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-          <TradingStats data={accountInfo} />
-        </div>
-      </div>
-
-      {/* Analysis by Time - Full width */}
-      <div className="mt-6">
-        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-          <AnalysisByTime data={history} />
-        </div>
-      </div>
-
-      {/* Trades Analysis - Full width */}
-      <div className="mt-6">
-        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-          <TradesAnalysis />
-        </div>
-      </div>
+      {/* Tab Content */}
+      {renderTabContent()}
     </div>
   );
 }

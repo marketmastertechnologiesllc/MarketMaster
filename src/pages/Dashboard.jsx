@@ -8,9 +8,10 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import DashboardTable from '../components/Tables/DashboardTable';
-import TradesTable from '../components/Tables/TradesTable';
-import HistoryTable from '../components/Tables/HistoryTable';
+import DashboardTradesTable from '../components/Tables/DashboardTradesTable';
+import DashboardHistoryTable from '../components/Tables/DashboardHistoryTable';
 import InfoModal from '../components/modals/InfoModal';
+import DashboardAnalysis from '../components/DashboardAnalysis';
 import api from '../utils/api';
 
 const initialHeaders = {
@@ -334,12 +335,24 @@ function Dashboard() {
             >
               Accounts
             </StyledButton>
-            {/* <StyledButton
+            <StyledButton
               variant="contained"
               size="small"
               sx={{
-                backgroundColor: activeTab == '2' ? '#11B3AE' : '#0B1220',
+                backgroundColor: activeTab == '2' ? '#11B3AE' : 'rgba(255, 255, 255, 0.1)',
                 textTransform: 'none',
+                color: activeTab == '2' ? '#FFFFFF' : '#E9D8C8',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                border: activeTab == '2' ? '1px solid #11B3AE' : '1px solid rgba(17, 179, 174, 0.3)',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: activeTab == '2' ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
               onClick={() => handleTabClick('2')}
             >
@@ -349,13 +362,48 @@ function Dashboard() {
               variant="contained"
               size="small"
               sx={{
-                backgroundColor: activeTab == '3' ? '#11B3AE' : '#0B1220',
+                backgroundColor: activeTab == '3' ? '#11B3AE' : 'rgba(255, 255, 255, 0.1)',
                 textTransform: 'none',
+                color: activeTab == '3' ? '#FFFFFF' : '#E9D8C8',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                border: activeTab == '3' ? '1px solid #11B3AE' : '1px solid rgba(17, 179, 174, 0.3)',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: activeTab == '3' ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
               onClick={() => handleTabClick('3')}
             >
+              Analysis
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: activeTab == '4' ? '#11B3AE' : 'rgba(255, 255, 255, 0.1)',
+                textTransform: 'none',
+                color: activeTab == '4' ? '#FFFFFF' : '#E9D8C8',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                border: activeTab == '4' ? '1px solid #11B3AE' : '1px solid rgba(17, 179, 174, 0.3)',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: activeTab == '4' ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
+              }}
+              onClick={() => handleTabClick('4')}
+            >
               History
-            </StyledButton> */}
+            </StyledButton>
           </div>
           <div className="flex gap-2 justify-center sm:justify-end">
             {/* <StyledButton
@@ -490,8 +538,9 @@ function Dashboard() {
           </div>
         </Stack>
       {activeTab === '1' && <DashboardTable headers={headers['1']} />}
-      {/* {activeTab === '2' && <TradesTable headers={headers['2']} />}
-      {activeTab === '3' && <HistoryTable headers={headers['3']} />} */}
+      {activeTab === '2' && <DashboardTradesTable />}
+      {activeTab === '3' && <DashboardAnalysis />}
+      {activeTab === '4' && <DashboardHistoryTable />}
     </div>
   );
 }

@@ -18,7 +18,6 @@ import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import { formatNumber } from '../../utils/formatNumber';
-import { useParams } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -100,25 +99,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const headers = [
   { id: 'positionTicket', label: 'Ticket' },
-  { id: 'start_time', label: 'OpenTime' },
+  { id: 'account', label: 'Account' },
+  { id: 'openTimeAsDateTime', label: 'OpenTime' },
   { id: 'symbol', label: 'Symbol' },
   { id: 'type', label: 'Type' },
   { id: 'lots', label: 'Lots' },
-  { id: 'price', label: 'OpenPrice' },
+  { id: 'openPrice', label: 'OpenPrice' },
   { id: 'stopLoss', label: 'SL' },
   { id: 'takeProfit', label: 'TP' },
-  { id: 'openTimeAsDateTime', label: 'CloseTime' },
-  { id: 'openPrice', label: 'ClosePrice' },
-  { id: 'duration', label: 'Duration' },
   { id: 'commission', label: 'Com' },
   { id: 'swap', label: 'Swap' },
   { id: 'profit', label: 'Profit' },
   { id: 'comment', label: 'comment' },
-  { id: 'balance', label: 'Balance' },
 ];
 
-export default function CloseTradeTable() {
-  const { id } = useParams();
+export default function DashboardTradesTable() {
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -128,6 +123,10 @@ export default function CloseTradeTable() {
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [accounts, setAccounts] = React.useState([]);
+  const [selectedAccount, setSelectedAccount] = React.useState('');
+  const [loading, setLoading] = React.useState(true);
+  const [accountsLoading, setAccountsLoading] = React.useState(true);
 
   const handleChangeRowsPerPage = (e) => {
     setRowsPerPage(e.target.value);
@@ -138,34 +137,142 @@ export default function CloseTradeTable() {
     setPage(value);
 
     try {
-      const res = await api.get(
-        `/trade/history/${id}?page=${value}&pagecount=${pageCount ? pageCount : rowsPerPage
-        }&sort=${sort.id}&type=${sort.type}`
-      );
+      const endpoint = `/trade/${selectedAccount}?page=${value}&pagecount=${pageCount ? pageCount : rowsPerPage}&sort=${sort.id}&type=${sort.type}`;
+      
+      const res = await api.get(endpoint);
       setData(res.data.data);
       setCount(res.data.count);
     } catch (e) {
       console.log(e);
+      setData([]);
+      setCount(0);
     }
   };
 
   React.useEffect(() => {
+    async function fetchAccounts() {
+      setAccountsLoading(true);
+      try {
+        const res = await api.get('/account/accounts?page=1&pagecount=100&sort=&type=');
+        const accountsData = res.data.data;
+        setAccounts(accountsData);
+        
+        // Set default value to first account if accounts exist
+        if (accountsData && accountsData.length > 0) {
+          setSelectedAccount(accountsData[0].accountId);
+        }
+      } catch (error) {
+        console.error('Error fetching accounts:', error);
+        setAccounts([]);
+      } finally {
+        setAccountsLoading(false);
+      }
+    }
+
+    fetchAccounts();
+  }, []);
+
+  React.useEffect(() => {
     async function fetchData() {
-      const res = await api.get(
-        `/trade/history/${id}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
+      if (!selectedAccount) return; // Don't fetch if no account is selected yet
+      
+      setLoading(true);
+      try {
+        const endpoint = `/trade/${selectedAccount}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`;
+        
+        const res = await api.get(endpoint);
+        setData(res.data.data);
+        setCount(res.data.count);
+      } catch (error) {
+        console.error('Error fetching trades:', error);
+        setData([]);
+        setCount(0);
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchData();
-  }, [id]);
+  }, [selectedAccount, page, rowsPerPage, sort.id, sort.type]);
 
   return (
-    // <div className="text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-    <div className="text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+    <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
       <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
         <div className="flex items-center gap-3">
+          <FormControl size="small" sx={{ minWidth: 200 }}>
+            <Select
+              value={selectedAccount}
+              onChange={(e) => setSelectedAccount(e.target.value)}
+              displayEmpty
+              renderValue={(value) => {
+                if (accountsLoading) return 'Loading accounts...';
+                if (value === '') return 'Select Account';
+                const selectedAcc = accounts.find(acc => acc.accountId === value);
+                return selectedAcc ? `${selectedAcc.name || selectedAcc.accountName} (${selectedAcc.login || selectedAcc.accountLogin})` : 'Select Account';
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: '#0B1220',
+                    border: '1px solid rgba(17, 179, 174, 0.3)',
+                    borderRadius: '8px',
+                    maxHeight: '200px',
+                    '& .MuiMenuItem-root': {
+                      color: '#E9D8C8',
+                      '&:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: '#11B3AE',
+                        color: '#FFFFFF',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
+              input={
+                <OutlinedInput
+                  sx={{
+                    color: '#E9D8C8',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(17, 179, 174, 0.3)',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(17, 179, 174, 0.5)',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#11B3AE',
+                      boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                    },
+                    '& .MuiSelect-icon': {
+                      color: '#E9D8C8',
+                    },
+                  }}
+                />
+              }
+            >
+              {accountsLoading ? (
+                <MenuItem value="" disabled>
+                  Loading accounts...
+                </MenuItem>
+              ) : accounts.length === 0 ? (
+                <MenuItem value="" disabled>
+                  No accounts
+                </MenuItem>
+              ) : (
+                accounts.map((account) => (
+                  <MenuItem key={account.accountId} value={account.accountId}>
+                    {account.name || account.accountName} ({account.login || account.accountLogin})
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
           <FormControl size="small">
             <Select
               displayEmpty
@@ -336,13 +443,13 @@ export default function CloseTradeTable() {
                 },
               }}
             >
-              {data && data.map((row, index) => {
+              {data && data.length > 0 && data.map((row, index) => {
                 return (
                   <StyledTableRow
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={`close_trade_table_header_${index}`}
+                    key={`dashboard_trade_table_row_${index}`}
                     sx={{
                       transition: 'all 0.2s ease-in-out',
                       '&:hover': {
@@ -360,22 +467,17 @@ export default function CloseTradeTable() {
                       let value = row[id];
                       if (id === 'type') {
                         value = value === 'DealBuy' ? 'Sell' : 'Buy';
-                      } else if (id === 'start_time') {
-                        value = value.substring(0, 10) + ' ' + value.substring(11, 19);
                       } else if (id === 'openTimeAsDateTime') {
                         value = value.substring(0, 10) + ' ' + value.substring(11, 19);
                       } else if (id === 'openPrice') {
                         value = formatNumber(value);
-                      } else if (id === 'price') {
-                        value = formatNumber(value);
-                      } else if (id === 'duration') {
-                        value = value > 3600 ? `${Math.floor(value / 3600)}h ${Math.floor((value % 3600) / 60)}m ${value % 60}s` : value > 60 ? `${Math.floor(value / 60)}m ${value % 60}s` : `${value}s`;
                       } else if (id === 'profit') {
                         value = formatNumber(value);
                       } else if (id === 'swap') {
                         value = formatNumber(value);
-                      } else if (id === 'balance') {
-                        value = formatNumber(value);
+                      } else if (id === 'account') {
+                        const selectedAcc = accounts.find(acc => acc.accountId === selectedAccount);
+                        value = selectedAcc ? `${selectedAcc.name || selectedAcc.accountName} (${selectedAcc.login || selectedAcc.accountLogin})` : 'N/A';
                       }
                       return (
                         <StyledTableCell
@@ -396,6 +498,22 @@ export default function CloseTradeTable() {
             </TableBody>
           </Table>
         </TableContainer>
+        
+        {loading && (
+          <div className="flex items-center justify-center h-32">
+            <Typography sx={{ color: '#E9D8C8' }}>
+              Loading trades...
+            </Typography>
+          </div>
+        )}
+        
+        {!loading && (!data || data.length === 0) && (
+          <div className="flex items-center justify-center h-32">
+            <Typography sx={{ color: '#E9D8C8' }}>
+              No opened trades found
+            </Typography>
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)] gap-4">
           <Typography sx={{ 
@@ -447,4 +565,4 @@ export default function CloseTradeTable() {
       </Paper>
     </div>
   );
-}
+} 

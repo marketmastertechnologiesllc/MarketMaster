@@ -158,7 +158,7 @@ export default function OpenTradeTable() {
 
   return (
     // <div className="text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-    <div className="text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] border-opacity-20">
+    <div className="text-[#E9D8C8] bg-[#0B1220] p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
       <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
         <div className="flex items-center gap-3">
           <FormControl size="small">
@@ -384,7 +384,7 @@ export default function OpenTradeTable() {
           </Table>
         </TableContainer>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)] gap-4">
           <Typography sx={{ 
             color: '#E9D8C8', 
             fontSize: { xs: 12, sm: 14 }, 

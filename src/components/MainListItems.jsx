@@ -196,22 +196,6 @@ function MainListItems({ open }) {
       {
         user.role === "Admin" &&
         <>
-          <Link className="flex flex-row" to={'/signal-followers'}>
-            <ListItemButton>
-              <ListItemIcon>
-                <ForwardRoundedIcon sx={{ color: '#E9D8C8' }} />
-              </ListItemIcon>
-              <ListItemText primary="Signal Followers" />
-            </ListItemButton>
-          </Link>
-          <Link className="flex flex-row" to={'/signal-provider'}>
-            <ListItemButton>
-              <ListItemIcon>
-                <SwapHorizRoundedIcon sx={{ color: '#E9D8C8' }} />
-              </ListItemIcon>
-              <ListItemText primary="Signal Provider" />
-            </ListItemButton>
-          </Link>
           <ListItemButton 
             onClick={handleWhitelabelClick}
             sx={{
@@ -271,6 +255,22 @@ function MainListItems({ open }) {
                     <SettingsSuggestIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
                   <ListItemText primary="Settings" />
+                </ListItemButton>
+              </Link>
+              <Link className="flex flex-row" to={'/signal-followers'}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ForwardRoundedIcon sx={{ color: '#E9D8C8' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Signal Followers" />
+                </ListItemButton>
+              </Link>
+              <Link className="flex flex-row" to={'/signal-provider'}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <SwapHorizRoundedIcon sx={{ color: '#E9D8C8' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Signal Provider" />
                 </ListItemButton>
               </Link>
             </List>
