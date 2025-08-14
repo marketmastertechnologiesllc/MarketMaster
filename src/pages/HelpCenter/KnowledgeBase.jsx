@@ -55,16 +55,30 @@ function KnowledgeBase() {
   };
 
   return (
-    <div className="grid grid-cols-12">
+    <div className="grid grid-cols-12 gap-6 text-[#E9D8C8]">
       <div className="col-span-3 px-[15px]">
-        <section className="mb-[20px] rounded-lg bg-[#282D36]">
-          <header className="p-[18px] text-white">
-            <h2 className="mt-[5px] text-[20px] font-normal">Knowledge base</h2>
+        <section className="mb-[20px] rounded-xl bg-[#0B1220] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+          <header className="p-[18px] text-[#E9D8C8] border-b border-[#11B3AE] border-opacity-20">
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Knowledge base</h2>
           </header>
-          <div className="p-[15px] bg-[#2E353E] rounded-b-lg">
+          <div className="p-[15px] bg-[#0B1220] rounded-b-xl">
             <select
-              className="w-full overflow-hidden bg-[#282D36] text-white text-[14px] px-3 py-1.5 rounded"
+              className="w-full overflow-hidden bg-[#0B1220] text-[#E9D8C8] text-[14px] px-3 py-2 rounded-lg border border-[#11B3AE] border-opacity-30 focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:border-transparent transition-all duration-200"
               onChange={handleInputChange}
+              value={selectedOption}
+              style={{
+                '& option': {
+                  backgroundColor: '#0B1220',
+                  color: '#E9D8C8',
+                },
+                '& option:hover': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.2)',
+                },
+                '& option:selected': {
+                  backgroundColor: '#11B3AE',
+                  color: '#FFFFFF',
+                }
+              }}
             >
               <option value="dashboard">Dashboard</option>
               <option value="signals">Signals</option>
@@ -79,148 +93,150 @@ function KnowledgeBase() {
           </div>
         </section>
       </div>
-      <div className="col-span-9 px-[15px] rounded-lg">
-        <section className="mb-[20px] rounded-lg bg-[#282D36]">
-          <header className="p-[18px] text-white">
-            <h2 className="mt-[5px] text-[20px] font-normal">
+      <div className="col-span-9 px-[15px] rounded-xl">
+        <section className="mb-[20px] rounded-xl bg-[#0B1220] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+          <header className="p-[18px] text-[#E9D8C8] border-b border-[#11B3AE] border-opacity-20">
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">
               {Title(selectedOption)}
             </h2>
           </header>
-          {selectedOption === 'dashboard' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle
-                toggleName={'Overview'}
-                initialActive={true}
-                initialLastChildren={true}
-              >
-                <DashboardOverview />
+          <div className="bg-[#0B1220] rounded-b-xl">
+            {selectedOption === 'dashboard' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle
+                  toggleName={'Overview'}
+                  initialActive={true}
+                  initialLastChildren={true}
+                >
+                  <DashboardOverview />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {selectedOption === 'signals' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle
+                  toggleName={'Overview'}
+                  initialActive={true}
+                  initialLastChildren={true}
+                >
+                  <SignalsOverview />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {selectedOption === 'accounts' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle toggleName={'Overview'} initialActive={true}>
+                  <AccountsOverview />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Add account'}>
+                  <AccountsAddAccount />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Connection response'}>
+                  <AccountsConnectionResponse />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'General settings'}>
+                  <AccountsGeneralSettings />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Login credentials'}>
+                  <AccountsLoginCredentials />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Suffix'}>
+                  <AccountsSuffix />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle
+                  toggleName={'Symbols'}
+                  initialLastChildren={true}
+                >
+                  <AccountsSymbols />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {selectedOption === 'tradeCopiers' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle toggleName={'Overview'} initialActive={true}>
+                  <TradeCopiersOverview />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Add copier'}>
+                  <TradeCopiersAddCopier />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'General settings'}>
+                  <TradeCopiersGeneralSettings />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Risk settings'}>
+                  <TradeCopiersRiskSettings />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Stops and limits'}>
+                  <TradeCopiersStopsAndLimits />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Disable symbols'}>
+                  <TradeCopiersDisableSymbols />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Symbol maps'}>
+                  <TradeCopiersSymbolMaps />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle
+                  toggleName={'Copier log'}
+                  initialLastChildren={true}
+                >
+                  <TradeCopiersCopierLog />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {selectedOption === 'equityMonitors' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle toggleName={'Overview'} initialActive={true}>
+                  <EquityMonitorsOverview />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle toggleName={'Create equity monitor'}>
+                  <EquityMonitorsCreateEquityMonitor />
+                </KnowledgeBaseToggle>
+                <KnowledgeBaseToggle
+                  toggleName={'Types'}
+                  initialLastChildren={true}
+                >
+                  <EquityMonitorsTypes />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {selectedOption === 'emailAlerts' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle
+                  toggleName={'Overview'}
+                  initialActive={true}
+                  initialLastChildren={true}
+                >
+                  <EmailAlertsOverview />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {selectedOption === 'analysis' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle
+                  toggleName={'Overview'}
+                  initialActive={true}
+                  initialLastChildren={true}
+                >
+                  <AnalysisOverview />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+            {/* {selectedOption === 'profileManager' && (
+              <KnowledgeBaseToggle>
+              <DashboardOverview />
               </KnowledgeBaseToggle>
-            </div>
-          )}
-          {selectedOption === 'signals' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle
-                toggleName={'Overview'}
-                initialActive={true}
-                initialLastChildren={true}
-              >
-                <SignalsOverview />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
-          {selectedOption === 'accounts' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle toggleName={'Overview'} initialActive={true}>
-                <AccountsOverview />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Add account'}>
-                <AccountsAddAccount />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Connection response'}>
-                <AccountsConnectionResponse />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'General settings'}>
-                <AccountsGeneralSettings />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Login credentials'}>
-                <AccountsLoginCredentials />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Suffix'}>
-                <AccountsSuffix />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle
-                toggleName={'Symbols'}
-                initialLastChildren={true}
-              >
-                <AccountsSymbols />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
-          {selectedOption === 'tradeCopiers' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle toggleName={'Overview'} initialActive={true}>
-                <TradeCopiersOverview />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Add copier'}>
-                <TradeCopiersAddCopier />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'General settings'}>
-                <TradeCopiersGeneralSettings />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Risk settings'}>
-                <TradeCopiersRiskSettings />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Stops and limits'}>
-                <TradeCopiersStopsAndLimits />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Disable symbols'}>
-                <TradeCopiersDisableSymbols />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Symbol maps'}>
-                <TradeCopiersSymbolMaps />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle
-                toggleName={'Copier log'}
-                initialLastChildren={true}
-              >
-                <TradeCopiersCopierLog />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
-          {selectedOption === 'equityMonitors' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle toggleName={'Overview'} initialActive={true}>
-                <EquityMonitorsOverview />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle toggleName={'Create equity monitor'}>
-                <EquityMonitorsCreateEquityMonitor />
-              </KnowledgeBaseToggle>
-              <KnowledgeBaseToggle
-                toggleName={'Types'}
-                initialLastChildren={true}
-              >
-                <EquityMonitorsTypes />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
-          {selectedOption === 'emailAlerts' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle
-                toggleName={'Overview'}
-                initialActive={true}
-                initialLastChildren={true}
-              >
-                <EmailAlertsOverview />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
-          {selectedOption === 'analysis' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle
-                toggleName={'Overview'}
-                initialActive={true}
-                initialLastChildren={true}
-              >
-                <AnalysisOverview />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
-          {/* {selectedOption === 'profileManager' && (
-            <KnowledgeBaseToggle>
-            <DashboardOverview />
-            </KnowledgeBaseToggle>
-          )} */}
-          {selectedOption === 'userSetting' && (
-            <div className="mb-[130px]">
-              <KnowledgeBaseToggle
-                toggleName={'Overview'}
-                initialActive={true}
-                initialLastChildren={true}
-              >
-                <UserSettingsOverview />
-              </KnowledgeBaseToggle>
-            </div>
-          )}
+            )} */}
+            {selectedOption === 'userSetting' && (
+              <div className="mb-[130px]">
+                <KnowledgeBaseToggle
+                  toggleName={'Overview'}
+                  initialActive={true}
+                  initialLastChildren={true}
+                >
+                  <UserSettingsOverview />
+                </KnowledgeBaseToggle>
+              </div>
+            )}
+          </div>
         </section>
       </div>
     </div>

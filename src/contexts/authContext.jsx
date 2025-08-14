@@ -35,10 +35,32 @@ const AuthProvider = ({ children }) => {
 
   const { pathname } = useLocation();
 
+  // Define public routes that don't require authentication
+  const publicRoutes = [
+    '/reset-password',
+    '/forgot-password', 
+    '/auth/login', 
+    '/auth/signup', 
+    '/auth/verify-email',
+    '/email-verification-page-for-login',
+    '/email-verification-page-for-signup',
+    '/email-verification-page-for-update',
+    '/auth/verify-email-update'
+  ];
+
   useEffect(() => {
     const init = async () => {
       try {
         const token = window.localStorage.getItem('token');
+
+        // Check if current path is a public route
+        const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+        
+        if (isPublicRoute) {
+          // Don't redirect for public routes, just mark as initialized
+          setIsInitialized(true);
+          return;
+        }
 
         if (token && verifyToken(token)) {
           // setSession(token);
@@ -66,7 +88,7 @@ const AuthProvider = ({ children }) => {
     if (pathname.substring(0, 11) !== '/auth/view/') {
       init();
     }
-  }, []);
+  }, [pathname, navigate]);
 
   const signOut = () => {
     setIsAuthenticated(false);

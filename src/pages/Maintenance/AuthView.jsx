@@ -12,7 +12,7 @@ import TradesAnalysis from '../../components/analysis/TradesAnalysis';
 import api from '../../utils/api';
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
-import Logo from '../../assets/img/dark-logo-img.png'
+import Logo from '../../assets/img/TradeMesh-MainLogo.png'
 
 function AuthView() {
   const { id } = useParams();
@@ -126,7 +126,7 @@ function AuthView() {
     return (
       <div className="pb-[100px]">
         <div className="flex justify-between">
-          <img className="h-10 w-10" src={Logo} alt="" />
+          <img className="h-10 w-32" src={Logo} alt="" />
           <button
             className="bg-[#51B451] text-white hover:bg-gray-200 hover:text-slate-500 px-3 rounded"
             onClick={handleFollowClick}

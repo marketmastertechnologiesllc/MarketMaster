@@ -36,50 +36,51 @@ function ContactSupport() {
   }
 
   return (
-    <div>
+    <div className="w-auto text-[#E9D8C8]">
       <div className="py-0 px-[200px]">
         <Paper
           elevation={0}
           sx={{
-            color: '#31708f',
-            backgroundColor: '#d9edf7',
-            padding: '15px',
+            color: '#E9D8C8',
+            backgroundColor: 'rgba(17, 179, 174, 0.1)',
+            padding: '20px',
             marginBottom: '20px',
-            borderRadius: '4px',
+            borderRadius: '12px',
+            border: '1px solid rgba(17, 179, 174, 0.3)',
           }}
         >
-          <HelpIcon fontSize="5px" />
-          <strong className="pl-[2px] font-bold box-border text-[13px]">
+          <HelpIcon sx={{ color: '#11B3AE', fontSize: '20px' }} />
+          <strong className="pl-[8px] font-bold box-border text-[14px] text-[#E9D8C8]">
             {' '}
             Have you read our{' '}
-            <Link to={'/knowledge-base'} className="text-[#0088cc]">
+            <Link to={'/knowledge-base'} className="text-[#11B3AE] hover:text-[#0F9A95] transition-colors">
               knowledge base?
             </Link>
           </strong>
-          <p className="pl-[25px] text-[13px] text-[#31708f]">
+          <p className="pl-[28px] text-[14px] text-[#E9D8C8] opacity-80 mt-2">
             With our{' '}
-            <Link to={'/knowledge-base'} className="text-[#0088cc]">
+            <Link to={'/knowledge-base'} className="text-[#11B3AE] hover:text-[#0F9A95] transition-colors">
               knowledge base
             </Link>{' '}
             you can get an in-depth explanation on all the features and
             functionality of the platform including copier risk settings and
             more{' '}
-            <Link to={'/knowledge-base'} className="text-[#0088cc]">
+            <Link to={'/knowledge-base'} className="text-[#11B3AE] hover:text-[#0F9A95] transition-colors">
               here
             </Link>
             .
           </p>
         </Paper>
         <div>
-          <section className="mb-[20px] rounded bg-[#282D36] text-white">
-            <header className="p-[18px]">
-              <h2 className="mt-[5px] text-[20px] font-normal">
+          <section className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+            <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
+              <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">
                 Contact Support
               </h2>
             </header>
-            <div className="box-border p-[15px] bg-[#2E353E]">
-              <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
-                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#ccc] text-[13px]">
+            <div className="box-border p-[15px] bg-[#0B1220]">
+              <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
+                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
                   Subject
                 </label>
                 <div className="w-1/2 px-[15px]">
@@ -89,12 +90,13 @@ function ContactSupport() {
                     required
                     value={data.subject}
                     onChange={e => setData({...data, subject: e.target.value})}
-                    className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+                    className="block w-full h-[40px] text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-2 rounded-lg border border-[#11B3AE] border-opacity-30 focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:border-transparent transition-all duration-200"
+                    placeholder="Enter subject"
                   />
                 </div>
               </div>
-              <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
-                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#ccc] text-[13px]">
+              <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
+                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
                   Department
                 </label>
                 <div className="w-1/2 px-[15px]">
@@ -103,7 +105,20 @@ function ContactSupport() {
                     required
                     value={data.department}
                     onChange={e => setData({...data, department: e.target.value})}
-                    className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+                    className="block w-full h-[40px] text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-2 rounded-lg border border-[#11B3AE] border-opacity-30 focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:border-transparent transition-all duration-200"
+                    style={{
+                      '& option': {
+                        backgroundColor: '#0B1220',
+                        color: '#E9D8C8',
+                      },
+                      '& option:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.2)',
+                      },
+                      '& option:selected': {
+                        backgroundColor: '#11B3AE',
+                        color: '#FFFFFF',
+                      }
+                    }}
                   >
                     <option value={'General'}>General</option>
                     <option value={'Technical'}>Technical</option>
@@ -112,7 +127,7 @@ function ContactSupport() {
                 </div>
               </div>
               <div className="flex justify-start">
-                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#ccc] text-[13px]">
+                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
                   Message
                 </label>
                 <div className="w-1/2 px-[15px]">
@@ -123,12 +138,13 @@ function ContactSupport() {
                     value={data.message}
                     required
                     minLength={6}
-                    className="block w-full h-auto text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+                    className="block w-full h-auto text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-2 rounded-lg border border-[#11B3AE] border-opacity-30 focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:border-transparent transition-all duration-200 resize-vertical"
+                    placeholder="Enter your message"
                   />
                 </div>
               </div>
             </div>
-            <footer className="px-[15px] py-[10px]">
+            <footer className="px-[15px] py-[10px] border-t border-[#11B3AE] border-opacity-20">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-4 col-span-4 pl-3.5">
                   <Button
@@ -136,10 +152,19 @@ function ContactSupport() {
                     size="small"
                     sx={{
                       textTransform: 'none',
-                      backgroundColor: '#0088CC!important',
+                      backgroundColor: '#11B3AE!important',
+                      color: '#FFFFFF!important',
+                      fontWeight: 500,
+                      borderRadius: '8px',
+                      padding: '8px 16px',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95!important',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                      },
                     }}
                     onClick={handleSubmit}
-                    
                   >
                     Send
                   </Button>

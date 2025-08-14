@@ -55,10 +55,17 @@ const initialHeaders = {
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -76,10 +83,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -92,16 +100,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
   },
   '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
   },
 }));
 
@@ -117,6 +134,7 @@ function SignalFollowers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [totalCount, setTotalCount] = useState(0);
   const [headers, setHeaders] = useState(initialHeaders);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   // Mock data for demonstration - replace with actual API calls
   const mockFollowers = [
@@ -181,6 +199,7 @@ function SignalFollowers() {
 
   const loadData = async () => {
     setIsLoading(true);
+    setIsDataLoading(true);
     try {
       if (activeTab === 'followers') {
         // Replace with actual API call
@@ -202,6 +221,7 @@ function SignalFollowers() {
       showToast('Failed to load data', 'error');
     } finally {
       setIsLoading(false);
+      setIsDataLoading(false);
     }
   };
 
@@ -223,9 +243,7 @@ function SignalFollowers() {
     navigate('/signal-followers/add');
   };
 
-
-
-    const getHeaders = () => {
+  const getHeaders = () => {
     return headers[activeTab];
   };
 
@@ -268,7 +286,7 @@ function SignalFollowers() {
   };
 
   return (
-    <div>
+    <div className="w-auto text-[#E9D8C8]">
       <Stack
         direction="row"
         alignItems="center"
@@ -284,8 +302,19 @@ function SignalFollowers() {
               size="small"
               startIcon={<AddIcon />}
               sx={{
-                textTransform: 'none',
-                backgroundColor: '#0088CC!important',
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF!important',
+                fontWeight: 500,
+                borderRadius: '8px',
+                padding: '8px 16px',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                position: 'relative',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
             >
               Add Follower
@@ -300,8 +329,18 @@ function SignalFollowers() {
           variant="contained"
           size="small"
           sx={{
-            backgroundColor: activeTab == 'followers' ? '#0088CC' : '#282d36',
+            backgroundColor: activeTab == 'followers' ? '#11B3AE' : '#0B1220',
+            color: activeTab == 'followers' ? '#FFFFFF' : '#E9D8C8',
+            border: activeTab == 'followers' ? '1px solid #11B3AE' : '1px solid rgba(17, 179, 174, 0.3)',
             textTransform: 'none',
+            fontWeight: 500,
+            borderRadius: '8px',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              backgroundColor: activeTab == 'followers' ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+            },
           }}
           onClick={() => setActiveTab('followers')}
         >
@@ -311,27 +350,76 @@ function SignalFollowers() {
           onClick={() => setActiveTab('deleted')}
           variant="contained"
           sx={{
-            backgroundColor: activeTab == 'deleted' ? '#0088CC' : '#282d36',
+            backgroundColor: activeTab == 'deleted' ? '#11B3AE' : '#0B1220',
+            color: activeTab == 'deleted' ? '#FFFFFF' : '#E9D8C8',
+            border: activeTab == 'deleted' ? '1px solid #11B3AE' : '1px solid rgba(17, 179, 174, 0.3)',
             textTransform: 'none',
+            fontWeight: 500,
+            borderRadius: '8px',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              backgroundColor: activeTab == 'deleted' ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+            },
           }}
         >
           Deleted Followers
         </StyledButton>
       </div>
 
-      <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
-        <div className="flex justify-between w-full pb-3">
-          <div className="flex items-center gap-2">
+      <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+        <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
+          <div className="flex items-center gap-3">
             <FormControl size="small">
               <Select
                 displayEmpty
                 value={rowsPerPage}
                 onChange={handleRowsPerPageChange}
+                disabled={isDataLoading}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#0B1220',
+                      border: '1px solid rgba(17, 179, 174, 0.3)',
+                      borderRadius: '8px',
+                      maxHeight: '200px',
+                      '& .MuiMenuItem-root': {
+                        color: '#E9D8C8',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: '#11B3AE',
+                          color: '#FFFFFF',
+                          '&:hover': {
+                            backgroundColor: '#0F9A95',
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
                 input={
                   <OutlinedInput
                     sx={{
-                      width: '80px',
-                      color: 'white',
+                      width: { xs: '70px', sm: '80px' },
+                      color: isDataLoading ? '#666' : '#E9D8C8',
+                      borderRadius: '8px',
+                      backgroundColor: isDataLoading ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : 'rgba(17, 179, 174, 0.3)',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : 'rgba(17, 179, 174, 0.5)',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : '#11B3AE',
+                        boxShadow: isDataLoading ? 'none' : '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiSelect-icon': {
+                        color: isDataLoading ? '#666' : '#E9D8C8',
+                      },
                     }}
                   />
                 }
@@ -342,7 +430,13 @@ function SignalFollowers() {
                 <MenuItem value={100}>100</MenuItem>
               </Select>
             </FormControl>
-            <Typography>records per page</Typography>
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontWeight: 500,
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}>
+              records per page
+            </Typography>
           </div>
           <Search>
             <SearchIconWrapper>
@@ -353,65 +447,58 @@ function SignalFollowers() {
               inputProps={{ 'aria-label': 'search' }}
               value={searchTerm}
               onChange={handleSearchChange}
+              disabled={isDataLoading}
             />
           </Search>
         </div>
 
         {/* Empty State */}
-        {getCurrentData().length === 0 && activeTab === 'followers' ? (
+        {getCurrentData().length === 0 && activeTab === 'followers' && !isDataLoading ? (
           <div className="text-center py-8">
-            <h3 className="text-white text-xl mb-4">There are currently no users following your signal</h3>
-            <p className="text-gray-300 mb-6">
+            <h3 className="text-[#E9D8C8] text-xl mb-4 font-semibold">There are currently no users following your signal</h3>
+            <p className="text-[#E9D8C8] opacity-80 mb-6">
               You can offer your trading expertise out to other people by creating a signal provider page from your account.
             </p>
             <StyledButton
               variant="contained"
               onClick={handleAddFollower}
               sx={{
-                backgroundColor: '#0099e6',
-                '&:hover': { backgroundColor: '#0088cc' },
-                textTransform: 'none'
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF!important',
+                fontWeight: 500,
+                borderRadius: '8px',
+                padding: '8px 16px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
             >
               <Icon icon="typcn:plus" width="16" height="16" style={{ marginRight: '4px' }} />
               Add Follower
             </StyledButton>
-            {/* <div className="mt-8">
-              <h3 className="text-white text-xl mb-4">How do I manage signal followers?</h3>
-              <p className="text-gray-300 mb-6">
-                Here you can find the documentation on how to manage clients following your signal.
-              </p>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: '#0099e6',
-                  '&:hover': { backgroundColor: '#0088cc' },
-                  textTransform: 'none'
-                }}
-              >
-                Documentation
-              </Button>
-            </div> */}
           </div>
         ) : (
           <Paper
             sx={{
               width: '100%',
               overflow: 'hidden',
-              backgroundColor: '#2E353E',
+              backgroundColor: 'transparent',
               boxShadow: 'none',
-              '& .MuiPaper-root': {
-                color: '#ccc',
-                backgroundColor: '#2E353E',
-                boxShadow: 'none',
-              },
             }}
           >
             <TableContainer
               sx={{
+                borderRadius: '12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                maxWidth: '100%',
+                overflowX: 'auto',
                 '.MuiTable-root': {
-                  borderColor: '#282D36',
+                  borderColor: 'rgba(17, 179, 174, 0.2)',
                   borderWidth: '1px',
+                  minWidth: { xs: '600px', sm: 'auto' },
                 },
               }}
             >
@@ -419,69 +506,102 @@ function SignalFollowers() {
                 stickyHeader
                 aria-label="sticky table"
                 sx={{
+                  borderRadius: '12px',
                   '& .MuiTableCell-root': {
-                    color: '#ccc',
-                    backgroundColor: '#2E353E',
-                    border: '#282D36',
+                    color: '#E9D8C8',
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(17, 179, 174, 0.15)',
+                    fontSize: '0.875rem',
+                  },
+                  '& .MuiTableHead-root .MuiTableCell-root': {
+                    backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    color: '#FFFFFF',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    borderColor: 'rgba(17, 179, 174, 0.2)',
+                  },
+                  '& .MuiTableRow-root:hover': {
+                    backgroundColor: 'rgba(17, 179, 174, 0.05)',
                   },
                 }}
               >
-                            <TableHead>
-              <TableRow
-                sx={{
-                  '&:last-child td, &:last-child th': {
-                    border: 1,
-                    borderColor: '#282D36',
-                  },
-                }}
-              >
-                {getHeaders()
-                  .filter((item) => item.checked && item.id !== 'actions')
-                  .map(({ label, id }, index) => (
-                  <TableCell
-                    key={`signal_followers_table_header_${index}`}
-                    align="center"
+                <TableHead sx={{
+                  borderRadius: '12px',
+                }}>
+                  <TableRow
                     sx={{
-                      padding: '5px',
+                      '&:last-child td, &:last-child th': {
+                        border: 1,
+                        borderColor: 'rgba(17, 179, 174, 0.2)',
+                      },
                     }}
                   >
-                    <div className="flex items-center justify-between p-[3px]">
-                      {label === '' ? <p></p> : <p>{label}</p>}
-                      <div className="flex flex-col cursor-pointer">
-                        <Icon
-                          icon="teenyicons:up-solid"
-                          color="#ccc"
-                          className="mb-[-4px]"
-                          width={11}
-                        />
-                        <Icon
-                          icon="teenyicons:down-solid"
-                          width={11}
-                          color="#ccc"
-                        />
-                      </div>
-                    </div>
-                  </TableCell>
-                ))}
-                <TableCell
-                  key={'option'}
-                  align="center"
-                  sx={{
-                    padding: '5px',
-                  }}
-                ></TableCell>
-              </TableRow>
-            </TableHead>
+                    {getHeaders()
+                      .filter((item) => item.checked && item.id !== 'actions')
+                      .map(({ label, id }, index) => (
+                      <TableCell
+                        key={`signal_followers_table_header_${index}`}
+                        align="center"
+                        sx={{
+                          padding: '12px 8px',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <div className="flex items-center justify-between p-[6px]">
+                          {label === '' ? <p></p> : <p className="font-semibold">{label}</p>}
+                          <div className="flex flex-col cursor-pointer">
+                            <Icon
+                              icon="teenyicons:up-solid"
+                              color="#11B3AE"
+                              className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
+                              width={11}
+                            />
+                            <Icon
+                              icon="teenyicons:down-solid"
+                              width={11}
+                              color="#11B3AE"
+                              className="hover:text-[#E9D8C8] transition-colors"
+                            />
+                          </div>
+                        </div>
+                      </TableCell>
+                    ))}
+                    <TableCell
+                      key={'option'}
+                      align="center"
+                      sx={{
+                        padding: '12px 8px',
+                        fontWeight: 600,
+                      }}
+                    ></TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody
                   sx={{
                     '&:last-child td, &:last-child th': {
                       border: 1,
-                      borderColor: '#282D36',
+                      borderColor: 'rgba(17, 179, 174, 0.15)',
                     },
                   }}
                 >
-                  {getCurrentData() &&
-                    getCurrentData().length > 0 &&
+                  {isDataLoading ? (
+                    <TableRow>
+                      <TableCell 
+                        colSpan={getHeaders().filter(item => item.checked).length} 
+                        align="center"
+                        sx={{
+                          padding: '60px 20px',
+                          border: 'none',
+                        }}
+                      >
+                        <div className="flex flex-col justify-center items-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#11B3AE] mb-4"></div>
+                          <span className="text-[#E9D8C8] text-lg font-medium">Loading followers...</span>
+                          <span className="text-[#E9D8C8] text-sm opacity-70 mt-1">Please wait while we fetch your follower data</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : getCurrentData() && getCurrentData().length > 0 ? (
                     getCurrentData().map((row, index) => {
                       return (
                         <TableRow
@@ -489,90 +609,127 @@ function SignalFollowers() {
                           role="checkbox"
                           tabIndex={-1}
                           key={`signal_followers_table_row_${index}`}
+                          sx={{
+                            transition: 'all 0.2s ease-in-out',
+                            '&:hover': {
+                              backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                              transform: 'translateY(-1px)',
+                              boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                            },
+                          }}
                         >
-                                                  {getHeaders()
-                          .filter((item) => item.checked && item.id !== 'actions')
-                          .map(({ id }) => {
-                          let value = row[id];
-                          if (id === 'emailAlerts' || id === 'tradeCopier') {
-                            value = row[id] ? 'Yes' : 'No';
-                          } else if (id === 'expires') {
-                            value = row[id] || 'No';
-                          } else if (id === 'account' && activeTab === 'deleted') {
-                            value = <span style={{ color: '#d2322d' }}>{row[id]}</span>;
-                          }
-                          return (
+                          {getHeaders()
+                            .filter((item) => item.checked && item.id !== 'actions')
+                            .map(({ id }) => {
+                            let value = row[id];
+                            if (id === 'emailAlerts' || id === 'tradeCopier') {
+                              value = row[id] ? 'Yes' : 'No';
+                            } else if (id === 'expires') {
+                              value = row[id] || 'No';
+                            } else if (id === 'account' && activeTab === 'deleted') {
+                              value = <span style={{ color: '#fa5252' }}>{row[id]}</span>;
+                            }
+                            return (
+                              <TableCell
+                                key={id + row.id}
+                                align="left"
+                                sx={{
+                                  padding: '12px 16px',
+                                  fontSize: '0.875rem',
+                                }}
+                              >
+                                {id === 'emailAlerts' || id === 'tradeCopier' ? (
+                                  <Icon
+                                    icon={row[id] ? 'mdi:check-bold' : 'mdi:close-bold'}
+                                    width={22}
+                                    className="font-bold"
+                                    color={row[id] ? '#11B3AE' : '#fa5252'}
+                                  />
+                                ) : (
+                                  <div className="truncate font-medium">{value}</div>
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                          {getHeaders().find(({ id }) => id === 'actions').checked && (
                             <TableCell
-                              key={id + row.id}
-                              align="left"
+                              key={row.id + 'option'}
+                              align="center"
                               sx={{
-                                padding: '5px',
-                                paddingLeft: 2,
+                                padding: '12px 8px',
                               }}
                             >
-                              {id === 'emailAlerts' || id === 'tradeCopier' ? (
-                                <Icon
-                                  icon={row[id] ? 'mdi:check-bold' : 'mdi:close-bold'}
-                                  width={22}
-                                  className="font-bold"
-                                  color={row[id] ? 'green' : '#D64742'}
-                                />
-                              ) : (
-                                <div className="truncate">{value}</div>
-                              )}
+                              <div className="flex gap-2 justify-center">
+                                <IconButton
+                                  size="small"
+                                  color="inherit"
+                                  sx={{
+                                    backgroundColor: '#11B3AE',
+                                    borderRadius: '8px',
+                                    fontSize: 16,
+                                    padding: '10px 10px',
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                      backgroundColor: '#0F9A95',
+                                      transform: 'translateY(-1px)',
+                                      boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                    },
+                                  }}
+                                  onClick={() => handleEditFollower(row.id)}
+                                >
+                                  <Icon icon="fa:cogs" color="white" />
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  color="inherit"
+                                  sx={{
+                                    backgroundColor: '#fa5252',
+                                    borderRadius: '8px',
+                                    fontSize: 16,
+                                    padding: '10px 10px',
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                      backgroundColor: '#e03131',
+                                      transform: 'translateY(-1px)',
+                                      boxShadow: '0 4px 12px rgba(250, 82, 82, 0.3)',
+                                    },
+                                  }}
+                                  onClick={() => handleDeleteFollower({
+                                    followerName: row.followerName,
+                                    followerId: row.id,
+                                  })}
+                                >
+                                  <Icon icon="ion:trash-sharp" color="white" />
+                                </IconButton>
+                              </div>
                             </TableCell>
-                          );
-                        })}
-                        {getHeaders().find(({ id }) => id === 'actions').checked && (
-                          <TableCell
-                            key={row.id + 'option'}
-                            align="center"
-                            sx={{
-                              padding: '5px',
-                            }}
-                          >
-                            <div className="flex gap-2">
-                              <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#0099E6',
-                                  borderRadius: '4px',
-                                  fontSize: 14,
-                                  padding: '8px 6px',
-                                }}
-                                onClick={() => handleEditFollower(row.id)}
-                              >
-                                <Icon icon="fa:cogs" color="white" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#D64742',
-                                  borderRadius: '4px',
-                                  fontSize: 14,
-                                  padding: '8px 6px',
-                                }}
-                                onClick={() => handleDeleteFollower({
-                                  followerName: row.followerName,
-                                  followerId: row.id,
-                                })}
-                              >
-                                <Icon icon="ion:trash-sharp" color="white" />
-                              </IconButton>
-                            </div>
-                          </TableCell>
-                        )}
+                          )}
                         </TableRow>
                       );
-                    })}
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell 
+                        colSpan={getHeaders().filter(item => item.checked).length} 
+                        align="center"
+                        sx={{
+                          padding: '60px 20px',
+                          border: 'none',
+                        }}
+                      >
+                        <div className="flex flex-col justify-center items-center">
+                          <span className="text-[#E9D8C8] text-lg font-medium">No followers found</span>
+                          <span className="text-[#E9D8C8] text-sm opacity-70 mt-1">Try adjusting your search criteria</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
 
-            <div className="flex justify-between items-center">
-              <Typography sx={{ color: '#ccc', fontSize: 13 }}>
+            <div className="flex justify-between items-center mt-4">
+              <Typography sx={{ color: '#E9D8C8', fontSize: { xs: 12, sm: 14 }, fontWeight: 500 }}>
                 Showing {rowsPerPage * (page - 1) + 1} to{' '}
                 {rowsPerPage * page > totalCount ? totalCount : rowsPerPage * page} of{' '}
                 {totalCount} entries
@@ -580,6 +737,24 @@ function SignalFollowers() {
               <Pagination
                 sx={{
                   paddingY: 2,
+                  '& .MuiPaginationItem-root': {
+                    color: '#E9D8C8',
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    minWidth: { xs: 32, sm: 40 },
+                    height: { xs: 32, sm: 40 },
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.2)',
+                      color: '#E9D8C8',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
                 }}
                 count={
                   totalCount % rowsPerPage === 0
@@ -602,27 +777,27 @@ function SignalFollowers() {
       {showRemoveModal && selectedFollower && (
         <div className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201]">
           <div
-            className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
+            className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-90 bg-[#0e1013]"
             onClick={() => setShowRemoveModal(false)}
           ></div>
-          <section className="mb-[20px] rounded bg-[#282D36] w-[500px] z-[100000]">
-            <header className="p-[18px] text-white flex justify-between items-center">
-              <h2 className="mt-[5px] text-[20px] font-normal">Remove follower access</h2>
+          <section className="mb-[20px] rounded-xl bg-[#0B1220] w-[500px] z-[100000] border border-[#11B3AE] shadow-[0_0_32px_rgba(17,179,174,0.3)]">
+            <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center border-b border-[#11B3AE] border-opacity-20">
+              <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Remove follower access</h2>
               <button
-                className="bg-[#0099e6] w-[33px] h-[33px] rounded font-extrabold"
+                className="bg-[#11B3AE] hover:bg-[#0F9A95] w-[33px] h-[33px] rounded font-extrabold text-white transition-all duration-200"
                 onClick={() => setShowRemoveModal(false)}
               >
                 ✖
               </button>
             </header>
-            <div className="p-[15px] bg-[#2E353E] text-white text-center">
+            <div className="p-[15px] bg-[#0B1220] text-[#E9D8C8] text-center">
               <p className="pb-[10px] text-sm">
                 Are you sure you want revoke access for <font className="font-bold">{selectedFollower.followerName}</font>?
               </p>
-              <p className="text-[13px] text-[#ccc] mb-[10px]">
+              <p className="text-[13px] text-[#E9D8C8] opacity-80 mb-[10px]">
                 Any configured trade alerts and trade copiers relating to this signal will be deleted.
               </p>
-              <p className="text-[13px] text-[#ccc] mb-[10px]">
+              <p className="text-[13px] text-[#E9D8C8] opacity-80 mb-[10px]">
                 <b>This process can not be undone.</b>
               </p>
               <label className="flex gap-2 justify-center items-center mb-[25px]">
@@ -631,21 +806,28 @@ function SignalFollowers() {
                   id="confirm-remove"
                   checked={confirmRemove}
                   onChange={(e) => setConfirmRemove(e.target.checked)}
+                  className="accent-[#11B3AE]"
                 />
-                <span className="text-[13px] text-[#ccc]">Are you sure?</span>
+                <span className="text-[13px] text-[#E9D8C8]">Are you sure?</span>
               </label>
             </div>
-            <footer className="px-4 py-3 text-white flex justify-end items-center">
+            <footer className="px-4 py-3 text-[#E9D8C8] flex justify-end items-center border-t border-[#11B3AE] border-opacity-20">
               <StyledButton
                 variant="contained"
                 disabled={!confirmRemove}
                 onClick={handleRemoveFollower}
                 sx={{
-                  backgroundColor: confirmRemove ? '#d2322d' : '#666',
-                  '&:hover': { 
-                    backgroundColor: confirmRemove ? '#b02a25' : '#666' 
+                  backgroundColor: confirmRemove ? '#fa5252!important' : '#666!important',
+                  color: '#FFFFFF!important',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: confirmRemove ? '#e03131!important' : '#666!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: confirmRemove ? '0 4px 12px rgba(250, 82, 82, 0.3)' : 'none',
                   },
-                  textTransform: 'none',
                   '&:disabled': {
                     backgroundColor: '#666!important',
                     color: '#999!important',

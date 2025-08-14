@@ -13,10 +13,6 @@ const CommonRoutes = {
   path: '/',
   children: [
     {
-      path: '*',
-      element: <Error404 />,
-    },
-    {
       path: '/404',
       element: <Error404 />,
     },
@@ -55,6 +51,10 @@ const CommonRoutes = {
     {
       path: '/auth/view/:id',
       element: <View />,
+    },
+    {
+      path: '*',
+      element: <Error404 />,
     },
   ],
 };

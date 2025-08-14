@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import Logo from '../assets/img/dark-logo-img.png';
+import Logo from '../assets/img/TradeMesh-MainLogo.png';
 import SidebarLinkGroup from './SidebarLinkGroup';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {

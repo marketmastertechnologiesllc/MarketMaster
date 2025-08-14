@@ -9,7 +9,7 @@ import { Icon } from '@iconify/react';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-import Logo from '../assets/img/dark-logo-img.png';
+import Logo from '../assets/img/TradeMesh-MainLogo.png';
 import useAuth from '../hooks/useAuth';
 import useSocket from '../hooks/useSocket';
 import api from '../utils/api';
@@ -75,7 +75,7 @@ function Header() {
 
   return (
     <div className="flex flex-row items-center justify-between h-[70px] bg-[#0B1220] text-[#E9D8C8] p-[15px] border-b border-[rgba(17,179,174,0.3)] shadow-[0_4px_12px_rgba(17,179,174,0.1)]">
-      <img className="h-10 w-10" src={Logo} alt="" />
+      <img className="h-10 w-32" src={Logo} alt="" />
       <div className="flex flex-row gap-x-2">
         {!isAuthenticated ? (
           <>

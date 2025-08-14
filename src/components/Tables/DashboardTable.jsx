@@ -196,7 +196,8 @@ export default function TradesTable({ headers }) {
                     '& .MuiMenuItem-root': {
                       color: '#E9D8C8',
                       '&:hover': {
-                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        backgroundColor: 'rgba(17, 179, 174, 0.2)',
+                        color: '#E9D8C8',
                       },
                       '&.Mui-selected': {
                         backgroundColor: '#11B3AE',

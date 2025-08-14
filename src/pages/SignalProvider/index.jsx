@@ -26,10 +26,17 @@ import api from '../../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -47,31 +54,13 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
-
-const StyledInfoButton = styled(IconButton)(({ theme }) => ({
-  '&:hover': {
-    backgroundColor: '#1B5E20',
-    boxShadow: 'none',
-  },
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
-  },
-  '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
-  },
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -82,19 +71,35 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
+  },
+  '&:active, &:focus, &.selected': {
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
+  },
 }));
 
 const headers = [
   { id: 'signal', label: 'Signal' },
   { id: 'accounts', label: 'provider Name' },
-  // { id: 'openTime', label: 'E' },
-  // { id: 'symbol', label: 'Symbol' },
-  // { id: 'type', label: 'Type' },
   { id: 'description', label: 'Description' },
   { id: 'created_at', label: 'CreatedAt' },
   { id: 'updated_at', label: 'UpdatedAt' },
   { id: 'live', label: 'Live' },
-  // { id: 'terms', label: 'Terms' },
 ];
 
 export default function SignalProvider() {
@@ -205,7 +210,7 @@ export default function SignalProvider() {
   }, []);
 
   return (
-    <div className="grid grid-cols-12 gap-4">
+    <div className="w-auto text-[#E9D8C8]">
       {deleteSignalModalShow && (
         <DeleteSignalModal
           deleteSignalModalShow={setDeleteSignalModalShow}
@@ -216,167 +221,221 @@ export default function SignalProvider() {
           isLoading={isLoading}
         />
       )}
-      <div className="col-span-3">
-        <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-          <h2 className="mt-[5px] text-[20px] font-normal">
-            Payment Processor
-          </h2>
-        </header>
-        <div className="text-[#ccc] bg-[#2E353E] p-4 rounded-b">
-          <p className="mb-3">Processor configured</p>
-          <button
-            className="w-auto rounded px-3 py-1.5 text-white text-sm bg-[#0099E6]"
-            onClick={handleConfigureButtonClicked}
-          >
-            Configure
-          </button>
-        </div>
-      </div>
-      <div className="col-span-9">
-        <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-          <h2 className="mt-[5px] text-[20px] font-normal">Signal Pages</h2>
-          <Link
-            to={'/signal-provider/create'}
-            className="bg-[#0099e6] h-[33px] rounded text-sm px-2 items-center flex"
-          >
-            <Icon
-              icon="typcn:plus"
-              width="16"
-              height="16"
-              style={{ display: 'inline-block' }}
-            />{' '}
-            Create Signal Page
-          </Link>
-        </header>
-        <div className="text-[#ccc] bg-[#2E353E] p-5 rounded-b pb-[10px]">
-          <div className="flex justify-between w-full pb-3">
-            <div className="flex items-center gap-2">
-              <FormControl size="small">
-                <Select
-                  displayEmpty
-                  value={rowsPerPage}
-                  onChange={handleChangeRowsPerPage}
-                  input={
-                    <OutlinedInput
-                      sx={{
-                        width: '80px',
-                        color: 'white',
-                        // borderColor: 'white!important',
-                        // '&: active': {
-                        //   border: '1px solid black',
-                        // },
-                      }}
-                    />
-                  }
-                >
-                  <MenuItem value={10}>10</MenuItem>
-                  <MenuItem value={25}>25</MenuItem>
-                  <MenuItem value={50}>50</MenuItem>
-                  <MenuItem value={100}>100</MenuItem>
-                </Select>
-              </FormControl>
-              <Typography>records per page</Typography>
-            </div>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-3">
+          <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t border border-[#11B3AE] border-b-0">
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">
+              Payment Processor
+            </h2>
+          </header>
+          <div className="text-[#E9D8C8] bg-[#0B1220] p-4 rounded-b border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+            <p className="mb-3 opacity-80">Processor configured</p>
+            <button
+              className="w-auto rounded px-3 py-1.5 text-white text-sm bg-[#11B3AE] hover:bg-[#0F9A95] transition-all duration-200"
+              onClick={handleConfigureButtonClicked}
+            >
+              Configure
+            </button>
           </div>
-          <Paper
-            sx={{
-              width: '100%',
-              // marginBottom: 10,
-              overflow: 'hidden',
-              backgroundColor: '#2E353E',
-              boxShadow: 'none',
-              '& .MuiPaper-root': {
-                color: '#ccc',
-                backgroundColor: '#2E353E',
-                boxShadow: 'none',
-              },
-            }}
-          >
-            <TableContainer
+        </div>
+        <div className="col-span-9">
+          <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t border border-[#11B3AE] border-b-0">
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Signal Pages</h2>
+            <Link
+              to={'/signal-provider/create'}
+              className="bg-[#11B3AE] hover:bg-[#0F9A95] h-[33px] rounded text-sm px-2 items-center flex text-white transition-all duration-200"
+            >
+              <Icon
+                icon="typcn:plus"
+                width="16"
+                height="16"
+                style={{ display: 'inline-block' }}
+              />{' '}
+              Create Signal Page
+            </Link>
+          </header>
+          <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.3)] pb-[20px]">
+            <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
+              <div className="flex items-center gap-3">
+                <FormControl size="small">
+                  <Select
+                    displayEmpty
+                    value={rowsPerPage}
+                    onChange={handleChangeRowsPerPage}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: '#0B1220',
+                          border: '1px solid rgba(17, 179, 174, 0.3)',
+                          borderRadius: '8px',
+                          maxHeight: '200px',
+                          '& .MuiMenuItem-root': {
+                            color: '#E9D8C8',
+                            '&:hover': {
+                              backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                            },
+                            '&.Mui-selected': {
+                              backgroundColor: '#11B3AE',
+                              color: '#FFFFFF',
+                              '&:hover': {
+                                backgroundColor: '#0F9A95',
+                              },
+                            },
+                          },
+                        },
+                      },
+                    }}
+                    input={
+                      <OutlinedInput
+                        sx={{
+                          width: { xs: '70px', sm: '80px' },
+                          color: '#E9D8C8',
+                          borderRadius: '8px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(17, 179, 174, 0.3)',
+                          },
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(17, 179, 174, 0.5)',
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#11B3AE',
+                            boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                          },
+                          '& .MuiSelect-icon': {
+                            color: '#E9D8C8',
+                          },
+                        }}
+                      />
+                    }
+                  >
+                    <MenuItem value={10}>10</MenuItem>
+                    <MenuItem value={25}>25</MenuItem>
+                    <MenuItem value={50}>50</MenuItem>
+                    <MenuItem value={100}>100</MenuItem>
+                  </Select>
+                </FormControl>
+                <Typography sx={{ 
+                  color: '#E9D8C8', 
+                  fontWeight: 500,
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>
+                  records per page
+                </Typography>
+              </div>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            </div>
+            <Paper
               sx={{
-                // maxHeight: 440,
-                '.MuiTable-root': {
-                  borderColor: '#282D36',
-                  borderWidth: '1px',
-                },
+                width: '100%',
+                overflow: 'hidden',
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
               }}
             >
-              <Table
-                stickyHeader
-                aria-label="sticky table"
+              <TableContainer
                 sx={{
-                  '& .MuiTableCell-root': {
-                    color: '#ccc',
-                    backgroundColor: '#2E353E',
-                    border: '#282D36',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                  maxWidth: '100%',
+                  overflowX: 'auto',
+                  '.MuiTable-root': {
+                    borderColor: 'rgba(17, 179, 174, 0.2)',
+                    borderWidth: '1px',
+                    minWidth: { xs: '600px', sm: 'auto' },
                   },
                 }}
               >
-                <TableHead>
-                  <TableRow
-                    sx={{
-                      '&:last-child td, &:last-child th': {
-                        border: 1,
-                        borderColor: '#282D36',
-                      },
-                    }}
-                  >
-                    {headers.map(({ label, id }, index) => (
-                      <TableCell
-                        key={`signal_provider_header_${index}`}
-                        align="center"
-                        sx={{
-                          padding: '5px',
-                        }}
-                      >
-                        <div className="flex items-center justify-between p-[3px]">
-                          {label}
-                          <div className="flex flex-col width={11} cursor-pointer">
-                            <Icon
-                              icon="teenyicons:up-solid"
-                              color="#ccc"
-                              className="mb-[-4px]"
-                              width={11}
-                            />
-                            <Icon
-                              icon="teenyicons:down-solid"
-                              width={11}
-                              color="#ccc"
-                            />
-                          </div>
-                        </div>
-                      </TableCell>
-                    ))}
-                    <TableCell
-                      key={'option'}
-                      align="center"
-                      sx={{
-                        width: '0',
-                        padding: '5px',
-                      }}
-                    ></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody
+                <Table
+                  stickyHeader
+                  aria-label="sticky table"
                   sx={{
-                    '&:last-child td, &:last-child th': {
-                      border: 1,
-                      borderColor: '#282D36',
+                    borderRadius: '12px',
+                    '& .MuiTableCell-root': {
+                      color: '#E9D8C8',
+                      backgroundColor: 'transparent',
+                      borderColor: 'rgba(17, 179, 174, 0.15)',
+                      fontSize: '0.875rem',
+                    },
+                    '& .MuiTableHead-root .MuiTableCell-root': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                      color: '#FFFFFF',
+                      fontWeight: 600,
+                      fontSize: '0.875rem',
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
+                    },
+                    '& .MuiTableRow-root:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.05)',
                     },
                   }}
                 >
-                  {
-                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    data &&
+                  <TableHead sx={{
+                    borderRadius: '12px',
+                  }}>
+                    <TableRow
+                      sx={{
+                        '&:last-child td, &:last-child th': {
+                          border: 1,
+                          borderColor: 'rgba(17, 179, 174, 0.2)',
+                        },
+                      }}
+                    >
+                      {headers.map(({ label, id }, index) => (
+                        <TableCell
+                          key={`signal_provider_header_${index}`}
+                          align="center"
+                          sx={{
+                            padding: '12px 8px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <div className="flex items-center justify-between p-[6px]">
+                            {label}
+                            <div className="flex flex-col cursor-pointer">
+                              <Icon
+                                icon="teenyicons:up-solid"
+                                color="#11B3AE"
+                                className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
+                                width={11}
+                              />
+                              <Icon
+                                icon="teenyicons:down-solid"
+                                width={11}
+                                color="#11B3AE"
+                                className="hover:text-[#E9D8C8] transition-colors"
+                              />
+                            </div>
+                          </div>
+                        </TableCell>
+                      ))}
+                      <TableCell
+                        key={'option'}
+                        align="center"
+                        sx={{
+                          width: '0',
+                          padding: '12px 8px',
+                          fontWeight: 600,
+                        }}
+                      ></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody
+                    sx={{
+                      '&:last-child td, &:last-child th': {
+                        border: 1,
+                        borderColor: 'rgba(17, 179, 174, 0.15)',
+                      },
+                    }}
+                  >
+                    {data &&
                       data.length > 0 &&
                       data.map((row, index) => {
                         return (
@@ -385,6 +444,14 @@ export default function SignalProvider() {
                             role="checkbox"
                             tabIndex={-1}
                             key={`signal_provider_data_${index}`}
+                            sx={{
+                              transition: 'all 0.2s ease-in-out',
+                              '&:hover': {
+                                backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                                transform: 'translateY(-1px)',
+                                boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                              },
+                            }}
                           >
                             {headers.map(({ id }) => {
                               let value = row[id];
@@ -404,8 +471,8 @@ export default function SignalProvider() {
                                   key={id}
                                   align="left"
                                   sx={{
-                                    padding: '5px',
-                                    paddingLeft: 2,
+                                    padding: '12px 16px',
+                                    fontSize: '0.875rem',
                                   }}
                                 >
                                   {id === 'live' ? (
@@ -417,43 +484,37 @@ export default function SignalProvider() {
                                       }
                                       width={22}
                                       className="font-bold"
-                                      color={row[id] ? 'green' : '#D64742'}
+                                      color={row[id] ? '#11B3AE' : '#fa5252'}
                                     />
                                   ) : (
-                                    <div className="truncate">{value}</div>
+                                    <div className="truncate font-medium">{value}</div>
                                   )}
                                 </TableCell>
                               );
                             })}
                             <TableCell
                               key={row.id + 'option'}
-                              align="left"
+                              align="center"
                               sx={{
                                 width: '0',
-                                padding: '5px',
+                                padding: '12px 8px',
                               }}
                             >
-                              <div className="flex gap-1">
-                                {/* <IconButton
-                        size="small"
-                        color="inherit"
-                        sx={{
-                          backgroundColor: '#2e7d32',
-                          borderRadius: '4px',
-                          fontSize: 24,
-                          paddingX: '6px',
-                        }}
-                      >
-                        <Icon icon="mdi:play" color="white" />
-                      </IconButton> */}
+                              <div className="flex gap-2 justify-center">
                                 <IconButton
                                   size="small"
                                   color="inherit"
                                   sx={{
-                                    backgroundColor: '#0099E6',
-                                    borderRadius: '4px',
-                                    fontSize: 13,
-                                    paddingX: '11px',
+                                    backgroundColor: '#11B3AE',
+                                    borderRadius: '8px',
+                                    fontSize: 16,
+                                    padding: '10px 10px',
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                      backgroundColor: '#0F9A95',
+                                      transform: 'translateY(-1px)',
+                                      boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                    },
                                   }}
                                   onClick={() =>
                                     handleConfigButtonClicked(row.strategyId)
@@ -461,28 +522,20 @@ export default function SignalProvider() {
                                 >
                                   <Icon icon="fa:cogs" color="white" />
                                 </IconButton>
-                                {/* <IconButton
-                        size="small"
-                        color="inherit"
-                        sx={{
-                          backgroundColor: '#0099E6',
-                          borderRadius: '4px',
-                          fontSize: 17,
-                          fontWeight: 800,
-                          paddingX: '9px',
-                        }}
-                      >
-                        <Icon icon="tabler:list" color="white" />
-                      </IconButton> */}
                                 <IconButton
                                   size="small"
                                   color="inherit"
                                   sx={{
-                                    backgroundColor: '#D64742',
-                                    borderRadius: '4px',
-                                    fontSize: 13,
-
-                                    padding: '10px 11px!important',
+                                    backgroundColor: '#fa5252',
+                                    borderRadius: '8px',
+                                    fontSize: 16,
+                                    padding: '10px 10px',
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                      backgroundColor: '#e03131',
+                                      transform: 'translateY(-1px)',
+                                      boxShadow: '0 4px 12px rgba(250, 82, 82, 0.3)',
+                                    },
                                   }}
                                   onClick={() =>
                                     handleDeleteSignalButtonClicked({
@@ -498,37 +551,54 @@ export default function SignalProvider() {
                             </TableCell>
                           </TableRow>
                         );
-                      })
-                  }
-                </TableBody>
-              </Table>
-            </TableContainer>
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
 
-            <div className="flex justify-between items-center">
-              <Typography sx={{ color: '#ccc', fontSize: 13 }}>
-                Showing {rowsPerPage * (page - 1) + 1} to{' '}
-                {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
-                {count} entries
-              </Typography>
-              <Pagination
-                // className="text-white"
-                sx={{
-                  paddingY: 2,
-                }}
-                count={
-                  count % rowsPerPage === 0
-                    ? count / rowsPerPage
-                    : Math.floor(count / rowsPerPage) + 1
-                }
-                page={page}
-                onChange={handlePageChange}
-                variant="outlined"
-                shape="rounded"
-                showFirstButton
-                showLastButton
-              />
-            </div>
-          </Paper>
+              <div className="flex justify-between items-center mt-4">
+                <Typography sx={{ color: '#E9D8C8', fontSize: { xs: 12, sm: 14 }, fontWeight: 500 }}>
+                  Showing {rowsPerPage * (page - 1) + 1} to{' '}
+                  {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
+                  {count} entries
+                </Typography>
+                <Pagination
+                  sx={{
+                    paddingY: 2,
+                    '& .MuiPaginationItem-root': {
+                      color: '#E9D8C8',
+                      borderColor: 'rgba(17, 179, 174, 0.3)',
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      minWidth: { xs: 32, sm: 40 },
+                      height: { xs: 32, sm: 40 },
+                      '&:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.2)',
+                        color: '#E9D8C8',
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: '#11B3AE',
+                        color: '#FFFFFF',
+                        '&:hover': {
+                          backgroundColor: '#0F9A95',
+                        },
+                      },
+                    },
+                  }}
+                  count={
+                    count % rowsPerPage === 0
+                      ? count / rowsPerPage
+                      : Math.floor(count / rowsPerPage) + 1
+                  }
+                  page={page}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  shape="rounded"
+                  showFirstButton
+                  showLastButton
+                />
+              </div>
+            </Paper>
+          </div>
         </div>
       </div>
     </div>

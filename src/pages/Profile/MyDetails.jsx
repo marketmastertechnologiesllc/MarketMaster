@@ -58,13 +58,13 @@ function MyDetails() {
   };
 
   return (
-    <div className="mb-[20px] rounded bg-[#282D36] text-white">
-      <header className="p-[18px]">
-        <h2 className="mt-[5px] text-[20px] font-normal">My Details</h2>
+    <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+      <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
+        <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">My Details</h2>
       </header>
-      <div className="p-[15px] bg-[#2E353E] box-border">
-        <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
-          <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#ccc] text-[13px]">
+      <div className="p-[15px] bg-[#0B1220] box-border">
+        <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
+          <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
             Email
           </label>
           <div className="w-1/2 px-[15px]">
@@ -72,26 +72,27 @@ function MyDetails() {
               name="email"
               type="email"
               required
-              className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+              className="block w-full h-[40px] text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-2 rounded-lg border border-[#11B3AE] border-opacity-30 focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:border-transparent transition-all duration-200"
               onChange={handleInputChange}
               value={values.email}
+              placeholder="Enter your email"
             />
             {values.email == '' && updateButtonClicked && (
-              <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+              <p className="mt-2 text-sm text-[#fa5252] font-medium">
                 Email required!
               </p>
             )}
             {!validator.isEmail(values.email) &&
               values.email.length !== 0 &&
               updateButtonClicked && (
-                <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                <p className="mt-2 text-sm text-[#fa5252] font-medium">
                   Invalid email format!
                 </p>
               )}
           </div>
         </div>
         <div className="flex justify-start">
-          <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#ccc] text-[13px]">
+          <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
             Full Name
           </label>
           <div className="w-1/2 px-[15px]">
@@ -99,27 +100,41 @@ function MyDetails() {
               name="fullName"
               type="text"
               required
-              className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+              className="block w-full h-[40px] text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-2 rounded-lg border border-[#11B3AE] border-opacity-30 focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:border-transparent transition-all duration-200"
               onChange={handleInputChange}
               value={values.fullName}
+              placeholder="Enter your full name"
             />
             {values.fullName == '' && updateButtonClicked && (
-              <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+              <p className="mt-2 text-sm text-[#fa5252] font-medium">
                 Full Name required!
               </p>
             )}
           </div>
         </div>
       </div>
-      <footer className="px-[15px] py-[10px]">
+      <footer className="px-[15px] py-[10px] border-t border-[#11B3AE] border-opacity-20">
         <div className="grid grid-cols-12 gap-3">
           <div className="col-start-4 col-span-4 pl-3.5">
             <LoadingButton
               variant="contained"
               sx={{
                 textTransform: 'none',
-                backgroundColor: '#0088CC!important',
-                alignItems: 'center',
+                backgroundColor: '#11B3AE!important',
+                color: '#FFFFFF!important',
+                fontWeight: 500,
+                borderRadius: '8px',
+                padding: '8px 16px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
+                '&:disabled': {
+                  backgroundColor: '#666!important',
+                  color: '#999!important',
+                },
               }}
               onClick={handleUpdateButtonClick}
               loading={isLoading}

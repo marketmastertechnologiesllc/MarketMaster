@@ -23,59 +23,62 @@ function WhitelabelDashboard() {
 
   return (
     <div className="flex gap-4 w-full">
-      <div className="flex w-1/3 relative overflow-hidden rounded-lg bg-[#2E353E] px-4 pb-5 pt-5 shadow sm:px-6 sm:pt-6">
+      <div className="flex w-1/3 relative overflow-hidden rounded-xl bg-[#0B1220] px-4 pb-5 pt-5 shadow-[0_0_16px_rgba(17,179,174,0.3)] border border-[#11B3AE] hover:shadow-[0_0_24px_rgba(17,179,174,0.4)] transition-all duration-200">
         <GroupsRoundedIcon
           sx={{
             color: 'white',
             borderRadius: '50%',
-            backgroundColor: '#0088cc',
+            backgroundColor: '#11B3AE',
             padding: '15px',
             width: '70px',
             height: '70px',
             display: 'flex',
+            boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
           }}
         />
         <dd className="flex flex-col justify-center ml-6">
-          <p className="text-base font-semibold text-white">Users</p>
-          <p className="flex items-baseline text-2xl font-bold text-white">
+          <p className="text-base font-semibold text-[#E9D8C8]">Users</p>
+          <p className="flex items-baseline text-2xl font-bold text-[#11B3AE]">
             {userCount}
           </p>
         </dd>
       </div>
-      <div className="flex w-1/3 relative overflow-hidden rounded-lg bg-[#2E353E] px-4 pb-5 pt-5 shadow sm:px-6 sm:pt-6">
+      <div className="flex w-1/3 relative overflow-hidden rounded-xl bg-[#0B1220] px-4 pb-5 pt-5 shadow-[0_0_16px_rgba(17,179,174,0.3)] border border-[#11B3AE] hover:shadow-[0_0_24px_rgba(17,179,174,0.4)] transition-all duration-200">
         <ViewListRoundedIcon
           sx={{
             color: 'white',
             borderRadius: '50%',
-            backgroundColor: '#0088cc',
+            backgroundColor: '#11B3AE',
             padding: '15px',
             width: '70px',
             height: '70px',
             display: 'flex',
+            boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
           }}
         />
         <dd className="flex flex-col justify-center ml-6">
-          <p className="text-base font-semibold text-white">Accounts</p>
-          <p className="flex items-baseline text-2xl font-bold text-white">
+          <p className="text-base font-semibold text-[#E9D8C8]">Accounts</p>
+          <p className="flex items-baseline text-2xl font-bold text-[#11B3AE]">
             {accountCount}
           </p>
         </dd>
       </div>
-      <div className="flex w-1/3 relative overflow-hidden rounded-lg bg-[#2E353E] px-4 pb-5 pt-5 shadow sm:px-6 sm:pt-6">
+      <div className="flex w-1/3 relative overflow-hidden rounded-xl bg-[#0B1220] px-4 pb-5 pt-5 shadow-[0_0_16px_rgba(17,179,174,0.3)] border border-[#11B3AE] hover:shadow-[0_0_24px_rgba(17,179,174,0.4)] transition-all duration-200">
         <ShareRoundedIcon
           sx={{
             color: 'white',
             borderRadius: '50%',
-            backgroundColor: '#0088cc',
+            backgroundColor: '#11B3AE',
             padding: '15px',
             width: '70px',
             height: '70px',
             display: 'flex',
+            boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
           }}
         />
         <dd className="flex flex-col justify-center ml-6">
-          <p className="text-base font-semibold text-white">Copiers</p>
-          <p className="flex items-baseline text-2xl font-bold text-white">
+          <p className="text-base font-semibold text-[#E9D8C8]">Copiers</p>
+          <p className="flex items-baseline text-2xl font-bold text-[#11B3AE]">
             {copierCount}
           </p>
         </dd>
