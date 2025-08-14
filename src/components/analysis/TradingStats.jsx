@@ -224,9 +224,9 @@ const TradingStats = ({ data }) => {
                   </StyledTableCell>
                 </StyledTableRow>
                 <StyledTableRow>
-                  <StyledTableCell>Equity</StyledTableCell>
+                  <StyledTableCell>Deposits</StyledTableCell>
                   <StyledTableCell>
-                    {Object.keys(data).length > 0 && data.equity.toFixed(2)} USD
+                    {Object.keys(data).length > 0 && data.deposits.toFixed(2)} USD
                   </StyledTableCell>
                   <StyledTableCell>Leverage</StyledTableCell>
                   <StyledTableCell>
@@ -234,9 +234,9 @@ const TradingStats = ({ data }) => {
                   </StyledTableCell>
                 </StyledTableRow>
                 <StyledTableRow>
-                  <StyledTableCell>Deposits</StyledTableCell>
+                  <StyledTableCell>Withdrawals</StyledTableCell>
                   <StyledTableCell>
-                    {Object.keys(data).length > 0 && data.deposits} USD
+                    {Object.keys(data).length > 0 && data.withdrawals.toFixed(2)} USD
                   </StyledTableCell>
                   <StyledTableCell>Credit</StyledTableCell>
                   <StyledTableCell>

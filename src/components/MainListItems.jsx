@@ -58,15 +58,15 @@ function MainListItems({ open }) {
         maxWidth: 240,
         bgcolor: '#0B1220',
         flexGrow: 1,
-        paddingLeft: '7px',
+        paddingLeft: { xs: 'auto', sm: '7px' },
         '& .MuiListItemButton-root': {
           borderRadius: '8px',
-          margin: '2px 8px',
+          margin: '2px 2px',
           transition: 'all 0.2s ease-in-out',
           '&:hover': {
             backgroundColor: 'rgba(17, 179, 174, 0.1)',
             transform: 'translateX(4px)',
-            boxShadow: '0 2px 8px rgba(17, 179, 174, 0.2)',
+            boxShadow: '0 2px 2px rgba(17, 179, 174, 0.2)',
           },
           '&.Mui-selected': {
             backgroundColor: '#11B3AE',
@@ -92,7 +92,7 @@ function MainListItems({ open }) {
         '& .MuiCollapse-root': {
           backgroundColor: 'rgba(17, 179, 174, 0.05)',
           borderRadius: '8px',
-          margin: '2px 8px',
+          margin: '2px 2px',
           '& .MuiListItemButton-root': {
             margin: '1px 8px',
             paddingLeft: '32px',
@@ -108,7 +108,7 @@ function MainListItems({ open }) {
     >
       <Link className="flex flex-row" to={'/dashboard'}>
         <ListItemButton>
-          <ListItemIcon>
+          <ListItemIcon >
             <SpeedIcon sx={{ color: '#E9D8C8' }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
@@ -147,7 +147,7 @@ function MainListItems({ open }) {
         sx={{
           backgroundColor: 'rgba(17, 179, 174, 0.05)',
           borderRadius: '8px',
-          margin: '2px 8px',
+          margin: '2px 2px',
         }}
       >
         <List component="div" disablePadding>
@@ -237,7 +237,7 @@ function MainListItems({ open }) {
             sx={{
               backgroundColor: 'rgba(17, 179, 174, 0.05)',
               borderRadius: '8px',
-              margin: '2px 8px',
+              margin: '2px 2px',
             }}
           >
             <List component="div" disablePadding>
@@ -302,7 +302,7 @@ function MainListItems({ open }) {
         sx={{
           backgroundColor: 'rgba(17, 179, 174, 0.05)',
           borderRadius: '8px',
-          margin: '2px 8px',
+          margin: '2px 2px',
         }}
       >
         <List component="div" disablePadding>

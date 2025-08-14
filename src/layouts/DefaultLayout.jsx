@@ -14,7 +14,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import MainListItems from '../components/MainListItems';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import BreadCrumb from '../components/BreadCrumb';
 
@@ -78,7 +78,7 @@ const DefaultLayout = () => {
   const [open, setOpen] = React.useState(false);
   const [openManual, setOpenManual] = React.useState(false);
   const { isAuthenticated } = useAuth();
-
+  const navigate = useNavigate();
   const toggleDrawer = () => {
     setOpen(!open);
     setOpenManual(!openManual);
@@ -149,6 +149,7 @@ const DefaultLayout = () => {
                           boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
                         },
                       }}
+                      onClick={() => navigate('/contact-support')}
                     >
                       Help
                     </Button>

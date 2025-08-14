@@ -63,7 +63,7 @@ function ContactSupport() {
               knowledge base
             </Link>{' '}
             you can get an in-depth explanation on all the features and
-            functionality of the platform including copier risk settings and
+            functionality of the platform including copier settings and
             more{' '}
             <Link to={'/knowledge-base'} className="text-[#11B3AE] hover:text-[#0F9A95] transition-colors">
               here

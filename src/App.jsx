@@ -7,6 +7,8 @@ import ToastProvider from './contexts/toastContext';
 import AuthProvider from './contexts/authContext';
 import UtilsProvider from './contexts/utilsContext';
 import SocketProvider from './contexts/socketContext';
+import { PromotionProvider } from './contexts/promotionContext';
+import PromotionModal from './components/modals/PromotionModal';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,10 @@ function App() {
       <AuthProvider>
         <UtilsProvider>
           <SocketProvider>
-            <CoreRoutes />
+            <PromotionProvider>
+              <CoreRoutes />
+              <PromotionModal />
+            </PromotionProvider>
           </SocketProvider>
         </UtilsProvider>
       </AuthProvider>

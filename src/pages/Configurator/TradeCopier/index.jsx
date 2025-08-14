@@ -747,6 +747,7 @@ export default function TradesTable() {
                             >
                               {isLoading ? <Icon icon="mdi:loading" color="white" style={{ animation: 'spin 1s linear infinite' }} /> : row.enabled ? <Icon icon="mdi:pause" color="white" /> : <Icon icon="mdi:play" color="white" />}
                             </IconButton>
+                            
                             <IconButton
                               size="small"
                               color="inherit"

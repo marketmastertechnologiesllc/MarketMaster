@@ -200,7 +200,6 @@ export default function EditUser() {
                     boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
                   },
                 }}
-
                 onClick={handleOpenMaxAccountModal}
               >
                 <Icon icon="fa:cogs" color="white" />
@@ -255,7 +254,6 @@ export default function EditUser() {
                 className="col-start-8"
                 sx={{
                   backgroundColor: '#11B3AE',
-                  '&:hover': { backgroundColor: '#0F9A95' },
                   textTransform: 'none',
                   color: 'white',
                   paddingX: '40px',
