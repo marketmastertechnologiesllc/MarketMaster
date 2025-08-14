@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Radio from '@mui/material/Radio';
 import { Icon } from '@iconify/react';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 //import componenets
 import AccountDetails from '../../components/analysis/AccountDetails';
@@ -15,6 +17,22 @@ import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import TradesAnalysis from '../../components/analysis/TradesAnalysis';
 import { useParams } from 'react-router-dom';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
+
+const StyledButton = styled(LoadingButton)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
+  },
+  '&:active, &:focus, &.selected': {
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
+  },
+}));
 
 function AccountAnalysis() {
   const { id } = useParams();
@@ -64,51 +82,65 @@ function AccountAnalysis() {
   }, [id]);
 
   return (
-    <div className="pb-[100px]">
-      <div className="pb-3">
-          <Link
-            to={'/dashboard'}
-            className="flex flex-row items-center font-extrabold"
-          >
-            <ReplyRoundedIcon
-              fontSize="medium"
-              sx={{ color: 'white', fontWeight: 'bold' }}
-            />
-            <h1 className="text-white text-lg pl-2"> Dashboard</h1>
-          </Link>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
+      {/* Header with back button */}
+      <Link
+        to={'/dashboard'}
+        className="flex flex-row items-center font-extrabold hover:opacity-80 transition-opacity"
+      >
+        <ReplyRoundedIcon
+          fontSize="medium"
+          sx={{ color: '#11B3AE', fontWeight: 'bold' }}
+        />
+        <Typography sx={{ color: '#E9D8C8', fontSize: '1.125rem', fontWeight: 700, ml: 1 }}>
+          Back to Dashboard
+        </Typography>
+      </Link>
+      <div className="my-6 p-4 bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+        <Typography sx={{ color: '#E9D8C8', fontSize: '1.5rem', fontWeight: 600, mt: 2 }}>
+          Account Analysis
+        </Typography>
+        <Typography sx={{ color: '#11B3AE', fontSize: '0.875rem', mt: 0.5 }}>
+          Account ID: {id}
+        </Typography>
+      </div>
+
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Account Details - 1/4 width */}
+        <div className="lg:col-span-1">
+          <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+            <AccountDetails data={details} />
+          </div>
         </div>
-      {/* <div>
-        <Link
-          to={'/dashboard'}
-          className="flex flex-row items-center font-extrabold"
-        >
-          <Icon
-            icon="mdi:arrow-left-bold"
-            className="text-[26px]"
-            color="white"
-          />
-          <h1 className="text-white text-lg pl-2"> Dashboard</h1>
-        </Link>
-      </div> */}
-      <div className="flex gap-[20px]">
-        <div className="w-1/4 pt-[10px]">
-          <AccountDetails data={details} />
-        </div>
-        <div className="w-3/4 pt-[10px]">
-          <PerformanceChart data={history} />
+
+        {/* Performance Chart - 3/4 width */}
+        <div className="lg:col-span-3">
+          <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+            <PerformanceChart data={history} />
+          </div>
         </div>
       </div>
 
-      <div className="mt-[40px]">
-        <TradingStats data={accountInfo} />
+      {/* Trading Stats - Full width */}
+      <div className="mt-6">
+        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+          <TradingStats data={accountInfo} />
+        </div>
       </div>
 
-      <div className="mt-[40px]">
-        <AnalysisByTime data={history} />
+      {/* Analysis by Time - Full width */}
+      <div className="mt-6">
+        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+          <AnalysisByTime data={history} />
+        </div>
       </div>
 
-      <div className="mt-[40px]">
-        <TradesAnalysis />
+      {/* Trades Analysis - Full width */}
+      <div className="mt-6">
+        <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+          <TradesAnalysis />
+        </div>
       </div>
     </div>
   );

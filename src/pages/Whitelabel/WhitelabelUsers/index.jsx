@@ -32,10 +32,17 @@ import api from '../../../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(17, 179, 174, 0.3)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(17, 179, 174, 0.5)',
+  },
+  '&:focus-within': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid #11B3AE',
+    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
   },
   marginLeft: 0,
   width: '100%',
@@ -53,10 +60,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: '#E9D8C8',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#E9D8C8',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -70,16 +78,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#E9D8C8',
+    opacity: 0.7,
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontWeight: 500,
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: '#242830',
-    boxShadow: 'none',
+    backgroundColor: '#0B1220',
+    boxShadow: '0 4px 12px rgba(11, 18, 32, 0.3)',
+    transform: 'translateY(-1px)',
   },
   '&:active, &:focus, &.selected': {
-    backgroundColor: '#0088cc',
-    boxShadow: 'none',
+    backgroundColor: '#11B3AE',
+    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.4)',
   },
 }));
 
@@ -194,17 +211,19 @@ export default function WhitelabelUsers() {
 
   const handleDeleteAccountButtonClicked = (accountData) => {
     setSelectedAccountData(accountData);
-    console.log(selectedAccountData);
     setDeleteUserModalShow(true);
   };
 
   const handleDeleteUserModalButtonClicked = async () => {
     try {
       setIsLoading(true);
-
-      await api.delete(`users/${selectedAccountData.id}`);
-      handlePageChange(null, page);
-      showToast('Account deleted successfully!', 'success');
+      const res = await api.delete(`users/${selectedAccountData.id}`);
+      if (res.data.status === 'OK') {
+        handlePageChange(null, page);
+        showToast('Account deleted successfully!', 'success');
+      } else {
+        showToast('Account deletion failed!', 'error');
+      }
     } catch (err) {
       showToast('Account deletion failed!', 'error');
       console.log(err);
@@ -215,7 +234,7 @@ export default function WhitelabelUsers() {
   };
 
   return (
-    <div>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
       {DeleteUserModalShow && (
         <DeleteUserModal
           DeleteUserModalShow={setDeleteUserModalShow}
@@ -227,41 +246,92 @@ export default function WhitelabelUsers() {
         />
       )}
       <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        spacing={{ xs: 2, sm: 1 }}
         display={'flex'}
         justifyContent={'space-between'}
+        sx={{ gap: { xs: 2, sm: 1 } }}
       >
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center sm:justify-start">
           <Link to="/whitelabel/users/add-user">
-            <Button
+            <StyledButton
               variant="contained"
               size="small"
               startIcon={<AddIcon />}
               sx={{
+                backgroundColor: '#11B3AE',
                 textTransform: 'none',
-                backgroundColor: '#0088CC!important',
+                color: '#FFFFFF',
+                fontWeight: 500,
+                padding: { xs: '4px 8px', sm: '8px 12px' },
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                border: '1px solid #11B3AE',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
               }}
             >
               Add User
-            </Button>
+            </StyledButton>
           </Link>
         </div>
       </Stack>
-      <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
-        <div className="flex justify-between w-full pb-3">
-          <div className="flex items-center gap-2">
+      <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+        <div className="flex flex-col sm:flex-row justify-between w-full pb-4 gap-4">
+          <div className="flex items-center gap-3">
             <FormControl size="small">
               <Select
                 displayEmpty
                 value={rowsPerPage}
                 onChange={handleChangeRowsPerPage}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#0B1220',
+                      border: '1px solid rgba(17, 179, 174, 0.3)',
+                      borderRadius: '8px',
+                      maxHeight: '200px',
+                      '& .MuiMenuItem-root': {
+                        color: '#E9D8C8',
+                        '&:hover': {
+                          backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: '#11B3AE',
+                          color: '#FFFFFF',
+                          '&:hover': {
+                            backgroundColor: '#0F9A95',
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
                 input={
                   <OutlinedInput
                     sx={{
-                      width: '80px',
-                      color: 'white',
+                      width: { xs: '70px', sm: '80px' },
+                      color: '#E9D8C8',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(17, 179, 174, 0.3)',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(17, 179, 174, 0.5)',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#11B3AE',
+                        boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiSelect-icon': {
+                        color: '#E9D8C8',
+                      },
                     }}
                   />
                 }
@@ -272,7 +342,13 @@ export default function WhitelabelUsers() {
                 <MenuItem value={100}>100</MenuItem>
               </Select>
             </FormControl>
-            <Typography>records per page</Typography>
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontWeight: 500,
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}>
+              records per page
+            </Typography>
           </div>
           <Search>
             <SearchIconWrapper>
@@ -288,20 +364,20 @@ export default function WhitelabelUsers() {
           sx={{
             width: '100%',
             overflow: 'hidden',
-            backgroundColor: '#2E353E',
+            backgroundColor: 'transparent',
             boxShadow: 'none',
-            '& .MuiPaper-root': {
-              color: '#ccc',
-              backgroundColor: '#2E353E',
-              boxShadow: 'none',
-            },
           }}
         >
           <TableContainer
             sx={{
+              borderRadius: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.02)',
+              maxWidth: '100%',
+              overflowX: 'auto',
               '.MuiTable-root': {
-                borderColor: '#282D36',
+                borderColor: 'rgba(17, 179, 174, 0.2)',
                 borderWidth: '1px',
+                minWidth: { xs: '600px', sm: 'auto' },
               },
             }}
           >
@@ -309,19 +385,33 @@ export default function WhitelabelUsers() {
               stickyHeader
               aria-label="sticky table"
               sx={{
+                borderRadius: '12px',
                 '& .MuiTableCell-root': {
-                  color: '#ccc',
-                  backgroundColor: '#2E353E',
-                  border: '#282D36',
+                  color: '#E9D8C8',
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(17, 179, 174, 0.15)',
+                  fontSize: '0.875rem',
+                },
+                '& .MuiTableHead-root .MuiTableCell-root': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  borderColor: 'rgba(17, 179, 174, 0.2)',
+                },
+                '& .MuiTableRow-root:hover': {
+                  backgroundColor: 'rgba(17, 179, 174, 0.05)',
                 },
               }}
             >
-              <TableHead>
+              <TableHead sx={{
+                borderRadius: '12px',
+              }}>
                 <TableRow
                   sx={{
                     '&:last-child td, &:last-child th': {
                       border: 1,
-                      borderColor: '#282D36',
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
                     },
                   }}
                 >
@@ -330,22 +420,24 @@ export default function WhitelabelUsers() {
                       key={`users_header_${index}`}
                       align="center"
                       sx={{
-                        padding: '5px',
+                        padding: '12px 8px',
+                        fontWeight: 600,
                       }}
                     >
-                      <div className="flex items-center justify-between p-[3px]">
+                      <div className="flex items-center justify-between p-[6px]">
                         {label}
-                        <div className="flex flex-col width={11} cursor-pointer">
+                        <div className="flex flex-col cursor-pointer">
                           <Icon
                             icon="teenyicons:up-solid"
-                            color="#ccc"
-                            className="mb-[-4px]"
+                            color="#11B3AE"
+                            className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
                             width={11}
                           />
                           <Icon
                             icon="teenyicons:down-solid"
                             width={11}
-                            color="#ccc"
+                            color="#11B3AE"
+                            className="hover:text-[#E9D8C8] transition-colors"
                           />
                         </div>
                       </div>
@@ -355,7 +447,8 @@ export default function WhitelabelUsers() {
                     key={'option'}
                     align="center"
                     sx={{
-                      padding: '5px',
+                      padding: '12px 8px',
+                      fontWeight: 600,
                     }}
                   ></TableCell>
                 </TableRow>
@@ -364,12 +457,11 @@ export default function WhitelabelUsers() {
                 sx={{
                   '&:last-child td, &:last-child th': {
                     border: 1,
-                    borderColor: '#282D36',
+                    borderColor: 'rgba(17, 179, 174, 0.15)',
                   },
                 }}
               >
                 {
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   data &&
                   data.length > 0 &&
                   data.map((row, index) => {
@@ -379,6 +471,14 @@ export default function WhitelabelUsers() {
                         role="checkbox"
                         tabIndex={-1}
                         key={`users_table_data_${index}`}
+                        sx={{
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                          },
+                        }}
                       >
                         {headers.map(({ id }) => {
                           let value = row[id];
@@ -390,8 +490,8 @@ export default function WhitelabelUsers() {
                               key={id + row.id}
                               align="left"
                               sx={{
-                                padding: '5px',
-                                paddingLeft: 2,
+                                padding: '12px 16px',
+                                fontSize: '0.875rem',
                               }}
                             >
                               {value === 'Pending' ? (
@@ -403,7 +503,7 @@ export default function WhitelabelUsers() {
                                   {value}
                                 </div>
                               ) : (
-                                <div className="truncate">{value}</div>
+                                <div className="truncate font-medium">{value}</div>
                               )}
                             </TableCell>
                           );
@@ -413,18 +513,24 @@ export default function WhitelabelUsers() {
                           align="left"
                           sx={{
                             width: '0',
-                            padding: '5px',
+                            padding: '12px 8px',
                           }}
                         >
-                          <div className="flex gap-1">
+                          <div className="flex gap-2 justify-center">
                             <IconButton
                               size="small"
                               color="inherit"
                               sx={{
-                                backgroundColor: '#0099E6',
-                                borderRadius: '4px',
-                                fontSize: 13,
-                                paddingX: '11px',
+                                backgroundColor: '#11B3AE',
+                                borderRadius: '8px',
+                                fontSize: 16,
+                                padding: '10px 10px',
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: '#0F9A95',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                },
                               }}
                               onClick={() =>
                                 handleConfigButtonClicked(row._id)
@@ -436,15 +542,21 @@ export default function WhitelabelUsers() {
                               size="small"
                               color="inherit"
                               sx={{
-                                backgroundColor: '#D64742',
-                                borderRadius: '4px',
-                                fontSize: 13,
-                                padding: '10px 11px!important',
+                                backgroundColor: '#fa5252',
+                                borderRadius: '8px',
+                                fontSize: 16,
+                                padding: '10px 10px',
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: '#e03131',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(250, 82, 82, 0.3)',
+                                },
                               }}
                               onClick={() =>
                                 handleDeleteAccountButtonClicked({
                                   fullName: row.fullName,
-                                  id: row.id,
+                                  id: row._id,
                                 })
                               }
                             >
@@ -460,8 +572,13 @@ export default function WhitelabelUsers() {
             </Table>
           </TableContainer>
 
-          <div className="flex justify-between items-center">
-            <Typography sx={{ color: '#ccc', fontSize: 13 }}>
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
+            <Typography sx={{ 
+              color: '#E9D8C8', 
+              fontSize: { xs: 12, sm: 14 }, 
+              fontWeight: 500,
+              textAlign: { xs: 'center', sm: 'left' }
+            }}>
               Showing {rowsPerPage * (page - 1) + 1} to{' '}
               {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
               {count} entries
@@ -469,6 +586,24 @@ export default function WhitelabelUsers() {
             <Pagination
               sx={{
                 paddingY: 2,
+                '& .MuiPaginationItem-root': {
+                  color: '#E9D8C8',
+                  borderColor: 'rgba(17, 179, 174, 0.3)',
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  minWidth: { xs: '32px', sm: '40px' },
+                  height: { xs: '32px', sm: '40px' },
+                  '&:hover': {
+                    backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: '#11B3AE',
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      backgroundColor: '#0F9A95',
+                    },
+                  },
+                },
               }}
               count={
                 count % rowsPerPage === 0
@@ -481,6 +616,7 @@ export default function WhitelabelUsers() {
               shape="rounded"
               showFirstButton
               showLastButton
+              size="small"
             />
           </div>
         </Paper>

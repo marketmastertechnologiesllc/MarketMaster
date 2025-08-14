@@ -121,136 +121,165 @@ function WhitelabelHomepage() {
   }, []);
 
   return (
-    <div className="grid grid-cols-12 gap-6 mb-24">
-      <div className="col-span-3">
-        <div className="mb-[20px] rounded bg-[#282D36] text-white">
-          <header className="p-4">
-            <h2 className="mt-1 text-[20px] font-normal">Homepage</h2>
-          </header>
-          <div className="box-border py-3 px-4 text-[15px] text-[#ccc] bg-[#2E353E]">
-            Status
-            <div>
-              <button className="bg-[#477747] px-3 py-1 text-sm">Live</button>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
+      <div className="grid grid-cols-12 gap-6 mb-24">
+        <div className="col-span-3">
+          <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+            <header className="p-4 border-b border-[#11B3AE] border-opacity-20">
+              <h2 className="mt-1 text-[20px] font-normal text-[#FFFFFF]">Homepage</h2>
+            </header>
+            <div className="box-border py-3 px-4 text-[15px] text-[#E9D8C8] bg-[#0B1220]">
+              Status
+              <div>
+                <button className="bg-[#477747] px-3 py-1 text-sm rounded-lg">Live</button>
+              </div>
+            </div>
+          </div>
+          <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+            <header className="p-4 border-b border-[#11B3AE] border-opacity-20">
+              <h2 className="mt-1 text-[20px] font-normal text-[#FFFFFF]">Homepage</h2>
+            </header>
+            <div className="box-border py-3 px-4 bg-[#0B1220]">
+              <div className="flex justify-start">
+                <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#E9D8C8] text-[13px]">
+                  Title
+                </label>
+                <div className="w-1/2 px-[15px]">
+                  <input
+                    type="text"
+                    required
+                    value={newContent.title}
+                    className="block w-full h-[34px] text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+                    onChange={(e) =>
+                      setNewContent({ ...newContent, title: e.target.value })
+                    }
+                  />
+                  {newContent.title == '' && addButtonClicked && (
+                    <p className="mt-2 text-xs text-red-400">
+                      Title is required!
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="px-4 py-2 border-t border-[#11B3AE] border-opacity-20">
+              <LoadingButton
+                variant="contained"
+                size="small"
+                sx={{
+                  textTransform: 'none',
+                  backgroundColor: '#11B3AE!important',
+                  color: '#FFFFFF',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
+                }}
+                onClick={handlAaddButtonClicked}
+                loading={isAddButtonLoading}
+              >
+                Add content
+              </LoadingButton>
             </div>
           </div>
         </div>
-        <div className="mb-[20px] rounded bg-[#282D36] text-white">
-          <header className="p-4">
-            <h2 className="mt-1 text-[20px] font-normal">Homepage</h2>
-          </header>
-          <div className="box-border py-3 px-4 bg-[#2E353E]">
-            <div className="flex justify-start">
-              <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
-                Title
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  type="text"
-                  required
-                  value={newContent.title}
-                  className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  onChange={(e) =>
-                    setNewContent({ ...newContent, title: e.target.value })
-                  }
-                />
-                {newContent.title == '' && addButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Title is required!
-                  </p>
-                )}
+        <div className="col-span-9">
+          <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+            <header className="p-4 border-b border-[#11B3AE] border-opacity-20">
+              <h2 className="mt-1 text-[20px] font-normal text-[#FFFFFF]">Content#1142</h2>
+            </header>
+            <div className="box-border py-3 px-4 bg-[#0B1220]">
+              <div className="flex justify-start">
+                <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#E9D8C8] text-[13px]">
+                  Title
+                </label>
+                <div className="w-3/4 px-[15px]">
+                  <input
+                    type="text"
+                    required
+                    value={content.title}
+                    className="block w-full h-[34px] text-sm bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+                    onChange={(e) =>
+                      setContent({ ...content, title: e.target.value })
+                    }
+                  />
+                  {content.title === '' && updateButtonClicked && (
+                    <p className="mt-2 text-xs text-red-400">
+                      Title is required!
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-start mt-4">
+                <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#E9D8C8] text-[13px]">
+                  Body
+                </label>
+                <div className="w-3/4 px-[15px]">
+                  <ReactQuill
+                    className="editor bg-[#0B1220] rounded-lg min-h-[150px] block w-full h-[34px] text-sm text-[#E9D8C8] border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+                    theme="snow"
+                    value={content.body}
+                    onChange={(value) => setContent({ ...content, body: value })}
+                    modules={modules}
+                    placeholder="Enter Body Text Here..."
+                    required
+                  />
+                  {content.body === '' && updateButtonClicked && (
+                    <p className="mt-2 text-xs text-red-400">
+                      Body is required!
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="px-4 py-2">
-            <LoadingButton
-              variant="contained"
-              size="small"
-              sx={{
-                textTransform: 'none',
-                backgroundColor: '#0088CC!important',
-              }}
-              onClick={handlAaddButtonClicked}
-              loading={isAddButtonLoading}
-            >
-              Add content
-            </LoadingButton>
-          </div>
-        </div>
-      </div>
-      <div className="col-span-9">
-        <div className="mb-[20px] rounded bg-[#282D36] text-white">
-          <header className="p-4">
-            <h2 className="mt-1 text-[20px] font-normal">Content#1142</h2>
-          </header>
-          <div className="box-border py-3 px-4 bg-[#2E353E]">
-            <div className="flex justify-start">
-              <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
-                Title
-              </label>
-              <div className="w-3/4 px-[15px]">
-                <input
-                  type="text"
-                  required
-                  value={content.title}
-                  className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  onChange={(e) =>
-                    setContent({ ...content, title: e.target.value })
-                  }
-                />
-                {content.title === '' && updateButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Title is required!
-                  </p>
-                )}
-              </div>
+            <div className="px-4 py-2 flex justify-end gap-2 pr-8 border-t border-[#11B3AE] border-opacity-20">
+              <LoadingButton
+                variant="contained"
+                size="small"
+                sx={{
+                  textTransform: 'none',
+                  backgroundColor: '#11B3AE!important',
+                  color: '#FFFFFF',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
+                }}
+                onClick={handleUpdateButtonClicked}
+                loading={isUpdateButtonLoading}
+              >
+                Update
+              </LoadingButton>
+              <LoadingButton
+                variant="contained"
+                size="small"
+                sx={{
+                  textTransform: 'none',
+                  backgroundColor: '#fa5252!important',
+                  color: '#FFFFFF',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#e03131!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(250, 82, 82, 0.3)',
+                  },
+                }}
+                onClick={handleDeleteButtonClicked}
+                loading={isDeleteButtonLoading}
+              >
+                Delete
+              </LoadingButton>
             </div>
-            <div className="flex justify-start mt-4">
-              <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
-                Body
-              </label>
-              <div className="w-3/4 px-[15px]">
-                <ReactQuill
-                  className="editor bg-[#282d36] rounded min-h-[150px] block w-full h-[34px] text-sm text-[#fff]"
-                  theme="snow"
-                  value={content.body}
-                  onChange={(value) => setContent({ ...content, body: value })}
-                  modules={modules}
-                  placeholder="Enter Body Text Here..."
-                  required
-                />
-                {content.body === '' && updateButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Body is required!
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="px-4 py-2 flex justify-end gap-2 pr-8">
-            <LoadingButton
-              variant="contained"
-              size="small"
-              sx={{
-                textTransform: 'none',
-                backgroundColor: '#0088CC!important',
-              }}
-              onClick={handleUpdateButtonClicked}
-              loading={isUpdateButtonLoading}
-            >
-              Update
-            </LoadingButton>
-            <LoadingButton
-              variant="contained"
-              size="small"
-              sx={{
-                textTransform: 'none',
-                backgroundColor: 'red!important',
-              }}
-              onClick={handleDeleteButtonClicked}
-              loading={isDeleteButtonLoading}
-            >
-              Delete
-            </LoadingButton>
           </div>
         </div>
       </div>

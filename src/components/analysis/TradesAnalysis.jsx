@@ -1,38 +1,50 @@
 import * as React from 'react';
 import OpenTradeTable from '../Tables/OpenTradeTable';
 import CloseTradeTable from '../Tables/CloseTradeTable';
+import { styled } from '@mui/material/styles';
+
+const StyledTab = styled('div')(({ theme, active }) => ({
+  display: 'inline-block',
+  padding: '12px 16px',
+  color: active ? '#FFFFFF' : '#E9D8C8',
+  backgroundColor: active ? '#11B3AE' : 'transparent',
+  borderRadius: '8px 8px 0 0',
+  borderTop: `3px solid ${active ? '#11B3AE' : 'transparent'}`,
+  fontWeight: 600,
+  fontSize: '0.875rem',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: active ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+    transform: 'translateY(-1px)',
+  },
+}));
 
 const TradesAnalysis = () => {
   const [tab, setTab] = React.useState(1);
 
   return (
-    <div>
-      <ul className="flex text-sm font-medium text-center  dark:text-gray-400">
-        <li className="mr-[2px]">
-          <a
+    <div className="h-full">
+      {/* Tab Header */}
+      <div className="p-4 border-b border-[#11B3AE] border-opacity-20">
+        <div className="flex space-x-1">
+          <StyledTab 
+            active={tab === 1}
             onClick={() => setTab(1)}
-            href="#"
-            aria-current="page"
-            className={`inline-block px-[15px] py-[10px] text-white bg-[#282D36]  rounded-t border-t-[3px] box-border hover:border-white ${
-              tab === 1 ? 'border-white bg-[#2E353E]' : 'border-[#282D36]'
-            }`}
           >
             Open Trades
-          </a>
-        </li>
-        <li className="mr-[2px]">
-          <a
+          </StyledTab>
+          <StyledTab 
+            active={tab === 2}
             onClick={() => setTab(2)}
-            href="#"
-            className={`inline-block px-[15px] py-[10px] text-white bg-[#282D36]  rounded-t border-t-[3px] box-border hover:border-white ${
-              tab === 2 ? 'border-white bg-[#2E353E]' : 'border-[#282D36]'
-            }`}
           >
             Close Trades
-          </a>
-        </li>
-      </ul>
-      <div className="bg-[#2E353E] p-[15px]">
+          </StyledTab>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
         {tab === 1 && <OpenTradeTable />}
         {tab === 2 && <CloseTradeTable />}
       </div>

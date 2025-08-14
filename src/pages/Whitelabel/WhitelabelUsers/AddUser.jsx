@@ -73,110 +73,117 @@ function AddAccount() {
   };
 
   return (
-    <div>
-      <div className="py-0 px-[200px]">
-        <div className="pb-3">
-          <Grid container sx={{ cursor: 'pointer' }} onClick={() => navigate("/whitelabel/users")}>
-            <ReplyRoundedIcon
-              fontSize="medium"
-              sx={{ color: 'white', fontWeight: 'bold' }}
-            />
-            <h1 className="text-white text-lg pl-2"> Whitelabel Users</h1>
-          </Grid>
-        </div>
-        <div className="mb-[20px] rounded bg-[#282D36] text-white">
-          <header className="p-[18px]">
-            <h2 className="mt-[5px] text-[20px] font-normal">Manually add user</h2>
-          </header>
-          <div className="p-[15px] bg-[#2E353E] box-border">
-            <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                User Name
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  name="fullName"
-                  type="text"
-                  required
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-full h-[34px] text-sm"
-                  onChange={handleInputChange}
-                />
-                {values.fullName == '' && createButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    User Name required!
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#242830]">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                User Email
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  name="email"
-                  type="text"
-                  required
-                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
-                  onChange={handleInputChange}
-                />
-                {
-                  values.email == '' && createButtonClicked ?
-                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      User Email required!
-                    </p> :
-                  !validator.isEmail( values.email ) && createButtonClicked && 
-                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      Invalid Email Format!
-                    </p>
-                }
-              </div>
-            </div>
-            <div className="flex justify-start mb-[15px]">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                User Password (min 6 chars)
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  minLength={2}
-                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
-                  onChange={handleInputChange}
-                />
-                {
-                  values.password == '' && createButtonClicked ?
-                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      User Password required!
-                    </p> :
-                  values.password.length < 6 && createButtonClicked &&  
-                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      User Password at least 6 characters!
-                    </p>
-                }
-              </div>
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
+      <div className="pb-3">
+        <Grid container sx={{ cursor: 'pointer' }} onClick={() => navigate("/whitelabel/users")}>
+          <ReplyRoundedIcon
+            fontSize="medium"
+            sx={{ color: '#E9D8C8', fontWeight: 'bold' }}
+          />
+          <h1 className="text-[#E9D8C8] text-lg pl-2"> Whitelabel Users</h1>
+        </Grid>
+      </div>
+      <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+        <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
+          <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">Manually add user</h2>
+        </header>
+        <div className="p-[15px] bg-[#0B1220] box-border">
+          <div className="border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px] flex justify-start">
+            <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+              User Name
+            </label>
+            <div className="w-1/2 px-[15px]">
+              <input
+                name="fullName"
+                type="text"
+                required
+                className="bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg block w-full h-[34px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+                onChange={handleInputChange}
+              />
+              {values.fullName == '' && createButtonClicked && (
+                <p className="mt-2 text-xs text-red-400">
+                  User Name required!
+                </p>
+              )}
             </div>
           </div>
-          <footer className="px-[15px] py-[10px]">
-            <div className="grid grid-cols-12 gap-3">
-              <div className="col-start-4 col-span-4 pl-3.5">
-                <LoadingButton
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    textTransform: 'none',
-                    backgroundColor: '#0088CC!important',
-                  }}
-                  onClick={handleCreateAccount}
-                  loading={isLoading}
-                >
-                  Create
-                </LoadingButton>
-              </div>
+          <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
+            <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+              User Email
+            </label>
+            <div className="w-1/2 px-[15px]">
+              <input
+                name="email"
+                type="text"
+                required
+                className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[34px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+                onChange={handleInputChange}
+              />
+              {
+                values.email == '' && createButtonClicked ?
+                  <p className="mt-2 text-xs text-red-400">
+                    User Email required!
+                  </p> :
+                !validator.isEmail( values.email ) && createButtonClicked && 
+                  <p className="mt-2 text-xs text-red-400">
+                    Invalid Email Format!
+                  </p>
+              }
             </div>
-          </footer>
+          </div>
+          <div className="flex justify-start mb-[15px]">
+            <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+              User Password (min 6 chars)
+            </label>
+            <div className="w-1/2 px-[15px]">
+              <input
+                name="password"
+                type="password"
+                required
+                minLength={2}
+                className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[34px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+                onChange={handleInputChange}
+              />
+              {
+                values.password == '' && createButtonClicked ?
+                  <p className="mt-2 text-xs text-red-400">
+                    User Password required!
+                  </p> :
+                values.password.length < 6 && createButtonClicked &&  
+                  <p className="mt-2 text-xs text-red-400">
+                    User Password at least 6 characters!
+                  </p>
+              }
+            </div>
+          </div>
         </div>
+        <footer className="px-[15px] py-[10px] border-t border-[#11B3AE] border-opacity-20">
+          <div className="grid grid-cols-12 gap-3">
+            <div className="col-start-4 col-span-4 pl-3.5">
+              <LoadingButton
+                variant="contained"
+                size="small"
+                sx={{
+                  textTransform: 'none',
+                  backgroundColor: '#11B3AE!important',
+                  color: '#FFFFFF',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95!important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
+                }}
+                onClick={handleCreateAccount}
+                loading={isLoading}
+              >
+                Create
+              </LoadingButton>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );

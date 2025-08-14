@@ -69,6 +69,7 @@ export default function EditUser() {
   const [showMaxAccountModal, setShowMaxAccountModal] = React.useState(false);
 
   const [maxAccount, setMaxAccount] = React.useState(0);
+  const [tempMaxAccount, setTempMaxAccount] = React.useState(0);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -79,6 +80,7 @@ export default function EditUser() {
         setAccounts(res.data.data.accounts);
         setCopiers(res.data.data.copiers);
         setMaxAccount(res.data.data.maxAccount);
+        setTempMaxAccount(res.data.data.maxAccount);
         setValues({
           ...values,
           role: res.data.data.role,
@@ -90,17 +92,30 @@ export default function EditUser() {
     fetchData();
   }, [id]);
 
+  const handleOpenMaxAccountModal = () => {
+    setTempMaxAccount(userInfo.maxAccount);
+    setShowMaxAccountModal(true);
+  };
+
   const handleUpdateMaxAccount = async () => {
     try {
-      await api.put(`/users/max-account/${id}`, { maxAccount: maxAccount });
-      setUserInfo({
-        ...data,
-        maxAccount: maxAccount,
-      });
+      setIsLoading(true);
+      await api.put(`/users/max-account/${id}`, { maxAccount: tempMaxAccount });
+      
+      // Update the local state
+      setUserInfo(prev => ({
+        ...prev,
+        maxAccount: tempMaxAccount,
+      }));
+      setMaxAccount(tempMaxAccount);
+      
       setShowMaxAccountModal(false);
       showToast('Updated successfully', 'success');
     } catch (err) {
       console.log(err);
+      showToast('Update failed', 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -139,7 +154,7 @@ export default function EditUser() {
   };
 
   return (
-    <div className="mb-28">
+    <div className="w-auto text-[#E9D8C8] pb-[100px]">
       <div className="pb-3">
         <Link
           to={`/whitelabel/users`}
@@ -147,51 +162,57 @@ export default function EditUser() {
         >
           <ReplyRoundedIcon
             fontSize="medium"
-            sx={{ color: 'white', fontWeight: 'bold' }}
+            sx={{ color: '#E9D8C8', fontWeight: 'bold' }}
           />
-          <h1 className="text-white text-lg pl-2"> Whitelabel Users</h1>
+          <h1 className="text-[#E9D8C8] text-lg pl-2"> Whitelabel Users</h1>
         </Link>
       </div>
       <div className="grid grid-cols-12 gap-7">
         <div className="col-span-3">
-          <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-            <h2 className="mt-[5px] text-[20px] font-normal">User Details</h2>
+          <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t-xl border border-[#11B3AE] border-b-0 shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">User Details</h2>
           </header>
-          <div className="text-[#ccc] bg-[#2E353E] p-4 rounded-b">
+          <div className="text-[#E9D8C8] bg-[#0B1220] p-4 rounded-b-xl border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.5)]">
             <p className="mb-2 text-sm">Profile Name</p>
-            <h1 className="text-xl">{userInfo.fullName}</h1>
+            <h1 className="text-xl text-[#FFFFFF]">{userInfo.fullName}</h1>
             <p className="my-2 text-sm">Registered</p>
-            <h1 className="text-xl">
+            <h1 className="text-xl text-[#FFFFFF]">
               {userInfo.created_at && userInfo.created_at.substring(0, 10)}
             </h1>
             <div className="flex justify-between items-center mb-3">
               <div>
                 <p className="my-2 text-sm">Max Accounts</p>
-                <h1 className="text-xl">{userInfo.maxAccount}</h1>
+                <h1 className="text-xl text-[#FFFFFF]">{userInfo.maxAccount}</h1>
               </div>
               <IconButton
                 size="small"
                 color="inherit"
                 sx={{
-                  backgroundColor: '#0099E6',
-                  borderRadius: '4px',
+                  backgroundColor: '#11B3AE',
+                  borderRadius: '8px',
                   fontSize: 13,
                   paddingX: '11px',
                   paddingY: '11px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
                 }}
 
-                onClick={() => setShowMaxAccountModal(true)}
+                onClick={handleOpenMaxAccountModal}
               >
                 <Icon icon="fa:cogs" color="white" />
               </IconButton>
             </div>
-            <fieldset className="grid grid-cols-12 border-2 border-[#282d36] rounded-md p-3 gap-3">
+            <fieldset className="grid grid-cols-12 border-2 border-[#11B3AE] border-opacity-30 rounded-lg p-3 gap-3">
               <div className="col-span-6">
                 <p className="mb-2 text-sm">Role</p>
                 <div>
                   <select
                     name="role"
-                    className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-lg"
+                    className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[34px] text-lg border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
                     value={values.role}
                     onChange={handleInputChange}
                   >
@@ -215,13 +236,13 @@ export default function EditUser() {
                       name="providerAccountLimit"
                       type="number"
                       required
-                      className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-lg"
+                      className="block bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg w-full h-[34px] text-lg border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
                       onChange={handleInputChange}
                       value={values.providerAccountLimit}
                     />
                     {values.providerAccountLimit == '' &&
                       isUpdateButtonClicked && (
-                        <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                        <p className="mt-2 text-xs text-red-400">
                           Limit required!
                         </p>
                       )}
@@ -233,11 +254,18 @@ export default function EditUser() {
               <LoadingButton
                 className="col-start-8"
                 sx={{
-                  backgroundColor: '#0099E6',
-                  '&:hover': { backgroundColor: '#0088cc' },
+                  backgroundColor: '#11B3AE',
+                  '&:hover': { backgroundColor: '#0F9A95' },
                   textTransform: 'none',
                   color: 'white',
                   paddingX: '40px',
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: '#0F9A95',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                  },
                 }}
                 loading={isLoading}
                 onClick={handleUpdateButtonClicked}
@@ -249,30 +277,28 @@ export default function EditUser() {
         </div>
         <div className="col-span-9 flex flex-col gap-5">
           <div>
-            <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-              <h2 className="mt-[5px] text-[20px] font-normal">Signals</h2>
+            <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t-xl border border-[#11B3AE] border-b-0 shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+              <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">Signals</h2>
             </header>
-            <div className="text-[#ccc] bg-[#2E353E] p-5 rounded-b pb-[10px]">
+            <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b-xl border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[10px]">
               <Paper
                 sx={{
                   width: '100%',
-                  // marginBottom: 10,
                   overflow: 'hidden',
-                  backgroundColor: '#2E353E',
+                  backgroundColor: 'transparent',
                   boxShadow: 'none',
-                  '& .MuiPaper-root': {
-                    color: '#ccc',
-                    backgroundColor: '#2E353E',
-                    boxShadow: 'none',
-                  },
                 }}
               >
                 <TableContainer
                   sx={{
-                    // maxHeight: 440,
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    maxWidth: '100%',
+                    overflowX: 'auto',
                     '.MuiTable-root': {
-                      borderColor: '#282D36',
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
                       borderWidth: '1px',
+                      minWidth: { xs: '600px', sm: 'auto' },
                     },
                   }}
                 >
@@ -280,19 +306,33 @@ export default function EditUser() {
                     stickyHeader
                     aria-label="sticky table"
                     sx={{
+                      borderRadius: '12px',
                       '& .MuiTableCell-root': {
-                        color: '#ccc',
-                        backgroundColor: '#2E353E',
-                        border: '#282D36',
+                        color: '#E9D8C8',
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgba(17, 179, 174, 0.15)',
+                        fontSize: '0.875rem',
+                      },
+                      '& .MuiTableHead-root .MuiTableCell-root': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        color: '#FFFFFF',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                        borderColor: 'rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiTableRow-root:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.05)',
                       },
                     }}
                   >
-                    <TableHead>
+                    <TableHead sx={{
+                      borderRadius: '12px',
+                    }}>
                       <TableRow
                         sx={{
                           '&:last-child td, &:last-child th': {
                             border: 1,
-                            borderColor: '#282D36',
+                            borderColor: 'rgba(17, 179, 174, 0.2)',
                           },
                         }}
                       >
@@ -300,24 +340,25 @@ export default function EditUser() {
                           <TableCell
                             key={id}
                             align="center"
-                            // style={{ minWidth: column.minWidth }}
                             sx={{
-                              padding: '5px',
+                              padding: '12px 8px',
+                              fontWeight: 600,
                             }}
                           >
-                            <div className="flex items-center justify-between p-[3px]">
+                            <div className="flex items-center justify-between p-[6px]">
                               {label}
-                              <div className="flex flex-col width={11} cursor-pointer">
+                              <div className="flex flex-col cursor-pointer">
                                 <Icon
                                   icon="teenyicons:up-solid"
-                                  color="#ccc"
-                                  className="mb-[-4px]"
+                                  color="#11B3AE"
+                                  className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
                                   width={11}
                                 />
                                 <Icon
                                   icon="teenyicons:down-solid"
                                   width={11}
-                                  color="#ccc"
+                                  color="#11B3AE"
+                                  className="hover:text-[#E9D8C8] transition-colors"
                                 />
                               </div>
                             </div>
@@ -329,12 +370,11 @@ export default function EditUser() {
                       sx={{
                         '&:last-child td, &:last-child th': {
                           border: 1,
-                          borderColor: '#282D36',
+                          borderColor: 'rgba(17, 179, 174, 0.15)',
                         },
                       }}
                     >
                       {
-                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         signals &&
                         signals.length > 0 &&
                         signals.map((row) => {
@@ -344,6 +384,14 @@ export default function EditUser() {
                               role="checkbox"
                               tabIndex={-1}
                               key={row.id}
+                              sx={{
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                                },
+                              }}
                             >
                               {headers[0].map(({ id }) => {
                                 let value = row[id];
@@ -370,8 +418,8 @@ export default function EditUser() {
                                     key={id}
                                     align="left"
                                     sx={{
-                                      padding: '5px',
-                                      paddingLeft: 2,
+                                      padding: '12px 16px',
+                                      fontSize: '0.875rem',
                                     }}
                                   >
                                     {id === 'live' ? (
@@ -386,7 +434,7 @@ export default function EditUser() {
                                         color={row[id] ? 'green' : '#D64742'}
                                       />
                                     ) : (
-                                      <div className="truncate">{value}</div>
+                                      <div className="truncate font-medium">{value}</div>
                                     )}
                                   </TableCell>
                                 );
@@ -398,38 +446,32 @@ export default function EditUser() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-
-                {/* <Typography color="white" mb={1}>
-                  No signals have been added.
-                </Typography> */}
               </Paper>
             </div>
           </div>
           <div>
-            <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-              <h2 className="mt-[5px] text-[20px] font-normal">Accounts</h2>
+            <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t-xl border border-[#11B3AE] border-b-0 shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+              <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">Accounts</h2>
             </header>
-            <div className="text-[#ccc] bg-[#2E353E] p-5 rounded-b pb-[10px]">
+            <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b-xl border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[10px]">
               <Paper
                 sx={{
                   width: '100%',
-                  // marginBottom: 10,
                   overflow: 'hidden',
-                  backgroundColor: '#2E353E',
+                  backgroundColor: 'transparent',
                   boxShadow: 'none',
-                  '& .MuiPaper-root': {
-                    color: '#ccc',
-                    backgroundColor: '#2E353E',
-                    boxShadow: 'none',
-                  },
                 }}
               >
                 <TableContainer
                   sx={{
-                    // maxHeight: 440,
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    maxWidth: '100%',
+                    overflowX: 'auto',
                     '.MuiTable-root': {
-                      borderColor: '#282D36',
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
                       borderWidth: '1px',
+                      minWidth: { xs: '600px', sm: 'auto' },
                     },
                   }}
                 >
@@ -437,19 +479,33 @@ export default function EditUser() {
                     stickyHeader
                     aria-label="sticky table"
                     sx={{
+                      borderRadius: '12px',
                       '& .MuiTableCell-root': {
-                        color: '#ccc',
-                        backgroundColor: '#2E353E',
-                        border: '#282D36',
+                        color: '#E9D8C8',
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgba(17, 179, 174, 0.15)',
+                        fontSize: '0.875rem',
+                      },
+                      '& .MuiTableHead-root .MuiTableCell-root': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        color: '#FFFFFF',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                        borderColor: 'rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiTableRow-root:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.05)',
                       },
                     }}
                   >
-                    <TableHead>
+                    <TableHead sx={{
+                      borderRadius: '12px',
+                    }}>
                       <TableRow
                         sx={{
                           '&:last-child td, &:last-child th': {
                             border: 1,
-                            borderColor: '#282D36',
+                            borderColor: 'rgba(17, 179, 174, 0.2)',
                           },
                         }}
                       >
@@ -458,22 +514,24 @@ export default function EditUser() {
                             key={id}
                             align="center"
                             sx={{
-                              padding: '5px',
+                              padding: '12px 8px',
+                              fontWeight: 600,
                             }}
                           >
-                            <div className="flex items-center justify-between p-[3px]">
+                            <div className="flex items-center justify-between p-[6px]">
                               {label}
-                              <div className="flex flex-col width={11} cursor-pointer">
+                              <div className="flex flex-col cursor-pointer">
                                 <Icon
                                   icon="teenyicons:up-solid"
-                                  color="#ccc"
-                                  className="mb-[-4px]"
+                                  color="#11B3AE"
+                                  className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
                                   width={11}
                                 />
                                 <Icon
                                   icon="teenyicons:down-solid"
                                   width={11}
-                                  color="#ccc"
+                                  color="#11B3AE"
+                                  className="hover:text-[#E9D8C8] transition-colors"
                                 />
                               </div>
                             </div>
@@ -485,12 +543,11 @@ export default function EditUser() {
                       sx={{
                         '&:last-child td, &:last-child th': {
                           border: 1,
-                          borderColor: '#282D36',
+                          borderColor: 'rgba(17, 179, 174, 0.15)',
                         },
                       }}
                     >
                       {
-                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         accounts &&
                         accounts.length > 0 &&
                         accounts.map((row) => {
@@ -500,6 +557,14 @@ export default function EditUser() {
                               role="checkbox"
                               tabIndex={-1}
                               key={row.id}
+                              sx={{
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                                },
+                              }}
                             >
                               {headers[1].map(({ id }) => {
                                 let value = row[id];
@@ -526,8 +591,8 @@ export default function EditUser() {
                                     key={id}
                                     align="left"
                                     sx={{
-                                      padding: '5px',
-                                      paddingLeft: 2,
+                                      padding: '12px 16px',
+                                      fontSize: '0.875rem',
                                     }}
                                   >
                                     {id === 'live' ? (
@@ -542,7 +607,7 @@ export default function EditUser() {
                                         color={row[id] ? 'green' : '#D64742'}
                                       />
                                     ) : (
-                                      <div className="truncate">{value}</div>
+                                      <div className="truncate font-medium">{value}</div>
                                     )}
                                   </TableCell>
                                 );
@@ -554,38 +619,32 @@ export default function EditUser() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-
-                {/* <Typography color="white" mb={1}>
-                  No accounts have been added.
-                </Typography> */}
               </Paper>
             </div>
           </div>
           <div>
-            <header className="p-[18px] text-white flex justify-between items-center bg-[#282D36] rounded-t">
-              <h2 className="mt-[5px] text-[20px] font-normal">Copiers</h2>
+            <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t-xl border border-[#11B3AE] border-b-0 shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+              <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">Copiers</h2>
             </header>
-            <div className="text-[#ccc] bg-[#2E353E] p-5 rounded-b pb-[10px]">
+            <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b-xl border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[10px]">
               <Paper
                 sx={{
                   width: '100%',
-                  // marginBottom: 10,
                   overflow: 'hidden',
-                  backgroundColor: '#2E353E',
+                  backgroundColor: 'transparent',
                   boxShadow: 'none',
-                  '& .MuiPaper-root': {
-                    color: '#ccc',
-                    backgroundColor: '#2E353E',
-                    boxShadow: 'none',
-                  },
                 }}
               >
                 <TableContainer
                   sx={{
-                    // maxHeight: 440,
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    maxWidth: '100%',
+                    overflowX: 'auto',
                     '.MuiTable-root': {
-                      borderColor: '#282D36',
+                      borderColor: 'rgba(17, 179, 174, 0.2)',
                       borderWidth: '1px',
+                      minWidth: { xs: '600px', sm: 'auto' },
                     },
                   }}
                 >
@@ -593,19 +652,33 @@ export default function EditUser() {
                     stickyHeader
                     aria-label="sticky table"
                     sx={{
+                      borderRadius: '12px',
                       '& .MuiTableCell-root': {
-                        color: '#ccc',
-                        backgroundColor: '#2E353E',
-                        border: '#282D36',
+                        color: '#E9D8C8',
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgba(17, 179, 174, 0.15)',
+                        fontSize: '0.875rem',
+                      },
+                      '& .MuiTableHead-root .MuiTableCell-root': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                        color: '#FFFFFF',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                        borderColor: 'rgba(17, 179, 174, 0.2)',
+                      },
+                      '& .MuiTableRow-root:hover': {
+                        backgroundColor: 'rgba(17, 179, 174, 0.05)',
                       },
                     }}
                   >
-                    <TableHead>
+                    <TableHead sx={{
+                      borderRadius: '12px',
+                    }}>
                       <TableRow
                         sx={{
                           '&:last-child td, &:last-child th': {
                             border: 1,
-                            borderColor: '#282D36',
+                            borderColor: 'rgba(17, 179, 174, 0.2)',
                           },
                         }}
                       >
@@ -614,22 +687,24 @@ export default function EditUser() {
                             key={id}
                             align="center"
                             sx={{
-                              padding: '5px',
+                              padding: '12px 8px',
+                              fontWeight: 600,
                             }}
                           >
-                            <div className="flex items-center justify-between p-[3px]">
+                            <div className="flex items-center justify-between p-[6px]">
                               {label}
-                              <div className="flex flex-col width={11} cursor-pointer">
+                              <div className="flex flex-col cursor-pointer">
                                 <Icon
                                   icon="teenyicons:up-solid"
-                                  color="#ccc"
-                                  className="mb-[-4px]"
+                                  color="#11B3AE"
+                                  className="mb-[-4px] hover:text-[#E9D8C8] transition-colors"
                                   width={11}
                                 />
                                 <Icon
                                   icon="teenyicons:down-solid"
                                   width={11}
-                                  color="#ccc"
+                                  color="#11B3AE"
+                                  className="hover:text-[#E9D8C8] transition-colors"
                                 />
                               </div>
                             </div>
@@ -641,12 +716,11 @@ export default function EditUser() {
                       sx={{
                         '&:last-child td, &:last-child th': {
                           border: 1,
-                          borderColor: '#282D36',
+                          borderColor: 'rgba(17, 179, 174, 0.15)',
                         },
                       }}
                     >
                       {
-                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         copiers &&
                         copiers.length > 0 &&
                         copiers.map((row) => {
@@ -656,6 +730,14 @@ export default function EditUser() {
                               role="checkbox"
                               tabIndex={-1}
                               key={row.id}
+                              sx={{
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(17, 179, 174, 0.08)',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.1)',
+                                },
+                              }}
                             >
                               {headers[2].map(({ id, index }) => {
                                 let value = row[id];
@@ -682,8 +764,8 @@ export default function EditUser() {
                                     key={index}
                                     align="left"
                                     sx={{
-                                      padding: '5px',
-                                      paddingLeft: 2,
+                                      padding: '12px 16px',
+                                      fontSize: '0.875rem',
                                     }}
                                   >
                                     {id === 'live' ? (
@@ -698,7 +780,7 @@ export default function EditUser() {
                                         color={row[id] ? 'green' : '#D64742'}
                                       />
                                     ) : (
-                                      <div className="truncate">{value}</div>
+                                      <div className="truncate font-medium">{value}</div>
                                     )}
                                   </TableCell>
                                 );
@@ -710,10 +792,6 @@ export default function EditUser() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-
-                {/* <Typography color="white" mb={1}>
-                  No copiers have been added.
-                </Typography> */}
               </Paper>
             </div>
           </div>
@@ -725,48 +803,61 @@ export default function EditUser() {
           }`}
       >
         <div
-          className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
-          onClick={() => setShowMaxAccountModal(false)}
+          className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#0B1220]"
+          onClick={() => {
+            setShowMaxAccountModal(false);
+            setTempMaxAccount(userInfo.maxAccount);
+          }}
         ></div>
-        <section className="mb-[20px] bg-[#282D36] w-[500px] z-[100000]">
-          <header className="p-[18px] text-white flex justify-between items-center">
-            <h2 className="mt-[5px] text-[20px] font-normal">
+        <section className="mb-[20px] bg-[#0B1220] w-[500px] z-[100000] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+          <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center border-b border-[#11B3AE] border-opacity-20">
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">
               Adjust max account limit
             </h2>
             <button
-              className="bg-[#0099e6] w-[33px] h-[33px] font-extrabold"
-              onClick={() => setShowMaxAccountModal(false)}
+              className="bg-[#11B3AE] w-[33px] h-[33px] font-extrabold rounded-lg hover:bg-[#0F9A95] transition-all duration-200"
+              onClick={() => {
+                setShowMaxAccountModal(false);
+                setTempMaxAccount(userInfo.maxAccount);
+              }}
             >
               ✖
             </button>
           </header>
-          <div className="p-[15px] bg-[#2E353E] text-white text-center flex justify-center gap-2 items-center py-10">
-            <div className="text-sm">Max account limt: </div>
+          <div className="p-[15px] bg-[#0B1220] text-[#E9D8C8] text-center flex justify-center gap-2 items-center py-10">
+            <div className="text-sm">Max account limit: </div>
             <input
-              name="fullName"
+              name="maxAccount"
               type="number"
+              min="1"
               required
-              value={maxAccount}
-              className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-[40%] h-[34px] text-sm"
-              onChange={(e) => setMaxAccount(e.target.value)}
+              value={tempMaxAccount}
+              className="bg-[#0B1220] text-[#E9D8C8] px-3 py-1.5 rounded-lg block w-[40%] h-[34px] text-sm border border-[#11B3AE] border-opacity-30 focus:border-[#11B3AE] focus:outline-none focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
+              onChange={(e) => setTempMaxAccount(parseInt(e.target.value) || 0)}
             />
           </div>
-          <footer className="px-4 py-3 text-white flex justify-end items-center">
+          <footer className="px-4 py-3 text-[#E9D8C8] flex justify-end items-center border-t border-[#11B3AE] border-opacity-20">
             <LoadingButton
               variant="contained"
               size="small"
               sx={{
                 textTransform: 'none',
                 color: '#ffffff!important',
-                backgroundColor: '#0099e6!important',
-                borderRadius: '1px',
+                backgroundColor: '#11B3AE!important',
+                borderRadius: '8px',
                 paddingX: '12px',
                 paddingY: '6px',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#0F9A95!important',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                },
                 '&:disabled': { opacity: 0.5 },
               }}
               onClick={handleUpdateMaxAccount}
               loading={isLoading}
-            // disabled={!checkboxSelected}
+              disabled={tempMaxAccount <= 0}
             >
               Update
             </LoadingButton>

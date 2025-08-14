@@ -9,6 +9,6 @@ export default defineConfig({
     port: 5173,           // Default Vite port
     strictPort: true,     // Fail if port is already in use
     open: false,           // Don't auto-open browser (optional)
-    allowedHosts: ['app.marketmaster.com']
+    allowedHosts: ['app.trademesh.com']
   }
 })

@@ -1,6 +1,29 @@
 import * as React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { formatNumber } from '../../utils/formatNumber';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+
+const StyledTab = styled('div')(({ theme, active }) => ({
+  display: 'inline-block',
+  padding: '12px 16px',
+  color: active ? '#FFFFFF' : '#E9D8C8',
+  backgroundColor: active ? '#11B3AE' : 'transparent',
+  borderRadius: '8px 8px 0 0',
+  borderTop: `3px solid ${active ? '#11B3AE' : 'transparent'}`,
+  fontWeight: 600,
+  fontSize: '0.875rem',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: active ? '#0F9A95' : 'rgba(17, 179, 174, 0.1)',
+    transform: 'translateY(-1px)',
+  },
+}));
 
 const _dateCompare = (a, b) => {
   const first = new Date(a);
@@ -35,7 +58,29 @@ const _dateHourCompare = (a, b) => {
 
 const AnalysisByTime = ({ data }) => {
   const [type, setType] = React.useState('win_loss');
-  const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
+  
+  // Get available years and set initial year to the first available year
+  const availableYears = React.useMemo(() => {
+    if (!data || data.length === 0) {
+      const currentYear = new Date().getFullYear();
+      return [currentYear];
+    }
+    
+    const years = new Set();
+    data.forEach(item => {
+      const year = new Date(item.openTimeAsDateTime).getFullYear();
+      years.add(year);
+    });
+    
+    const currentYear = new Date().getFullYear();
+    years.add(currentYear); // Ensure current year is included
+    
+    return Array.from(years).sort((a, b) => a - b);
+  }, [data]);
+  
+  const [selectedYear, setSelectedYear] = React.useState(() => {
+    return availableYears.length > 0 ? availableYears[0] : new Date().getFullYear();
+  });
 
   // Helper function to calculate total profit (profit + swap + commission)
   const calculateTotalProfit = (item) => {
@@ -117,6 +162,8 @@ const AnalysisByTime = ({ data }) => {
         toolbar: {
           show: false,
         },
+        background: 'transparent',
+        foreColor: '#E9D8C8',
       },
       plotOptions: {
         bar: {
@@ -126,15 +173,16 @@ const AnalysisByTime = ({ data }) => {
               {
                 from: -Infinity,
                 to: -0.01,
-                color: '#FF0000'
+                color: '#f40b0b'
               },
               {
                 from: 0,
                 to: Infinity,
-                color: '#00FF00'
+                color: '#47A447'
               }
             ]
-          }
+          },
+          borderRadius: 4,
         }
       },
       dataLabels: {
@@ -148,42 +196,60 @@ const AnalysisByTime = ({ data }) => {
           return val.toFixed(2);
         },
       },
-      markers: {
-        size: 0,
+      grid: {
+        borderColor: 'rgba(17, 179, 174, 0.1)',
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: true,
+          },
+        },
       },
       yaxis: {
         labels: {
           style: {
-            colors: '#FFFFFF',
+            colors: '#E9D8C8',
             fontSize: '12px',
           },
           formatter: function (val) {
-            // Check if value needs rounding to 2 decimal places
-            // const rounded = Math.round(val * 100) / 100;
-            // return Math.abs(val - rounded) < 0.001 ? rounded : val.toFixed(2);
             return val.toFixed(2);
           },
+        },
+        axisBorder: {
+          color: 'rgba(17, 179, 174, 0.2)',
+        },
+        axisTicks: {
+          color: 'rgba(17, 179, 174, 0.2)',
         },
       },
       xaxis: {
         categories: _makeMonthlyData(data).xData,
         labels: {
           style: {
-            colors: '#FFFFFF',
+            colors: '#E9D8C8',
             fontSize: '12px',
           },
+        },
+        axisBorder: {
+          color: 'rgba(17, 179, 174, 0.2)',
+        },
+        axisTicks: {
+          color: 'rgba(17, 179, 174, 0.2)',
         },
       },
       tooltip: {
         shared: false,
+        theme: 'dark',
         style: {
           fontSize: '12px',
         },
         y: {
           formatter: function (val) {
-            // Check if value needs rounding to 2 decimal places
-            // const rounded = Math.round(val * 100) / 100;
-            // return Math.abs(val - rounded) < 0.001 ? rounded : val.toFixed(2);
             return val.toFixed(2);
           },
         },
@@ -327,6 +393,8 @@ const AnalysisByTime = ({ data }) => {
         toolbar: {
           show: false,
         },
+        background: 'transparent',
+        foreColor: '#E9D8C8',
       },
       dataLabels: {
         enabled: true,
@@ -336,18 +404,32 @@ const AnalysisByTime = ({ data }) => {
           fontWeight: 'bold',
         },
       },
-      colors: ['#00BFFF', '#FFD700'],
+      colors: ['#11B3AE', '#FFD700'],
       fill: {
-        colors: ['#00BFFF', '#FFD700'],
+        colors: ['#11B3AE', '#FFD700'],
       },
       stroke: {
         lineCap: 'round',
         curve: 'smooth',
-        colors: ['#00BFFF', '#FFD700'],
+        colors: ['#11B3AE', '#FFD700'],
+      },
+      grid: {
+        borderColor: 'rgba(17, 179, 174, 0.1)',
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: true,
+          },
+        },
       },
       legend: {
         labels: {
-          colors: '#FFFFFF',
+          colors: '#E9D8C8',
           fontSize: '12px',
           fontWeight: 'bold',
         },
@@ -355,71 +437,47 @@ const AnalysisByTime = ({ data }) => {
       yaxis: {
         labels: {
           style: {
-            colors: '#FFFFFF',
+            colors: '#E9D8C8',
             fontSize: '12px',
           },
           formatter: function (val) {
-            // Check if value needs rounding to 2 decimal places
-            // const rounded = Math.round(val * 100) / 100;
-            // return Math.abs(val - rounded) < 0.001 ? rounded : val.toFixed(2);
             return val.toFixed(2);
           },
+        },
+        axisBorder: {
+          color: 'rgba(17, 179, 174, 0.2)',
+        },
+        axisTicks: {
+          color: 'rgba(17, 179, 174, 0.2)',
         },
       },
       xaxis: {
         categories: _makeDailyData(data).dates,
         labels: {
           style: {
-            colors: '#FFFFFF',
+            colors: '#E9D8C8',
             fontSize: '12px',
           },
+        },
+        axisBorder: {
+          color: 'rgba(17, 179, 174, 0.2)',
+        },
+        axisTicks: {
+          color: 'rgba(17, 179, 174, 0.2)',
         },
       },
       tooltip: {
         shared: false,
+        theme: 'dark',
         style: {
           fontSize: '12px',
         },
         y: {
           formatter: function (val) {
-            // Check if value needs rounding to 2 decimal places
-            // const rounded = Math.round(val * 100) / 100;
-            // return Math.abs(val - rounded) < 0.001 ? rounded : val.toFixed(2);
             return val.toFixed(2);
           },
         },
       },
-    },
-  };
-
-  const pieChartConfig = {
-    series: [100],
-    options: {
-      chart: {
-        width: 380,
-        type: 'pie',
-      },
-      legend: {
-        position: 'left',
-        labels: {
-          colors: '#ccc',
-          useSeriesColors: false,
-        },
-      },
-      labels: ['USDEUR'],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: 'bottom',
-            },
-          },
-        },
-      ],
     },
   };
 
@@ -447,6 +505,8 @@ const AnalysisByTime = ({ data }) => {
         toolbar: {
           show: false,
         },
+        background: 'transparent',
+        foreColor: '#E9D8C8',
       },
       dataLabels: {
         enabled: true,
@@ -456,18 +516,32 @@ const AnalysisByTime = ({ data }) => {
           fontWeight: 'bold',
         },
       },
-      colors: ['#00BFFF', '#FFD700'],
+      colors: ['#11B3AE', '#FFD700'],
       fill: {
-        colors: ['#00BFFF', '#FFD700'],
+        colors: ['#11B3AE', '#FFD700'],
       },
       stroke: {
         lineCap: 'round',
         curve: 'smooth',
-        colors: ['#00BFFF', '#FFD700'],
+        colors: ['#11B3AE', '#FFD700'],
+      },
+      grid: {
+        borderColor: 'rgba(17, 179, 174, 0.1)',
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: true,
+          },
+        },
       },
       legend: {
         labels: {
-          colors: '#FFFFFF',
+          colors: '#E9D8C8',
           fontSize: '12px',
           fontWeight: 'bold',
         },
@@ -475,36 +549,43 @@ const AnalysisByTime = ({ data }) => {
       yaxis: {
         labels: {
           style: {
-            colors: '#FFFFFF',
+            colors: '#E9D8C8',
             fontSize: '12px',
           },
           formatter: function (val) {
-            // Check if value needs rounding to 2 decimal places
-            // const rounded = Math.round(val * 100) / 100;
-            // return Math.abs(val - rounded) < 0.001 ? rounded : val.toFixed(2);
             return val.toFixed(2);
           },
+        },
+        axisBorder: {
+          color: 'rgba(17, 179, 174, 0.2)',
+        },
+        axisTicks: {
+          color: 'rgba(17, 179, 174, 0.2)',
         },
       },
       xaxis: {
         categories: _makeHourlyData(data).dates,
         labels: {
           style: {
-            colors: '#FFFFFF',
+            colors: '#E9D8C8',
             fontSize: '12px',
           },
+        },
+        axisBorder: {
+          color: 'rgba(17, 179, 174, 0.2)',
+        },
+        axisTicks: {
+          color: 'rgba(17, 179, 174, 0.2)',
         },
       },
       tooltip: {
         shared: false,
+        theme: 'dark',
         style: {
           fontSize: '12px',
         },
         y: {
           formatter: function (val) {
-            // Check if value needs rounding to 2 decimal places
-            // const rounded = Math.round(val * 100) / 100;
-            // return Math.abs(val - rounded) < 0.001 ? rounded : val.toFixed(2);
             return val.toFixed(2);
           },
         },
@@ -514,24 +595,68 @@ const AnalysisByTime = ({ data }) => {
 
   const [tab, setTab] = React.useState(1);
 
-  // Generate last 2 years dynamically
-  const currentYear = new Date().getFullYear();
-  const years = [currentYear, currentYear - 1];
+  const years = availableYears;
 
   const _renderMonthlyData = () => (
-    <div className="flex items-center gap-[30px]">
-      <div className="w-[100%]">
-        <select
-          name="year"
-          required
-          className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded text-[14px] h-[34px] mb-4"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-        >
-          {years.map(year => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
+    <div className="space-y-4">
+      <div className="flex gap-4">
+        <FormControl size="small">
+          <Select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: '#0B1220',
+                  border: '1px solid rgba(17, 179, 174, 0.3)',
+                  borderRadius: '8px',
+                  maxHeight: '200px',
+                  '& .MuiMenuItem-root': {
+                    color: '#E9D8C8',
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
+                },
+              },
+            }}
+            input={
+              <OutlinedInput
+                sx={{
+                  color: '#E9D8C8',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#11B3AE',
+                    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                  },
+                  '& .MuiSelect-icon': {
+                    color: '#E9D8C8',
+                  },
+                }}
+              />
+            }
+          >
+            {years.map(year => (
+              <MenuItem key={year} value={year}>{year}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+      <div className="bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 p-4">
         <ReactApexChart
           options={monthlyChartConfig.options}
           series={monthlyChartConfig.series}
@@ -539,124 +664,285 @@ const AnalysisByTime = ({ data }) => {
           height={350}
         />
       </div>
-      {/* <div className="w-[34%]">
-        <ReactApexChart
-          options={pieChartConfig.options}
-          series={pieChartConfig.series}
-          type="pie"
-          width={'88%'}
-        />
-      </div> */}
     </div>
   );
 
   const _renderDailyData = () => (
-    <div className="">
-      <div className="flex gap-4 mb-4">
-        <select
-          name="year"
-          required
-          className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded text-[14px] h-[34px]"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-        >
-          {years.map(year => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
-        <select
-          name="type"
-          required
-          className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded text-[14px] h-[34px]"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value={'buy_sell'}>Buy vs Sell</option>
-          <option value={'win_loss'}>Win vs Loss</option>
-        </select>
+    <div className="space-y-4">
+      <div className="flex gap-4">
+        <FormControl size="small">
+          <Select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: '#0B1220',
+                  border: '1px solid rgba(17, 179, 174, 0.3)',
+                  borderRadius: '8px',
+                  maxHeight: '200px',
+                  '& .MuiMenuItem-root': {
+                    color: '#E9D8C8',
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
+                },
+              },
+            }}
+            input={
+              <OutlinedInput
+                sx={{
+                  color: '#E9D8C8',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#11B3AE',
+                    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                  },
+                  '& .MuiSelect-icon': {
+                    color: '#E9D8C8',
+                  },
+                }}
+              />
+            }
+          >
+            {years.map(year => (
+              <MenuItem key={year} value={year}>{year}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl size="small">
+          <Select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: '#0B1220',
+                  border: '1px solid rgba(17, 179, 174, 0.3)',
+                  borderRadius: '8px',
+                  maxHeight: '200px',
+                  '& .MuiMenuItem-root': {
+                    color: '#E9D8C8',
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
+                },
+              },
+            }}
+            input={
+              <OutlinedInput
+                sx={{
+                  color: '#E9D8C8',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#11B3AE',
+                    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                  },
+                  '& .MuiSelect-icon': {
+                    color: '#E9D8C8',
+                  },
+                }}
+              />
+            }
+          >
+            <MenuItem value={'buy_sell'}>Buy vs Sell</MenuItem>
+            <MenuItem value={'win_loss'}>Win vs Loss</MenuItem>
+          </Select>
+        </FormControl>
       </div>
-      <ReactApexChart
-        options={dailyChartConfig.options}
-        series={dailyChartConfig.series}
-        type="bar"
-        height={350}
-      />
+      <div className="bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 p-4">
+        <ReactApexChart
+          options={dailyChartConfig.options}
+          series={dailyChartConfig.series}
+          type="bar"
+          height={350}
+        />
+      </div>
     </div>
   );
 
   const _renderHourlyData = () => (
-    <div className="">
-      <div className="flex gap-4 mb-4">
-        <select
-          name="year"
-          required
-          className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded text-[14px] h-[34px]"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-        >
-          {years.map(year => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
-        <select
-          name="type"
-          required
-          className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded text-[14px] h-[34px]"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value={'buy_sell'}>Buy vs Sell</option>
-          <option value={'win_loss'}>Win vs Loss</option>
-        </select>
+    <div className="space-y-4">
+      <div className="flex gap-4">
+        <FormControl size="small">
+          <Select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: '#0B1220',
+                  border: '1px solid rgba(17, 179, 174, 0.3)',
+                  borderRadius: '8px',
+                  maxHeight: '200px',
+                  '& .MuiMenuItem-root': {
+                    color: '#E9D8C8',
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
+                },
+              },
+            }}
+            input={
+              <OutlinedInput
+                sx={{
+                  color: '#E9D8C8',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#11B3AE',
+                    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                  },
+                  '& .MuiSelect-icon': {
+                    color: '#E9D8C8',
+                  },
+                }}
+              />
+            }
+          >
+            {years.map(year => (
+              <MenuItem key={year} value={year}>{year}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl size="small">
+          <Select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: '#0B1220',
+                  border: '1px solid rgba(17, 179, 174, 0.3)',
+                  borderRadius: '8px',
+                  maxHeight: '200px',
+                  '& .MuiMenuItem-root': {
+                    color: '#E9D8C8',
+                    '&:hover': {
+                      backgroundColor: 'rgba(17, 179, 174, 0.1)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#11B3AE',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#0F9A95',
+                      },
+                    },
+                  },
+                },
+              },
+            }}
+            input={
+              <OutlinedInput
+                sx={{
+                  color: '#E9D8C8',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.3)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(17, 179, 174, 0.5)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#11B3AE',
+                    boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                  },
+                  '& .MuiSelect-icon': {
+                    color: '#E9D8C8',
+                  },
+                }}
+              />
+            }
+          >
+            <MenuItem value={'buy_sell'}>Buy vs Sell</MenuItem>
+            <MenuItem value={'win_loss'}>Win vs Loss</MenuItem>
+          </Select>
+        </FormControl>
       </div>
-      <ReactApexChart
-        options={hourlyChartConfig.options}
-        series={hourlyChartConfig.series}
-        type="bar"
-        height={350}
-      />
+      <div className="bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 p-4">
+        <ReactApexChart
+          options={hourlyChartConfig.options}
+          series={hourlyChartConfig.series}
+          type="bar"
+          height={350}
+        />
+      </div>
     </div>
   );
 
   return (
-    <div>
-      <ul className="flex text-sm font-medium text-center  dark:text-gray-400">
-        <li className="mr-[2px]">
-          <a
+    <div className="h-full">
+      {/* Tab Header */}
+      <div className="p-4 border-b border-[#11B3AE] border-opacity-20">
+        <div className="flex space-x-1">
+          <StyledTab 
+            active={tab === 1}
             onClick={() => setTab(1)}
-            href="#"
-            aria-current="page"
-            className={`inline-block px-[15px] py-[10px] text-white bg-[#282D36]  rounded-t border-t-[3px] box-border hover:border-white ${
-              tab === 1 ? 'border-white bg-[#2E353E]' : 'border-[#282D36]'
-            }`}
           >
             Monthly
-          </a>
-        </li>
-        <li className="mr-[2px]">
-          <a
+          </StyledTab>
+          <StyledTab 
+            active={tab === 2}
             onClick={() => setTab(2)}
-            href="#"
-            className={`inline-block px-[15px] py-[10px] text-white bg-[#282D36]  rounded-t border-t-[3px] box-border hover:border-white ${
-              tab === 2 ? 'border-white bg-[#2E353E]' : 'border-[#282D36]'
-            }`}
           >
             Weekly
-          </a>
-        </li>
-        <li className="mr-[2px]">
-          <a
+          </StyledTab>
+          <StyledTab 
+            active={tab === 3}
             onClick={() => setTab(3)}
-            href="#"
-            className={`inline-block px-[15px] py-[10px] text-white bg-[#282D36]  rounded-t border-t-[3px] box-border hover:border-white ${
-              tab === 3 ? 'border-white bg-[#2E353E]' : 'border-[#282D36]'
-            }`}
           >
             Hourly
-          </a>
-        </li>
-      </ul>
-      <div className="bg-[#2E353E] rounded-b p-[15px]">
+          </StyledTab>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
         {tab === 1 && _renderMonthlyData()}
         {tab === 2 && _renderDailyData()}
         {tab === 3 && _renderHourlyData()}
