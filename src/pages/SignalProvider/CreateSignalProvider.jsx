@@ -6,10 +6,11 @@ import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
 import SignalProviderTermsModal from '../../components/modals/SignalProviderTermsModal';
+import { useLoading } from '../../contexts/loadingContext';
 
 function CreateSignalProvider() {
   const { showToast } = useToast();
-
+  const { loading } = useLoading();
   const initialValues = {
     providerID: '',
     StrategyName: '',
@@ -27,8 +28,15 @@ function CreateSignalProvider() {
 
   React.useEffect(() => {
     async function fetchData() {
-      const response = await api.get('/account/all-accounts');
-      setAccountData(response.data);
+      try {
+        loading(true);
+        const response = await api.get('/account/all-accounts');
+        setAccountData(response.data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        loading(false);
+      }
     }
 
     fetchData();

@@ -20,6 +20,7 @@ import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 import OpenTradeTable from '../../components/Tables/OpenTradeTable';
 import CloseTradeTable from '../../components/Tables/CloseTradeTable';
 import AccountAnalysisStats from '../../components/analysis/AccountAnalysisStats';
+import { useLoading } from '../../contexts/loadingContext';
 
 const StyledButton = styled(LoadingButton)(({ theme }) => ({
   borderRadius: '8px',
@@ -59,52 +60,58 @@ function AccountAnalysis() {
   const [details, setDetails] = React.useState({});
   const [accountInfo, setAccountInfo] = React.useState({});
   const [history, setHistory] = React.useState([]);
-  const [activeTab, setActiveTab] = React.useState('accounts');
-
+  // const [activeTab, setActiveTab] = React.useState('accounts');
+  const { loading } = useLoading();
   React.useEffect(() => {
-    async function fetcher() {
+    async function fetcherDetails() {
       try {
+        loading(true);
         const res = await api.get(`/account/accounts/${id}`);
         setDetails(res.data);
       } catch (err) {
         console.log(err);
+      } finally {
+        loading(false);
       }
     }
-
-    fetcher();
-  }, [id]);
-
-  React.useEffect(() => {
-    async function fetcher() {
+    async function fetcherHistory() {
       try {
+        loading(true);
+        const res = await api.get(`/account/history/${id}`);
+        setHistory(res.data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        loading(false);
+      }
+    }
+    async function fetcherAccountInfo() {
+      try {
+        loading(true);
         const res = await api.get(`/account/accountInfo/${id}`);
         if (Object.keys(res.data).length > 0) {
           setAccountInfo(res.data);
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        loading(false);
       }
     }
 
-    fetcher();
-  }, [id]);
-
-  React.useEffect(() => {
     async function fetcher() {
-      try {
-        const res = await api.get(`/account/history/${id}`);
-        setHistory(res.data);
-      } catch (err) {
-        console.log(err);
-      }
+      loading(true);
+      await fetcherDetails();
+      await fetcherHistory();
+      await fetcherAccountInfo();
+      loading(false);
     }
-
     fetcher();
   }, [id]);
-
+    
   const renderTabContent = () => {
-    switch (activeTab) {
-      case 'accounts':
+    // switch (activeTab) {
+    //   case 'accounts':
         return (
           <>
             {/* Main content grid */}
@@ -147,22 +154,22 @@ function AccountAnalysis() {
           </>
         );
       
-      case 'trades':
-        return <OpenTradeTable />;
+      // case 'trades':
+      //   return <OpenTradeTable />;
       
-      case 'analysis':
-        return (
-          <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-            <AccountAnalysisStats accountData={details} accountInfo={accountInfo} />
-          </div>
-        );
+      // case 'analysis':
+      //   return (
+      //     <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+      //       <AccountAnalysisStats accountData={details} accountInfo={accountInfo} />
+      //     </div>
+      //   );
       
-      case 'history':
-        return <CloseTradeTable />;
+      // case 'history':
+      //   return <CloseTradeTable />;
       
-      default:
-        return null;
-    }
+      // default:
+      //   return null;
+    // }
   };
 
   return (
@@ -189,7 +196,7 @@ function AccountAnalysis() {
         </Typography>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Tab Navigation
       <div className="mb-6">
         <div className="bg-[#0B1220] rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
           <div className="p-4 border-b border-[#11B3AE] border-opacity-20">
@@ -221,7 +228,7 @@ function AccountAnalysis() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Tab Content */}
       {renderTabContent()}

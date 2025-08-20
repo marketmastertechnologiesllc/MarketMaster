@@ -199,17 +199,17 @@ const coreRoutes = {
       element: <Signals />,
     },
     {
-      path: '/trade-copier',
+      path: '/connect-signal',
       title: 'Copiers',
       element: <TradeCopier />,
     },
     {
-      path: '/trade-copier/create-new-trade-copier',
-      title: 'Create Copier',
+      path: '/connect-signal/new-connect-signal',
+      title: 'Connect Signal',
       element: <CreateNewTradeCopier />,
     },
     {
-      path: '/trade-copier/edit/:subscriberId/:strategyId',
+      path: '/connect-signal/edit/:subscriberId/:strategyId',
       title: 'Manage Copier',
       element: <EditTradeCopier />,
     },

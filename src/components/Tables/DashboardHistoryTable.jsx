@@ -18,6 +18,7 @@ import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import { formatNumber } from '../../utils/formatNumber';
+import { useLoading } from '../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -126,8 +127,9 @@ export default function DashboardHistoryTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [accounts, setAccounts] = React.useState([]);
   const [selectedAccount, setSelectedAccount] = React.useState('');
-  const [loading, setLoading] = React.useState(true);
-  const [accountsLoading, setAccountsLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
+  const { loading } = useLoading();
+  // const [accountsLoading, setAccountsLoading] = React.useState(true);
 
   const handleChangeRowsPerPage = (e) => {
     setRowsPerPage(e.target.value);
@@ -139,7 +141,7 @@ export default function DashboardHistoryTable() {
 
     try {
       const endpoint = `/trade/history/${selectedAccount}?page=${value}&pagecount=${pageCount ? pageCount : rowsPerPage}&sort=${sort.id}&type=${sort.type}`;
-      
+
       const res = await api.get(endpoint);
       setData(res.data.data);
       setCount(res.data.count);
@@ -152,12 +154,13 @@ export default function DashboardHistoryTable() {
 
   React.useEffect(() => {
     async function fetchAccounts() {
-      setAccountsLoading(true);
+      // setAccountsLoading(true);
+      loading(true);
       try {
         const res = await api.get('/account/accounts?page=1&pagecount=100&sort=&type=');
         const accountsData = res.data.data;
         setAccounts(accountsData);
-        
+
         // Set default value to first account if accounts exist
         if (accountsData && accountsData.length > 0) {
           setSelectedAccount(accountsData[0].accountId);
@@ -166,7 +169,8 @@ export default function DashboardHistoryTable() {
         console.error('Error fetching accounts:', error);
         setAccounts([]);
       } finally {
-        setAccountsLoading(false);
+        // setAccountsLoading(false);
+        loading(false);
       }
     }
 
@@ -176,11 +180,11 @@ export default function DashboardHistoryTable() {
   React.useEffect(() => {
     async function fetchData() {
       if (!selectedAccount) return; // Don't fetch if no account is selected yet
-      
-      setLoading(true);
+
+      loading(true);
       try {
         const endpoint = `/trade/history/${selectedAccount}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`;
-        
+
         const res = await api.get(endpoint);
         setData(res.data.data);
         setCount(res.data.count);
@@ -189,7 +193,8 @@ export default function DashboardHistoryTable() {
         setData([]);
         setCount(0);
       } finally {
-        setLoading(false);
+        // setLoading(false);
+        loading(false);
       }
     }
 
@@ -206,8 +211,8 @@ export default function DashboardHistoryTable() {
               onChange={(e) => setSelectedAccount(e.target.value)}
               displayEmpty
               renderValue={(value) => {
-                if (accountsLoading) return 'Loading accounts...';
-                if (value === '') return 'Select Account';
+                // if (accountsLoading) return 'Loading accounts...';
+                // if (value === '') return 'Select Account';
                 const selectedAcc = accounts.find(acc => acc.accountId === value);
                 return selectedAcc ? `${selectedAcc.name || selectedAcc.accountName} (${selectedAcc.login || selectedAcc.accountLogin})` : 'Select Account';
               }}
@@ -257,21 +262,23 @@ export default function DashboardHistoryTable() {
                 />
               }
             >
-              {accountsLoading ? (
-                <MenuItem value="" disabled>
-                  Loading accounts...
-                </MenuItem>
-              ) : accounts.length === 0 ? (
-                <MenuItem value="" disabled>
-                  No accounts
-                </MenuItem>
-              ) : (
-                accounts.map((account) => (
-                  <MenuItem key={account.accountId} value={account.accountId}>
-                    {account.name || account.accountName} ({account.login || account.accountLogin})
+              {
+                // accountsLoading ? (
+                //   <MenuItem value="" disabled>
+                //     Loading accounts...
+                //   </MenuItem>
+                // ) : 
+                accounts.length === 0 ? (
+                  <MenuItem value="" disabled>
+                    No accounts
                   </MenuItem>
-                ))
-              )}
+                ) : (
+                  accounts.map((account) => (
+                    <MenuItem key={account.accountId} value={account.accountId}>
+                      {account.name || account.accountName} ({account.login || account.accountLogin})
+                    </MenuItem>
+                  ))
+                )}
             </Select>
           </FormControl>
           <FormControl size="small">
@@ -332,8 +339,8 @@ export default function DashboardHistoryTable() {
               <MenuItem value={100}>100</MenuItem>
             </Select>
           </FormControl>
-          <Typography sx={{ 
-            color: '#E9D8C8', 
+          <Typography sx={{
+            color: '#E9D8C8',
             fontWeight: 500,
             fontSize: { xs: '0.875rem', sm: '1rem' }
           }}>
@@ -350,7 +357,7 @@ export default function DashboardHistoryTable() {
           />
         </Search>
       </div>
-      
+
       <Paper
         sx={{
           width: '100%',
@@ -503,16 +510,17 @@ export default function DashboardHistoryTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        
-        {loading && (
+
+        {/* {loading && (
           <div className="flex items-center justify-center h-32">
             <Typography sx={{ color: '#E9D8C8' }}>
               Loading history...
             </Typography>
           </div>
-        )}
-        
-        {!loading && (!data || data.length === 0) && (
+        )} */}
+
+        {/* {!loading && (!data || data.length === 0) && ( */}
+        {(!data || data.length === 0) && (
           <div className="flex items-center justify-center h-32">
             <Typography sx={{ color: '#E9D8C8' }}>
               No history found
@@ -521,9 +529,9 @@ export default function DashboardHistoryTable() {
         )}
 
         <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)] gap-4">
-          <Typography sx={{ 
-            color: '#E9D8C8', 
-            fontSize: { xs: 12, sm: 14 }, 
+          <Typography sx={{
+            color: '#E9D8C8',
+            fontSize: { xs: 12, sm: 14 },
             fontWeight: 500,
             textAlign: { xs: 'center', sm: 'left' }
           }}>

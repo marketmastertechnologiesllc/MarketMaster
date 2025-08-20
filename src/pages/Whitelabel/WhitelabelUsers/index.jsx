@@ -26,9 +26,9 @@ import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 import DeleteUserModal from '../../../components/modals/DeleteUserModal';
-
 import useToast from '../../../hooks/useToast';
 import api from '../../../utils/api';
+import { useLoading } from '../../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -115,7 +115,7 @@ const headers = [
 export default function WhitelabelUsers() {
   const { showToast } = useToast();
   const navigate = useNavigate();
-
+  const { loading } = useLoading();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -152,6 +152,7 @@ export default function WhitelabelUsers() {
 
     async function fetchData() {
       try {
+        loading(true);
         const { page, pagecount, sort, type } = config;
         const res = await api.get(
           `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
@@ -160,6 +161,8 @@ export default function WhitelabelUsers() {
         setCount(res.data.count);
       } catch (err) {
         console.log(err);
+      } finally {
+        loading(false);
       }
     }
 

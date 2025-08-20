@@ -27,7 +27,7 @@ function PromotionModal() {
       <div className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"></div>
       
       {/* Modal Content */}
-      <section className="mb-[20px] rounded bg-[#282D36] w-[500px] z-[100000] animate-fade-in">
+      <section className="mb-[20px] rounded bg-[#282D36] w-[500px] z-[100000] animate-fade-in m-4 sm:m-0">
         <header className="p-[18px] text-white flex justify-between items-center border-b border-[#1d2127]">
           <h2 className="mt-[5px] text-[20px] font-normal flex items-center">
             <Icon 
@@ -101,7 +101,8 @@ function PromotionModal() {
                   className="bg-[#11B3AE] hover:bg-[#0F9A95] text-white px-6 py-2 rounded-lg transition-colors duration-200 font-medium"
                   onClick={nextPromotion}
                 >
-                  {totalPromotions > 1 ? 'Next' : 'Close'}
+                  {/* {totalPromotions > 1 ? 'Next' : 'Close'} */}
+                  Next
                 </button>
               </div>
             </div>

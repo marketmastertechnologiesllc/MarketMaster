@@ -159,12 +159,12 @@ function MainListItems({ open }) {
               <ListItemText primary="Accounts" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/trade-copier'}>
+          <Link className="flex flex-row" to={'/connect-signal'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ShareIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
-              <ListItemText primary="Trade Copier" />
+              <ListItemText primary="Connect Signal" />
             </ListItemButton>
           </Link>
           <Link className="flex flex-row" to={'/equity-monitors'}>

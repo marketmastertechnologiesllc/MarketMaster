@@ -11,7 +11,7 @@ import PerformanceCharts from '../../components/analysis/PerformanceCharts';
 import AccountDetails from '../../components/analysis/AccountDetails';
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
-
+import { useLoading } from '../../contexts/loadingContext';
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   textTransform: 'none',
@@ -32,7 +32,7 @@ function PerformanceChartPage() {
   const { accountId } = useParams();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  
+  const { loading } = useLoading();
   // State for data
   const [accountDetails, setAccountDetails] = React.useState({});
   const [historyData, setHistoryData] = React.useState([]);
@@ -45,10 +45,16 @@ function PerformanceChartPage() {
 
   // Fetch account data on component mount
   React.useEffect(() => {
-    if (accountId) {
-      fetchAccountData();
-      fetchAccountNameAndLogin();
-    }
+    const fetchData = async () => {
+      loading(true);
+      if (accountId) {
+        await fetchAccountData();
+        await fetchAccountNameAndLogin();
+      }
+      loading(false);
+    };
+    
+    fetchData();
   }, [accountId]);
 
   const fetchAccountData = async () => {
@@ -88,6 +94,7 @@ function PerformanceChartPage() {
       }
     } catch (err) {
       console.error('Error fetching account name and login:', err);
+    } finally {
     }
   };
 
@@ -185,16 +192,18 @@ function PerformanceChartPage() {
       </div>
 
       {/* Content */}
-      {isLoading ? (
-        <div className="flex justify-center items-center py-16">
-          <div className="text-center">
-            <CircularProgress sx={{ color: '#11B3AE', mb: 2 }} />
-            <Typography sx={{ color: '#E9D8C8', fontSize: '1rem' }}>
-              Loading performance data...
-            </Typography>
-          </div>
-        </div>
-      ) : (
+      {
+      // isLoading ? (
+      //   <div className="flex justify-center items-center py-16">
+      //     <div className="text-center">
+      //       <CircularProgress sx={{ color: '#11B3AE', mb: 2 }} />
+      //       <Typography sx={{ color: '#E9D8C8', fontSize: '1rem' }}>
+      //         Loading performance data...
+      //       </Typography>
+      //     </div>
+      //   </div>
+      // ) : 
+      (
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-3">
             <div className="rounded-xl bg-[#0B1220] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">

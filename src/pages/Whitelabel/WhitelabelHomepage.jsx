@@ -12,10 +12,11 @@ import Typography from '@mui/material/Typography';
 
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
+import { useLoading } from '../../contexts/loadingContext';
 
 function WhitelabelHomepage() {
   const { showToast } = useToast();
-
+  const { loading } = useLoading();
   const [addButtonClicked, setAddButtonClicked] = React.useState(false);
   const [updateButtonClicked, setUpdateButtonClicked] = React.useState(false);
   const [isAddButtonLoading, setIsAddButtonLoading] = React.useState(false);
@@ -167,6 +168,7 @@ function WhitelabelHomepage() {
 
   const fetchContentByTitle = async (title) => {
     try {
+      loading(true);
       setIsLoadingContent(true);
       
       // Try the first endpoint
@@ -193,6 +195,7 @@ function WhitelabelHomepage() {
       setContent({ id: '', title: title, content: '' });
     } finally {
       setIsLoadingContent(false);
+      loading(false);
     }
   };
 

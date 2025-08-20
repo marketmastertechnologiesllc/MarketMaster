@@ -18,6 +18,7 @@ import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import { formatNumber } from '../../utils/formatNumber';
+import { useLoading } from '../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -114,6 +115,7 @@ const headers = [
 ];
 
 export default function DashboardTradesTable() {
+  const { loading } = useLoading();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -125,8 +127,8 @@ export default function DashboardTradesTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [accounts, setAccounts] = React.useState([]);
   const [selectedAccount, setSelectedAccount] = React.useState('');
-  const [loading, setLoading] = React.useState(true);
-  const [accountsLoading, setAccountsLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
+  // const [accountsLoading, setAccountsLoading] = React.useState(true);
 
   const handleChangeRowsPerPage = (e) => {
     setRowsPerPage(e.target.value);
@@ -137,21 +139,24 @@ export default function DashboardTradesTable() {
     setPage(value);
 
     try {
+      loading(true);
       const endpoint = `/trade/${selectedAccount}?page=${value}&pagecount=${pageCount ? pageCount : rowsPerPage}&sort=${sort.id}&type=${sort.type}`;
-      
       const res = await api.get(endpoint);
       setData(res.data.data);
       setCount(res.data.count);
+      loading(false);
     } catch (e) {
       console.log(e);
       setData([]);
       setCount(0);
+      loading(false);
     }
   };
 
   React.useEffect(() => {
     async function fetchAccounts() {
-      setAccountsLoading(true);
+      // setAccountsLoading(true);
+      loading(true);
       try {
         const res = await api.get('/account/accounts?page=1&pagecount=100&sort=&type=');
         const accountsData = res.data.data;
@@ -165,7 +170,8 @@ export default function DashboardTradesTable() {
         console.error('Error fetching accounts:', error);
         setAccounts([]);
       } finally {
-        setAccountsLoading(false);
+        // setAccountsLoading(false);
+        loading(false);
       }
     }
 
@@ -176,19 +182,19 @@ export default function DashboardTradesTable() {
     async function fetchData() {
       if (!selectedAccount) return; // Don't fetch if no account is selected yet
       
-      setLoading(true);
+      loading(true);
       try {
         const endpoint = `/trade/${selectedAccount}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`;
         
         const res = await api.get(endpoint);
         setData(res.data.data);
         setCount(res.data.count);
+        loading(false);
       } catch (error) {
         console.error('Error fetching trades:', error);
         setData([]);
         setCount(0);
-      } finally {
-        setLoading(false);
+        loading(false);
       }
     }
 
@@ -205,8 +211,8 @@ export default function DashboardTradesTable() {
               onChange={(e) => setSelectedAccount(e.target.value)}
               displayEmpty
               renderValue={(value) => {
-                if (accountsLoading) return 'Loading accounts...';
-                if (value === '') return 'Select Account';
+                // if (accountsLoading) return 'Loading accounts...';
+                // if (value === '') return 'Select Account';
                 const selectedAcc = accounts.find(acc => acc.accountId === value);
                 return selectedAcc ? `${selectedAcc.name || selectedAcc.accountName} (${selectedAcc.login || selectedAcc.accountLogin})` : 'Select Account';
               }}
@@ -256,11 +262,13 @@ export default function DashboardTradesTable() {
                 />
               }
             >
-              {accountsLoading ? (
-                <MenuItem value="" disabled>
-                  Loading accounts...
-                </MenuItem>
-              ) : accounts.length === 0 ? (
+              {
+              // loading ? (
+              //   <MenuItem value="" disabled>
+              //     Loading accounts...
+              //   </MenuItem>
+              // ) : 
+              accounts.length === 0 ? (
                 <MenuItem value="" disabled>
                   No accounts
                 </MenuItem>
@@ -499,13 +507,13 @@ export default function DashboardTradesTable() {
           </Table>
         </TableContainer>
         
-        {loading && (
+        {/* {loading && (
           <div className="flex items-center justify-center h-32">
             <Typography sx={{ color: '#E9D8C8' }}>
               Loading trades...
             </Typography>
           </div>
-        )}
+        )} */}
         
         {!loading && (!data || data.length === 0) && (
           <div className="flex items-center justify-center h-32">

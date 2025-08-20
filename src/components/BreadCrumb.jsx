@@ -40,22 +40,22 @@ const breadcrumb = {
     { name: "Accounts", url: "/accounts" },
     { name: "Edit", url: "/accounts/edit/" },
   ],
-  "/trade-copier": [
+  "/connect-signal": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
-    { name: "Trade Copier", url: "/trade-copier" },
+    { name: "Connect Signal", url: "/connect-signal" },
   ],
-  "/trade-copier/edit": [
+  "/connect-signal/edit": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
-    { name: "Trade Copier", url: "/trade-copier" },
+    { name: "Connect Signal", url: "/connect-signal" },
     { name: "Edit", url: "" },
   ],
-  "/trade-copier/create-new-trade-copier": [
+  "/connect-signal/new-connect-signal": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
-    { name: "Trade Copier", url: "/trade-copier" },
-    { name: "Create Trade Copier", url: "/trade-copier/create-new-trade-copier" },
+    { name: "Connect Signal", url: "/connect-signal" },
+    { name: "New Connect Signal", url: "/connect-signal/new-connect-signal" },
   ],
   "/email-alerts": [
     { name: "Dashboard", url: "/dashboard" },
@@ -173,8 +173,8 @@ export default function CustomSeparator() {
       return "/whitelabel/users/edit";
     } else if (_url.includes("/accounts/edit/")) {
       return "/accounts/edit/";
-    } else if (_url.includes("/trade-copier/edit")) {
-      return "/trade-copier/edit";
+    } else if (_url.includes("/connect-signal/edit")) {
+      return "/connect-signal/edit";
     } else if (_url.includes("/signal-provider/edit")) {
       return "/signal-provider/edit";
     } else if (_url.includes("/signal-provider/follower-terms")) {

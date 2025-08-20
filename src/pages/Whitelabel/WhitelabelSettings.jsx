@@ -5,9 +5,10 @@ import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
 import { Icon } from '@iconify/react';
+import { useLoading } from '../../contexts/loadingContext';
 
 function WhitelabelHomepage() {
-
+  const { loading } = useLoading();
   const { showToast } = useToast();
 
   const [isSiteSettingUpdateButtonLoading, setIsSiteSettingUpdateButtonLoading] = React.useState(false);
@@ -42,30 +43,27 @@ function WhitelabelHomepage() {
   }
 
   React.useEffect(() => {
-    api.get("/settings/site-setting").then(res => {
-      if (res.data.status === "OK") {
-        const _userRegistration = res.data.data.find(({key, value}) => key === "userRegistration");
-        const _maxAccount = res.data.data.find(({key, value}) => key ===  "maxAccount");
-        if (_userRegistration) {
-          setUserRegistration(_userRegistration.value);
+    async function fetchData() {
+      try {
+        loading(true);
+        const res = await api.get("/settings/site-setting");
+        if (res.data.status === "OK") {
+          const _userRegistration = res.data.data.find(({ key, value }) => key === "userRegistration");
+          const _maxAccount = res.data.data.find(({ key, value }) => key === "maxAccount");
+          if (_userRegistration) {
+            setUserRegistration(_userRegistration.value);
+          }
+          if (_maxAccount) {
+            setMaxAccount(_maxAccount.value);
+          }
         }
-        if (_maxAccount) {
-          setMaxAccount(_maxAccount.value);
-        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        loading(false);
       }
-    }).catch(err => {
-      console.log(err)
-    });
-  }, []);
-
-  React.useEffect(() => {
-    api.get("/settings/brokers").then(res => {
-      if (res.data.status === "OK") {
-        setBrokers(res.data.data);
-      }
-    }).catch(err => {
-      console.log(err)
-    })
+    }
+    fetchData();
   }, []);
 
   const handleAddBrokerButtonClicked = async () => {
@@ -75,7 +73,7 @@ function WhitelabelHomepage() {
         showToast("Insert broker to add", "error");
       } else {
         const res = await api.post("/settings/brokers", { broker: broker });
-        if ( res.data.status === "OK" ) {
+        if (res.data.status === "OK") {
           showToast("Successfully added", "success");
           setBroker("");
           setBrokers(prev => [...prev, res.data.data])

@@ -22,7 +22,7 @@ function TradeCopiersOverview() {
         Adding a new trade copier
       </h4>
       <p className="py-2.5 text-[13px]">
-        To add a new trade copier, click on the + <strong>Create Copier</strong>{' '}
+        To add a new trade copier, click on the + <strong>New Connect</strong>{' '}
         in the top left corner of the page.
       </p>
       <h4 className="my-2.5 text-[18px] text-white">Copier Modes</h4>

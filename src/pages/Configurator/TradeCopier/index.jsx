@@ -26,6 +26,7 @@ import DeleteTradeCopierModal from '../../../components/modals/DeleteTradeCopier
 import useToast from '../../../hooks/useToast';
 import useAuth from '../../../hooks/useAuth';
 import api from '../../../utils/api';
+import { useLoading } from '../../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -130,7 +131,7 @@ export default function TradesTable() {
   const { showToast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
-
+  const { loading } = useLoading();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -143,6 +144,7 @@ export default function TradesTable() {
   const [deleteTradeCopierModalShow, setDeleteTradeCopierModalShow] = React.useState(false);
   const [selectedTradeCopierData, setSelectedTradeCopierData] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const [loadingRows, setLoadingRows] = React.useState({});
   const [headers, setHeaders] = React.useState(initialHeaders);
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showFilterItems, setShowFilterItems] = React.useState(true);
@@ -150,7 +152,7 @@ export default function TradesTable() {
   const filterModalRef = React.useRef(null);
 
   const handleConfigButtonClicked = (subscriberId, strategyId) => {
-    navigate(`/trade-copier/edit/${subscriberId}/${strategyId}`);
+    navigate(`/connect-signal/edit/${subscriberId}/${strategyId}`);
   };
 
   const handleCreateCopierClick = async () => {
@@ -158,7 +160,7 @@ export default function TradesTable() {
       setIsCreateButtonLoading(true);
       // Simulate a small delay to show loading state
       await new Promise(resolve => setTimeout(resolve, 500));
-      navigate('/trade-copier/create-new-trade-copier');
+      navigate('/connect-signal/new-connect-signal');
     } catch (error) {
       console.error('Navigation error:', error);
     } finally {
@@ -167,8 +169,9 @@ export default function TradesTable() {
   };
 
   const handleToggleTradeCopier = async (strategyId, accountId) => {
+    const rowKey = `${strategyId}-${accountId}`;
     try {
-      setIsLoading(true);
+      setLoadingRows(prev => ({ ...prev, [rowKey]: true }));
       const res = await api.post(`/account/toggle-copier`, {
         strategyId,
         accountId,
@@ -182,7 +185,7 @@ export default function TradesTable() {
     } catch (e) {
       showToast(e.response.data.msg, 'error');
     } finally {
-      setIsLoading(false);
+      setLoadingRows(prev => ({ ...prev, [rowKey]: false }));
     }
   };
 
@@ -200,6 +203,7 @@ export default function TradesTable() {
     setPage(value);
 
     try {
+      loading(true);
       let config = JSON.parse(sessionStorage.getItem('tradeCopier'));
       config.page = value;
       sessionStorage.setItem('tradeCopier', JSON.stringify(config));
@@ -212,6 +216,8 @@ export default function TradesTable() {
       setCount(res.data.data.length);
     } catch (e) {
       console.log(e);
+    } finally {
+      loading(false);
     }
   };
 
@@ -322,16 +328,22 @@ export default function TradesTable() {
     });
 
     async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      const res = await api.get(
-        `/strategy/strategies-copier/${user.id}?page=1&pagecount=100&sort=&type=`
-      );
-      setData(res.data.data);
-      setCount(res.data.data.length);
+      try {
+        loading(true);
+        const { page, pagecount, sort, type } = config;
+        const res = await api.get(
+          `/strategy/strategies-copier/${user.id}?page=1&pagecount=100&sort=&type=`
+        );
+        setData(res.data.data);
+        setCount(res.data.data.length);
+      } catch (error) {
+        console.error('Error fetching trade copier data:', error);
+      } finally {
+        loading(false);
+      }
     }
-
-    fetchData();
-  }, []);
+      fetchData();
+    }, []);
 
   return (
     <div className="w-auto text-[#E9D8C8] pb-[100px]">
@@ -360,8 +372,8 @@ export default function TradesTable() {
           startIcon={<AddIcon />}
           onClick={handleCreateCopierClick}
           loading={isCreateButtonLoading}
-          sx={{ 
-            textTransform: 'none', 
+          sx={{
+            textTransform: 'none',
             backgroundColor: '#11B3AE!important',
             color: '#FFFFFF',
             fontWeight: 500,
@@ -375,7 +387,7 @@ export default function TradesTable() {
             },
           }}
         >
-          Create Copier
+          New Connect
         </StyledButton>
         <div className="relative" ref={filterModalRef}>
           <StyledButton
@@ -383,8 +395,8 @@ export default function TradesTable() {
             size="small"
             onClick={() => setShowFilterModal((prev) => !prev)}
             startIcon={<VisibilityOffIcon />}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               backgroundColor: '#11B3AE!important',
               color: '#FFFFFF',
               fontWeight: 500,
@@ -553,8 +565,8 @@ export default function TradesTable() {
                 <MenuItem value={100}>100</MenuItem>
               </Select>
             </FormControl>
-            <Typography sx={{ 
-              color: '#E9D8C8', 
+            <Typography sx={{
+              color: '#E9D8C8',
               fontWeight: 500,
               fontSize: { xs: '0.875rem', sm: '1rem' }
             }}>
@@ -681,10 +693,10 @@ export default function TradesTable() {
               >
                 {data && data.length > 0 && data.map((row, index) => {
                   return (
-                    <TableRow 
-                      hover 
-                      role="checkbox" 
-                      tabIndex={-1} 
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
                       key={`unified_data_${index}`}
                       sx={{
                         transition: 'all 0.2s ease-in-out',
@@ -728,7 +740,7 @@ export default function TradesTable() {
                             <IconButton
                               size="small"
                               color="inherit"
-                              loading={isLoading}
+                              disabled={loadingRows[`${row.strategyId}-${row.accountId}`]}
                               sx={{
                                 backgroundColor: row.enabled ? '#fa5252' : '#11B3AE',
                                 borderRadius: '8px',
@@ -740,14 +752,18 @@ export default function TradesTable() {
                                   transform: 'translateY(-1px)',
                                   boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
                                 },
+                                '&:disabled': {
+                                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                  opacity: 0.6,
+                                },
                               }}
                               onClick={() => {
                                 handleToggleTradeCopier(row.strategyId, row.accountId);
                               }}
                             >
-                              {isLoading ? <Icon icon="mdi:loading" color="white" style={{ animation: 'spin 1s linear infinite' }} /> : row.enabled ? <Icon icon="mdi:pause" color="white" /> : <Icon icon="mdi:play" color="white" />}
+                              {loadingRows[`${row.strategyId}-${row.accountId}`] ? <Icon icon="mdi:loading" color="white" style={{ animation: 'spin 1s linear infinite' }} /> : row.enabled ? <Icon icon="mdi:pause" color="white" /> : <Icon icon="mdi:play" color="white" />}
                             </IconButton>
-                            
+
                             <IconButton
                               size="small"
                               color="inherit"
@@ -783,9 +799,9 @@ export default function TradesTable() {
           </TableContainer>
 
           <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
-            <Typography sx={{ 
-              color: '#E9D8C8', 
-              fontSize: { xs: 12, sm: 14 }, 
+            <Typography sx={{
+              color: '#E9D8C8',
+              fontSize: { xs: 12, sm: 14 },
               fontWeight: 500,
               textAlign: { xs: 'center', sm: 'left' }
             }}>

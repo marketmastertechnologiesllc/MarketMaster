@@ -14,7 +14,7 @@ import Alert from '@mui/material/Alert';
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
 import { formatNumber } from '../../utils/formatNumber';
-
+import { useLoading } from '../../contexts/loadingContext';
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   textTransform: 'none',
@@ -34,7 +34,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 function Analysis() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  
+  const { loading } = useLoading();
   // State for accounts and data
   const [accounts, setAccounts] = React.useState([]);
   const [selectedAccount, setSelectedAccount] = React.useState('');
@@ -67,6 +67,7 @@ function Analysis() {
 
   const fetchUserAccounts = async () => {
     try {
+      loading(true);
       setIsLoadingAccounts(true);
       setError(null);
       
@@ -87,6 +88,7 @@ function Analysis() {
       showToast('Failed to load accounts', 'error');
     } finally {
       setIsLoadingAccounts(false);
+      loading(false);
     }
   };
 
@@ -94,6 +96,7 @@ function Analysis() {
     if (!accountId) return;
     
     try {
+      loading(true);
       setIsLoadingAccountData(true);
       setError(null);
       
@@ -120,6 +123,7 @@ function Analysis() {
       showToast('Failed to load account data', 'error');
     } finally {
       setIsLoadingAccountData(false);
+      loading(false);
     }
   };
 

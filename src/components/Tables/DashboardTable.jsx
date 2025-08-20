@@ -20,6 +20,7 @@ import Pagination from '@mui/material/Pagination';
 import { Icon } from '@iconify/react';
 import api from '../../utils/api';
 import { formatNumber } from '../../utils/formatNumber';
+import { useLoading } from '../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -76,6 +77,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TradesTable({ headers }) {
+  const { loading } = useLoading();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -101,6 +103,7 @@ export default function TradesTable({ headers }) {
     setPage(value);
 
     try {
+      loading(true);
       let config = JSON.parse(sessionStorage.getItem('dashboard'));
       config.accounts.page = value;
       sessionStorage.setItem('dashboard', JSON.stringify(config));
@@ -111,6 +114,7 @@ export default function TradesTable({ headers }) {
       );
       setData(res.data.data);
       setCount(res.data.count);
+      loading(false);
     } catch (e) {
       console.log(e);
     }
@@ -142,19 +146,23 @@ export default function TradesTable({ headers }) {
   React.useEffect(() => {
     let session = sessionStorage.getItem('dashboard');
     async function fetchData(config) {
+      loading(true);
       const { page, pagecount, sort, type } = config;
       const res = await api.get(
         `/account/accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
       setData(res.data.data);
       setCount(res.data.count);
+      loading(false);
     }
     async function fetchData1() {
+      loading(true);
       const res = await api.get(
         `/account/accounts?page=${1}&pagecount=${10}&sort=${''}&type=${''}`
       );
       setData(res.data.data);
       setCount(res.data.count);
+      loading(false);
     }
     if (session) {
       let config = JSON.parse(session).accounts;
@@ -390,6 +398,8 @@ export default function TradesTable({ headers }) {
                             value = formatNumber(value);
                           } else if (id === 'balance') {
                             value = formatNumber(value);
+                          } else if (id === 'role') {
+                            value = value.map((role) => role).join(', ');
                           }
                           return (
                             <TableCell

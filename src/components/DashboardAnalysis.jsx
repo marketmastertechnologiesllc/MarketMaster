@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import { Icon } from '@iconify/react';
 import api from '../utils/api';
 import useAuth from '../hooks/useAuth';
+import { useLoading } from '../contexts/loadingContext';
 
 const StyledTab = styled('div')(({ theme, active }) => ({
   display: 'inline-block',
@@ -63,12 +64,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const DashboardAnalysis = () => {
   const { user } = useAuth();
   const [accounts, setAccounts] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
+  const { loading } = useLoading();
 
   React.useEffect(() => {
     async function fetchAccounts() {
       try {
-        setLoading(true);
+        loading(true);
         const res = await api.get('/account/accounts?page=1&pagecount=100&sort=&type=');
         const accountsData = res.data.data;
         
@@ -96,29 +98,30 @@ const DashboardAnalysis = () => {
             }
           })
         );
-        console.log(accountsWithDetails);
         setAccounts(accountsWithDetails);
       } catch (error) {
         console.error('Error fetching accounts:', error);
+        loading(false);
       } finally {
-        setLoading(false);
+        // setLoading(false);
+        loading(false);
       }
     }
 
     fetchAccounts();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
-        <div className="flex items-center justify-center h-32">
-          <Typography sx={{ color: '#E9D8C8' }}>
-            Loading analysis data...
-          </Typography>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">
+  //       <div className="flex items-center justify-center h-32">
+  //         <Typography sx={{ color: '#E9D8C8' }}>
+  //           Loading analysis data...
+  //         </Typography>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="mt-4 text-[#E9D8C8] bg-[#0B1220] p-3 sm:p-6 rounded-xl border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[20px]">

@@ -26,6 +26,7 @@ import DeleteSignalModal from '../components/modals/DeleteSignalModal';
 import useToast from '../hooks/useToast';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
+import { useLoading } from '../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -108,7 +109,7 @@ const initialHeaders = [
 
 export default function Signals() {
   const { showToast } = useToast();
-
+  const { loading } = useLoading();
   const [headers, setHeaders] = React.useState(initialHeaders);
   const [sort, setSort] = React.useState({
     id: '',
@@ -139,6 +140,7 @@ export default function Signals() {
     setPage(value);
 
     try {
+      loading(true);
       let config = JSON.parse(sessionStorage.getItem('signals'));
       config.page = value;
       sessionStorage.setItem('signals', JSON.stringify(config));
@@ -151,6 +153,8 @@ export default function Signals() {
       setCount(res.data.count);
     } catch (e) {
       console.log(e);
+    } finally {
+      loading(false);
     }
   };
 
@@ -161,6 +165,7 @@ export default function Signals() {
 
   const handleDeleteSignalModalButtonClicked = async () => {
     try {
+      loading(true);
       await api.delete(`/strategy/${selectedSignalData.strategyId}`);
       showToast('Signal deleted successfully!', 'success');
       handlePageChange(null, page);
@@ -169,6 +174,7 @@ export default function Signals() {
       console.log(err);
     } finally {
       setDeleteSignalModalShow(false);
+      loading(false);
     }
   };
 
@@ -254,13 +260,21 @@ export default function Signals() {
     });
 
     async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      const res = await api.get(
-        `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
-      setDeletePermission(res.data.deletePermission);
+      try {
+        loading(true);
+        const { page, pagecount, sort, type } = config;
+        const res = await api.get(
+          `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        );
+        setData(res.data.data);
+        setCount(res.data.count);
+        setDeletePermission(res.data.deletePermission);
+        loading(false);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        loading(false);
+      }
     }
 
     fetchData();
@@ -277,7 +291,7 @@ export default function Signals() {
           }
         />
       )}
-      
+
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         alignItems={{ xs: 'stretch', sm: 'center' }}
@@ -308,7 +322,7 @@ export default function Signals() {
               },
             }}
           >
-            Signals
+            Billing
           </StyledButton>
         </div>
         <div className="flex gap-2 justify-center sm:justify-end">
@@ -491,8 +505,8 @@ export default function Signals() {
                 <MenuItem value={100}>100</MenuItem>
               </Select>
             </FormControl>
-            <Typography sx={{ 
-              color: '#E9D8C8', 
+            <Typography sx={{
+              color: '#E9D8C8',
               fontWeight: 500,
               fontSize: { xs: '0.875rem', sm: '1rem' }
             }}>
@@ -719,9 +733,9 @@ export default function Signals() {
           </TableContainer>
 
           <div className="flex flex-col sm:flex-row justify-between items-center mt-4 px-4 bg-[#0B1220] rounded-lg border border-[#11B3AE] border-opacity-20 gap-4">
-            <Typography sx={{ 
-              color: '#E9D8C8', 
-              fontSize: { xs: 12, sm: 14 }, 
+            <Typography sx={{
+              color: '#E9D8C8',
+              fontSize: { xs: 12, sm: 14 },
               fontWeight: 500,
               textAlign: { xs: 'center', sm: 'left' }
             }}>

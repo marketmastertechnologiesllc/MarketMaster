@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import useAuth from '../../../hooks/useAuth';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import { useLoading } from '../../../contexts/loadingContext';
 
 const StyledButton = styled(LoadingButton)(({ theme }) => ({
   borderRadius: '8px',
@@ -22,7 +23,7 @@ const StyledButton = styled(LoadingButton)(({ theme }) => ({
 function AccountProfile() {
   const { user } = useAuth();
   const { showToast } = useToast();
-
+  const { loading } = useLoading();
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -40,9 +41,17 @@ function AccountProfile() {
 
   React.useEffect(() => {
     async function init() {
-      const response = await api.get(`/account/${id}`);
-      const { name, login, broker, type, server } = response.data;
-      setValues({ accountName: name, accountLogin: login, broker: broker, type: type, server: server });
+      try {
+        loading(true);
+        const response = await api.get(`/account/${id}`);
+        const { name, login, broker, type, server } = response.data;
+        setValues({ accountName: name, accountLogin: login, broker: broker, type: type, server: server });
+      }
+      catch (err) {
+        console.log(err);
+      } finally {
+        loading(false);
+      }
     }
     init();
   }, []);

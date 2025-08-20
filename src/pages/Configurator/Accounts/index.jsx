@@ -34,6 +34,7 @@ import useToast from '../../../hooks/useToast';
 import useAuth from '../../../hooks/useAuth';
 import api from '../../../utils/api';
 import useSocket from '../../../hooks/useSocket';
+import { useLoading } from '../../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -120,7 +121,7 @@ export default function Accounts() {
   const { socket } = useSocket();
   const { user } = useAuth();
   const navigate = useNavigate();
-
+  const { loading } = useLoading();
   const [headers, setHeaders] = React.useState(initialHeaders);
   const [sort, setSort] = React.useState({
     id: '',
@@ -135,7 +136,6 @@ export default function Accounts() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showFilterItems, setShowFilterItems] = React.useState(true);
-  const [isDataLoading, setIsDataLoading] = React.useState(true);
   const filterModalRef = React.useRef(null);
 
   const handleChangeRowsPerPage = (e) => {
@@ -152,6 +152,8 @@ export default function Accounts() {
     setPage(value);
 
     try {
+      loading(true);
+      setIsLoading(true);
       let config = JSON.parse(sessionStorage.getItem('accounts'));
       config.page = value;
       sessionStorage.setItem('accounts', JSON.stringify(config));
@@ -164,6 +166,9 @@ export default function Accounts() {
       setCount(res.data.count);
     } catch (err) {
       console.log(err);
+    } finally {
+      loading(false);
+      setIsLoading(false);
     }
   };
 
@@ -178,6 +183,7 @@ export default function Accounts() {
 
   const handleDeleteAccountModalButtonClicked = async () => {
     try {
+      loading(true);
       setIsLoading(true);
       await api.delete(`/account/delete/${selectedAccountData.accountId}`);
       handlePageChange(null, page);
@@ -187,12 +193,14 @@ export default function Accounts() {
       console.log(err);
     } finally {
       setDeleteAccountModalShow(false);
+      loading(false);
       setIsLoading(false);
     }
   };
 
   const handleSendProviderRequest = async () => {
     try {
+      loading(true);
       setIsLoading(true);
       socket.emit('message', {
         type: 'provider-request',
@@ -206,6 +214,7 @@ export default function Accounts() {
       showToast('Send request failed!', 'error');
       console.log(err);
     } finally {
+      loading(false);
       setIsLoading(false);
     }
   };
@@ -293,7 +302,8 @@ export default function Accounts() {
 
     async function fetchData() {
       try {
-        setIsDataLoading(true);
+        loading(true);
+        setIsLoading(true);
         const { page, pagecount, sort, type } = config;
         const res = await api.get(
           `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
@@ -304,7 +314,8 @@ export default function Accounts() {
         console.error('Error fetching accounts data:', error);
         showToast('Failed to load accounts data. Please try again.', 'error');
       } finally {
-        setIsDataLoading(false);
+        loading(false);
+        setIsLoading(false);
       }
     }
 
@@ -510,7 +521,6 @@ export default function Accounts() {
                 displayEmpty
                 value={rowsPerPage}
                 onChange={handleChangeRowsPerPage}
-                disabled={isDataLoading}
                 MenuProps={{
                   PaperProps: {
                     sx: {
@@ -538,21 +548,21 @@ export default function Accounts() {
                   <OutlinedInput
                     sx={{
                       width: { xs: '70px', sm: '80px' },
-                      color: isDataLoading ? '#666' : '#E9D8C8',
+                      color: '#E9D8C8',
                       borderRadius: '8px',
-                      backgroundColor: isDataLoading ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
                       '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : 'rgba(17, 179, 174, 0.3)',
+                        borderColor: 'rgba(17, 179, 174, 0.3)',
                       },
                       '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : 'rgba(17, 179, 174, 0.5)',
+                        borderColor: 'rgba(17, 179, 174, 0.5)',
                       },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: isDataLoading ? 'rgba(255, 255, 255, 0.1)' : '#11B3AE',
-                        boxShadow: isDataLoading ? 'none' : '0 0 0 2px rgba(17, 179, 174, 0.2)',
+                        borderColor: '#11B3AE',
+                        boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
                       },
                       '& .MuiSelect-icon': {
-                        color: isDataLoading ? '#666' : '#E9D8C8',
+                        color: '#E9D8C8',
                       },
                     }}
                   />
@@ -579,7 +589,6 @@ export default function Accounts() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
-              disabled={isDataLoading}
             />
           </Search>
         </div>
@@ -678,24 +687,8 @@ export default function Accounts() {
                   },
                 }}
               >
-                {isDataLoading ? (
-                  <TableRow>
-                    <TableCell 
-                      colSpan={headers.filter(item => item.checked).length} 
-                      align="center"
-                      sx={{
-                        padding: '60px 20px',
-                        border: 'none',
-                      }}
-                    >
-                      <div className="flex flex-col justify-center items-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#11B3AE] mb-4"></div>
-                        <span className="text-[#E9D8C8] text-lg font-medium">Loading accounts...</span>
-                        <span className="text-[#E9D8C8] text-sm opacity-70 mt-1">Please wait while we fetch your account data</span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : data && data.length > 0 ? (
+                {
+                data && data.length > 0 ? (
                   data.map((row, index) => {
                     return (
                       <TableRow
@@ -825,15 +818,14 @@ export default function Accounts() {
               fontWeight: 500,
               textAlign: { xs: 'center', sm: 'left' }
             }}>
-              {isDataLoading ? (
-                'Loading accounts...'
-              ) : (
+              {
+              (
                 `Showing ${rowsPerPage * (page - 1) + 1} to
                 ${rowsPerPage * page > count ? count : rowsPerPage * page} of ${count}
                 entries`
               )}
             </Typography>
-            {!isDataLoading && count > 0 && (
+            {count > 0 && (
               <Pagination
                 sx={{
                   paddingY: 2,

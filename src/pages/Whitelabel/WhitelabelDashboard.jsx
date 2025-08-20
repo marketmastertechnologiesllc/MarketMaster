@@ -3,18 +3,18 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import ViewListRoundedIcon from '@mui/icons-material/ViewListRounded';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import api from '../../utils/api';
-
+import { useLoading } from '../../contexts/loadingContext';
 function WhitelabelDashboard() {
+  const { loading } = useLoading();
   const [userCount, setUserCount] = React.useState(0);
   const [accountCount, setAccountCount] = React.useState(0);
   const [copierCount, setCopierCount] = React.useState(0);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
     async function init() {
       try {
-        setIsLoading(true);
+        loading(true);
         setError(null);
         
         // Make all API calls in parallel for better performance
@@ -31,22 +31,11 @@ function WhitelabelDashboard() {
         console.error('Error loading dashboard data:', err);
         setError('Failed to load dashboard data. Please try again.');
       } finally {
-        setIsLoading(false);
+        loading(false);
       }
     }
     init();
   }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center w-full h-64">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#11B3AE]"></div>
-          <p className="text-[#E9D8C8] text-lg font-medium">Loading data...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (

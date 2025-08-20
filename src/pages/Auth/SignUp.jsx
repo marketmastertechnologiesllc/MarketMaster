@@ -71,7 +71,7 @@ function SignUp() {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center text-[#E9D8C8] bg-[#0B1220]">
+    <div className="w-screen h-screen flex flex-col px-3 items-center justify-center text-[#E9D8C8] bg-[#0B1220]">
       <div className="block max-w-md pt-2 w-full">
         <div className="flex flex-row justify-between h-10 gap-5 relative">
           <img 
@@ -85,8 +85,8 @@ function SignUp() {
           </label>
         </div>
       </div>
-      <div className="block max-w-md z-20 rounded-xl bg-[#0B1220] px-8 pt-8 pb-12 border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
-        <div className="w-96 mx-auto">
+      <div className="block w-full max-w-md z-20 rounded-xl rounded-tr-none bg-[#0B1220] px-8 pt-8 pb-12 border border-t-[5px] border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
+        <div className="w-full px-2 mx-auto">
           <div className="mb-5">
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-[#E9D8C8]">
               Email
@@ -183,7 +183,7 @@ function SignUp() {
                 </p>
               )}
           </div>
-          <div className="flex items-end justify-end mb-5">
+          <div className="flex flex-col md:flex-row gap-2 items-end justify-end mb-5">
             <label className="ms-2 text-sm font-medium text-[#E9D8C8]">
               Already have account?{' '}
               <Link

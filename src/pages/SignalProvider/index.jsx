@@ -23,6 +23,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteSignalModal from '../../components/modals/DeleteSignalModal';
 import useToast from '../../hooks/useToast';
 import api from '../../utils/api';
+import { useLoading } from '../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -105,7 +106,7 @@ const headers = [
 export default function SignalProvider() {
   const { showToast } = useToast();
   const navigate = useNavigate();
-
+  const { loading } = useLoading();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -161,6 +162,7 @@ export default function SignalProvider() {
     setPage(value);
 
     try {
+      loading(true);
       let config = JSON.parse(sessionStorage.getItem('signals'));
       config.page = value;
       sessionStorage.setItem('signals', JSON.stringify(config));
@@ -173,6 +175,8 @@ export default function SignalProvider() {
       setCount(res.data.count);
     } catch (e) {
       console.log(e);
+    } finally {
+      loading(false);
     }
   };
 
@@ -198,12 +202,19 @@ export default function SignalProvider() {
     });
 
     async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      const res = await api.get(
-        `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
+      try {
+        loading(true);
+        const { page, pagecount, sort, type } = config;
+        const res = await api.get(
+          `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        );
+        setData(res.data.data);
+        setCount(res.data.count);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        loading(false);
+      }
     }
 
     fetchData();
@@ -251,7 +262,7 @@ export default function SignalProvider() {
                 height="16"
                 style={{ display: 'inline-block' }}
               />{' '}
-              Create Signal Page
+              Create Signal
             </Link>
           </header>
           <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.3)] pb-[20px]">
@@ -315,8 +326,8 @@ export default function SignalProvider() {
                     <MenuItem value={100}>100</MenuItem>
                   </Select>
                 </FormControl>
-                <Typography sx={{ 
-                  color: '#E9D8C8', 
+                <Typography sx={{
+                  color: '#E9D8C8',
                   fontWeight: 500,
                   fontSize: { xs: '0.875rem', sm: '1rem' }
                 }}>

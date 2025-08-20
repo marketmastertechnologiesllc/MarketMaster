@@ -17,7 +17,7 @@ import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import TradesAnalysis from '../../components/analysis/TradesAnalysis';
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
-
+import { useLoading } from '../../contexts/loadingContext';
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   textTransform: 'none',
@@ -71,7 +71,7 @@ function TimeAnalysisPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  
+  const { loading } = useLoading();
   // Debug log to see all available parameters
   console.log('Account ID from params:', id);
   
@@ -100,10 +100,16 @@ function TimeAnalysisPage() {
 
   // Fetch account data on component mount
   React.useEffect(() => {
-    if (id) {
-      fetchAccountData();
-      fetchAccountNameAndLogin();
-    }
+    const fetchData = async () => {
+      loading(true);
+      if (id) {
+        await fetchAccountData();
+        await fetchAccountNameAndLogin();
+      }
+      loading(false);
+    };
+    
+    fetchData();
   }, [id]);
 
   // Filter data when date range changes

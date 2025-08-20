@@ -19,7 +19,7 @@ import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import { useParams } from 'react-router-dom';
 import { formatNumber } from '../../utils/formatNumber';
-
+import { useLoading } from '../../contexts/loadingContext';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: '12px',
@@ -114,6 +114,7 @@ const headers = [
 ];
 
 export default function OpenTradeTable() {
+  const { loading } = useLoading();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -134,6 +135,7 @@ export default function OpenTradeTable() {
     setPage(value);
 
     try {
+      loading(true);
       const res = await api.get(
         `/trade/${id}?page=${value}&pagecount=${pageCount ? pageCount : rowsPerPage
         }&sort=${sort.id}&type=${sort.type}`
@@ -142,16 +144,25 @@ export default function OpenTradeTable() {
       setCount(res.data.count);
     } catch (e) {
       console.log(e);
+    } finally {
+      loading(false);
     }
   };
 
   React.useEffect(() => {
     async function fetchData() {
-      const res = await api.get(
-        `/trade/${id}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
+      try {
+        loading(true);
+        const res = await api.get(
+          `/trade/${id}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`
+        );
+        setData(res.data.data);
+        setCount(res.data.count);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        loading(false);
+      }
     }
     fetchData();
   }, [id]);

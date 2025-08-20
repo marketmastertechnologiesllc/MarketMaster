@@ -24,7 +24,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import api from '../../../utils/api';
 import DeleteSignalModal from '../../../components/modals/DeleteSignalModal';
 import useToast from '../../../hooks/useToast';
-
+import { useLoading } from '../../../contexts/loadingContext';
 const headers = [[
   { id: 'strategyId', label: 'Strategy ID' },
   { id: 'name', label: 'Name' },
@@ -53,6 +53,7 @@ const headers = [[
 
 export default function EditUser() {
   const { showToast } = useToast();
+  const { loading } = useLoading();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isUpdateButtonClicked, setIsUpdateButtonClicked] =
     React.useState(false);
@@ -73,19 +74,26 @@ export default function EditUser() {
 
   React.useEffect(() => {
     async function fetchData() {
-      const res = await api.get(`/users/detail/${id}`);
-      if (res.data.status === 'OK') {
-        setUserInfo(res.data.data.userInfo);
-        setSignals(res.data.data.strategies);
-        setAccounts(res.data.data.accounts);
-        setCopiers(res.data.data.copiers);
-        setMaxAccount(res.data.data.maxAccount);
-        setTempMaxAccount(res.data.data.maxAccount);
-        setValues({
-          ...values,
-          role: res.data.data.role,
-          providerAccountLimit: res.data.data.providerAccountLimit,
-        });
+      try {
+        loading(true);
+        const res = await api.get(`/users/detail/${id}`);
+        if (res.data.status === 'OK') {
+          setUserInfo(res.data.data.userInfo);
+          setSignals(res.data.data.strategies);
+          setAccounts(res.data.data.accounts);
+          setCopiers(res.data.data.copiers);
+          setMaxAccount(res.data.data.maxAccount);
+          setTempMaxAccount(res.data.data.maxAccount);
+          setValues({
+            ...values,
+            role: res.data.data.role,
+            providerAccountLimit: res.data.data.providerAccountLimit,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        loading(false);
       }
     }
 
@@ -101,14 +109,14 @@ export default function EditUser() {
     try {
       setIsLoading(true);
       await api.put(`/users/max-account/${id}`, { maxAccount: tempMaxAccount });
-      
+
       // Update the local state
       setUserInfo(prev => ({
         ...prev,
         maxAccount: tempMaxAccount,
       }));
       setMaxAccount(tempMaxAccount);
-      
+
       setShowMaxAccountModal(false);
       showToast('Updated successfully', 'success');
     } catch (err) {

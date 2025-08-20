@@ -29,6 +29,11 @@ const initialHeaders = {
       checked: true,
     },
     {
+      id: 'role',
+      label: 'Role',
+      checked: true,
+    },
+    {
       id: 'balance',
       label: 'Balance',
       checked: true,
@@ -145,55 +150,6 @@ function Dashboard() {
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showFilterItems, setShowFilterItems] = React.useState(true);
   const filterModalRef = React.useRef(null);
-
-  // React.useEffect(() => {
-  //   _intervalRef3.current = setInterval(async () => {
-  //     try {
-  //       let temp = [...ids];
-  //       console.log('temp -> ', temp);
-  //       if (temp.length === 0) {
-  //         clearInterval(_intervalRef3.current);
-  //       }
-  //       for (let i = 0; i < temp.length; i++) {
-  //         api.put(`/account/update-account-information/${temp[i]}`)
-  //           .then((res) => {
-  //             console.log('res -> ', res.data.data);
-  //             dispatch({
-  //               type: 'DELETE_ID',
-  //               payload: temp[i],
-  //             });
-  //           })
-  //           .catch((err) => {
-  //           });
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }, 3000);
-
-  //   // setIntervalId(id);
-
-  //   return () => {
-  //     clearInterval(_intervalRef3.current);
-  //   };
-  // }, [ids]);
-
-  // React.useEffect(() => {
-  //   _intervalRef300.current = setInterval(() => {
-  //     async function fetcher() {
-  //       try {
-  //         await api.put(`/account/update-all-accounts-information`);
-  //       } catch (err) {
-  //         console.log(err);
-  //       }
-  //     }
-  //     fetcher();
-  //   }, 1000 * 60 * 5);
-
-  //   return () => {
-  //     clearInterval(_intervalRef300);
-  //   };
-  // }, []);
 
   React.useEffect(() => {
     let config = sessionStorage.getItem('dashboard');

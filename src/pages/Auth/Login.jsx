@@ -70,9 +70,9 @@ function Login() {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center text-[#E9D8C8] bg-[#0B1220]">
+    <div className="w-screen h-screen flex flex-col px-3 items-center justify-center text-[#E9D8C8] bg-[#0B1220]">
       <div className="block max-w-md pt-2 w-full">
-        <div className="flex flex-row justify-between h-10 relative">
+        <div className="flex flex-row justify-between h-10 gap-5 relative">
           <img 
             className='absolute -top-1 left-0 z-10' 
             style={{ height: '40px', width: '150px' }} 
@@ -98,8 +98,8 @@ function Login() {
           </div>
         </div>
       </div>
-      <div className="block max-w-m z-20 rounded-xl rounded-tr-none bg-[#0B1220] p-6 border-t-[5px] border-[#11B3AE] px-8 pt-8 pb-12 shadow-[0_0_16px_rgba(17,179,174,0.5)] border border-[#11B3AE]">
-        <div className="w-96 mx-auto">
+      <div className="block w-full max-w-md z-20 rounded-xl rounded-tr-none bg-[#0B1220] px-8 pt-8 pb-12 shadow-[0_0_16px_rgba(17,179,174,0.5)] border border-t-[5px] border-[#11B3AE]">
+        <div className="w-full px-2 mx-auto">
           <div className="mb-8">
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-[#E9D8C8]">
               Email
@@ -161,7 +161,7 @@ function Login() {
                 </p>
               )}
           </div>
-          <div className="flex items-start mb-8 justify-between">
+          <div className="flex flex-col md:flex-row gap-2 items-start mb-8 justify-between">
             <div className="flex items-center h-5">
               <input
                 id="terms"

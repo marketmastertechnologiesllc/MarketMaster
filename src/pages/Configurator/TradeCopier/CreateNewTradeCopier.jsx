@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import { useLoading } from '../../../contexts/loadingContext';
 
 const StyledButton = styled(LoadingButton)(({ theme }) => ({
   borderRadius: '8px',
@@ -25,7 +26,7 @@ const StyledButton = styled(LoadingButton)(({ theme }) => ({
 
 function CreateNewTradeCopier() {
   const { showToast } = useToast();
-
+  const { loading } = useLoading();
   const initialValues = {
     copyFrom: '',
     sendTo: '',
@@ -46,6 +47,7 @@ function CreateNewTradeCopier() {
   React.useEffect(() => {
     async function fetchData() {
       try {
+        loading(true);
         setIsDataLoading(true);
         // let tempStrategy = [];
         const response = await api.get('/account/my-accounts');
@@ -57,6 +59,7 @@ function CreateNewTradeCopier() {
         showToast('Failed to load data. Please try again.', 'error');
       } finally {
         setIsDataLoading(false);
+        loading(false);
       }
     }
 
@@ -97,13 +100,13 @@ function CreateNewTradeCopier() {
       setIsLoading(true);
       setCreateCopierButtonClicked(true);
       const data = {
-        subject: 'Request to create a new trade copier',
-        department: 'Create Copier',
+        subject: 'Request to create a new signal',
+        department: 'New Connect',
         message: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
             <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
               <h2 style="color: #333; margin-bottom: 20px; border-bottom: 2px solid #0088CC; padding-bottom: 10px;">
-                Trade Copier Creation Request
+                New Connect Creation Request
               </h2>
               
               <div style="margin-bottom: 20px;">
@@ -132,7 +135,7 @@ function CreateNewTradeCopier() {
         copierId: values.sendTo,
       });
       if (addCopier.data.status === "OK") {
-        showToast('New copier created successfully!', 'success');
+        showToast('New connection created successfully!', 'success');
       } else {
         const res = await api.post('/users/contact', data);
         if (res.data.status === "OK") {
@@ -142,7 +145,7 @@ function CreateNewTradeCopier() {
         }
       }
       setIsLoading(false);
-      navigate('/trade-copier');
+      navigate('/connect-signal');
     } catch (err) {
       showToast(err.response?.data?.msg || 'An error occurred while creating the copier', 'error');
       console.log(err);
@@ -154,26 +157,26 @@ return (
     <div className="py-0 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
       <div className="pb-3">
         <Link
-          to={'/trade-copier'}
+          to={'/connect-signal'}
           className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors duration-200"
         >
           <ReplyRoundedIcon
             fontSize="medium"
             sx={{ color: 'currentColor', fontWeight: 'bold' }}
           />
-          <h1 className="text-base sm:text-lg pl-2"> My Copiers</h1>
+          <h1 className="text-base sm:text-lg pl-2"> Connect Signal</h1>
         </Link>
       </div>
       <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.5)]">
         <header className="p-4 sm:p-[18px] bg-[#0B1220] rounded-t-xl border-b border-[#11B3AE] border-opacity-20">
           <h2 className="mt-[5px] text-lg sm:text-[20px] font-normal text-[#E9D8C8]">
-            Create New Trade Copier
+            Create New Connect
           </h2>
         </header>
         <div className="box-border p-4 sm:p-[15px] bg-[#0B1220]">
           <div className="flex flex-col sm:flex-row justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
             <label className="inline-block relative max-w-full text-right w-full sm:w-1/4 pt-[7px] px-0 sm:px-[15px] text-[#E9D8C8] text-[13px] font-medium mb-2 sm:mb-0">
-              Copy from
+              Signal from
             </label>
             <div className="w-full sm:w-1/2 px-0 sm:px-[15px]">
               <FormControl fullWidth>
@@ -262,14 +265,14 @@ return (
               </FormControl>
               {values.copyFrom == '' && createCopierButtonClicked && (
                 <p className="mt-2 text-xs text-[#fa5252] font-medium">
-                  Copy from required!
+                  Signal from required!
                 </p>
               )}
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
             <label className="inline-block relative max-w-full text-right w-full sm:w-1/4 pt-[7px] px-0 sm:px-[15px] text-[#E9D8C8] text-[13px] font-medium mb-2 sm:mb-0">
-              Send to
+              Connect to
             </label>
             <div className="w-full sm:w-1/2 px-0 sm:px-[15px]">
               <FormControl fullWidth>
@@ -363,7 +366,7 @@ return (
               </FormControl>
               {values.sendTo == '' && createCopierButtonClicked && (
                 <p className="mt-2 text-xs text-[#fa5252] font-medium">
-                  Send to required!
+                  Connect to required!
                 </p>
               )}
             </div>
@@ -445,7 +448,7 @@ return (
                 onClick={handleCreateCopierButtonClick}
                 loading={isLoading}
               >
-                {isDataLoading ? 'Loading...' : 'Create Copier'}
+                {isDataLoading ? 'Loading...' : 'Connect Signal'}
               </StyledButton>
             </div>
           </div>

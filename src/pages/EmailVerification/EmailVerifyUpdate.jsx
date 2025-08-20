@@ -1,19 +1,24 @@
 import * as React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import api from '../../utils/api';
+import { useLoading } from '../../contexts/loadingContext';
 
 function EmailVerifyUpdate() {
   const { token } = useParams();
   const [ isEmailVerified, setIsEmailVerified ] = React.useState(false);
+  const { loading } = useLoading();
 
   React.useEffect(() => {
     async function verifyEmail() {
       try {
+        loading(true);
         const result = await api.get(`/users/verify-email-update/${token}`);
         setIsEmailVerified(result.data.emailVerified);
       } catch (err) {
         console.log(err);
         setIsEmailVerified(false);
+      } finally {
+        loading(false);
       }
     }
 

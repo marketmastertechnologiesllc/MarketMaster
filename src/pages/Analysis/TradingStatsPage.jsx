@@ -11,7 +11,7 @@ import TradingStats from '../../components/analysis/TradingStats';
 import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
-
+import { useLoading } from '../../contexts/loadingContext';
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   textTransform: 'none',
@@ -32,7 +32,7 @@ function TradingStatsPage() {
   const { accountId } = useParams();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  
+  const { loading } = useLoading();
   // State for data
   const [accountDetails, setAccountDetails] = React.useState({});
   const [accountInfo, setAccountInfo] = React.useState({});
@@ -46,10 +46,16 @@ function TradingStatsPage() {
 
   // Fetch account data on component mount
   React.useEffect(() => {
-    if (accountId) {
-      fetchAccountData();
-      fetchAccountNameAndLogin();
-    }
+    const fetchData = async () => {
+      loading(true);
+      if (accountId) {
+        await fetchAccountData();
+        await fetchAccountNameAndLogin();
+      }
+      loading(false);
+    };
+    
+    fetchData();
   }, [accountId]);
 
   const fetchAccountData = async () => {
@@ -188,16 +194,18 @@ function TradingStatsPage() {
       </div>
 
       {/* Content */}
-      {isLoading ? (
-        <div className="flex justify-center items-center py-16">
-          <div className="text-center">
-            <CircularProgress sx={{ color: '#11B3AE', mb: 2 }} />
-            <Typography sx={{ color: '#E9D8C8', fontSize: '1rem' }}>
-              Loading trading statistics...
-            </Typography>
-          </div>
-        </div>
-      ) : (
+      {
+      // isLoading ? (
+      //   <div className="flex justify-center items-center py-16">
+      //     <div className="text-center">
+      //       <CircularProgress sx={{ color: '#11B3AE', mb: 2 }} />
+      //       <Typography sx={{ color: '#E9D8C8', fontSize: '1rem' }}>
+      //         Loading trading statistics...
+      //       </Typography>
+      //     </div>
+      //   </div>
+      // ) : 
+      (
         <div className="space-y-8">
           <div className="rounded-xl bg-[#0B1220] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
             <TradingStats data={accountInfo} />
