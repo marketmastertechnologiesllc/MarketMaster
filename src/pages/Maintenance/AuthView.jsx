@@ -50,7 +50,7 @@ function AuthView() {
             setAccountId(res.data.data.accountId);
             setSetting(res.data.data.setting);
           } else {
-            navigate('/404'); //go to 404 if signal is not live
+            navigate('/404'); //go to 404 if strategy is not live
           }
         } else {
           navigate('/404');
@@ -107,7 +107,7 @@ function AuthView() {
         const res = await api.post('/strategy/follow', { id: accountId });
         if (res.data.status === 'OK') {
           showToast(res.data.msg, 'success');
-          navigate('/signals');
+          navigate('/strategies');
         } else {
           showToast('Follow failed', 'error');
         }
@@ -131,7 +131,7 @@ function AuthView() {
             className="bg-[#51B451] text-white hover:bg-gray-200 hover:text-slate-500 px-3 rounded"
             onClick={handleFollowClick}
           >
-            Follow Signal
+            Follow Strategy
           </button>
         </div>
         <div className="flex gap-[20px]">

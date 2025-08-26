@@ -1,13 +1,26 @@
 import * as React from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../components/Header';
 import api from '../utils/api';
+import useAuth from '../hooks/useAuth';
 
 function Root() {
   const [data, setData] = React.useState({
     title: '',
     body: '',
   });
+  const { isAuthenticated, isInitialized } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (isInitialized && isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, isInitialized, navigate]);
+
   React.useEffect(() => {
     api
       .get('/settings/homepage-content')
@@ -18,6 +31,12 @@ function Root() {
         console.log(err);
       });
   }, []);
+
+  // Don't render anything if user is authenticated (will redirect)
+  if (isInitialized && isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="mx-28 flex flex-col justify-between text-white">
       <Header />

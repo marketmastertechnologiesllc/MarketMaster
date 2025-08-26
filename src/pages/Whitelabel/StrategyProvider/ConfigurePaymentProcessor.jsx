@@ -3,8 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function ConfigurePaymentProcessor() {
   const { showToast } = useToast();
@@ -32,7 +32,7 @@ function ConfigurePaymentProcessor() {
         // const result = await api.post('/strategy/register-strategy', values);
         showToast('Payment processor configured successfully!', 'success');
         setIsLoading(false);
-        navigate(`/signal-provider/`);
+        navigate(`/strategy-provider/`);
       }
     } catch (err) {
       showToast('Payment configuration failed!', 'error');
@@ -53,14 +53,14 @@ function ConfigurePaymentProcessor() {
       <div className="py-0 px-[200px]">
         <div className="pb-3">
           <Link
-            to='/signal-provider'
+            to='/strategy-provider'
             className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'currentColor', fontWeight: 'bold' }}
             />
-            <h1 className="text-lg pl-2"> Signal Provider</h1>
+            <h1 className="text-lg pl-2"> Strategy Provider</h1>
           </Link>
         </div>
         <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">

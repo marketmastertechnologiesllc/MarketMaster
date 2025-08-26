@@ -122,7 +122,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-function SignalFollowers() {
+function StrategyFollowers() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('followers');
@@ -240,7 +240,7 @@ function SignalFollowers() {
   };
 
   const handleAddFollower = () => {
-    navigate('/signal-followers/add');
+    navigate('/strategy-followers/add');
   };
 
   const getHeaders = () => {
@@ -256,7 +256,7 @@ function SignalFollowers() {
   const [confirmRemove, setConfirmRemove] = useState(false);
 
   const handleEditFollower = (followerId) => {
-    navigate(`/signal-followers/details/${followerId}`);
+    navigate(`/strategy-followers/details/${followerId}`);
   };
 
   const handleDeleteFollower = (followerData) => {
@@ -296,7 +296,7 @@ function SignalFollowers() {
         className="relative"
       >
         <div className="absolute right-0 top-0 flex gap-2">
-          <Link to="/signal-followers/add">
+          <Link to="/strategy-followers/add">
             <StyledButton
               variant="contained"
               size="small"
@@ -455,9 +455,9 @@ function SignalFollowers() {
         {/* Empty State */}
         {getCurrentData().length === 0 && activeTab === 'followers' && !isDataLoading ? (
           <div className="text-center py-8">
-            <h3 className="text-[#E9D8C8] text-xl mb-4 font-semibold">There are currently no users following your signal</h3>
+            <h3 className="text-[#E9D8C8] text-xl mb-4 font-semibold">There are currently no users following your strategy</h3>
             <p className="text-[#E9D8C8] opacity-80 mb-6">
-              You can offer your trading expertise out to other people by creating a signal provider page from your account.
+              You can offer your trading expertise out to other people by creating a strategy provider page from your account.
             </p>
             <StyledButton
               variant="contained"
@@ -540,7 +540,7 @@ function SignalFollowers() {
                       .filter((item) => item.checked && item.id !== 'actions')
                       .map(({ label, id }, index) => (
                       <TableCell
-                        key={`signal_followers_table_header_${index}`}
+                        key={`strategy_followers_table_header_${index}`}
                         align="center"
                         sx={{
                           padding: '12px 8px',
@@ -608,7 +608,7 @@ function SignalFollowers() {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={`signal_followers_table_row_${index}`}
+                          key={`strategy_followers_table_row_${index}`}
                           sx={{
                             transition: 'all 0.2s ease-in-out',
                             '&:hover': {
@@ -795,7 +795,7 @@ function SignalFollowers() {
                 Are you sure you want revoke access for <font className="font-bold">{selectedFollower.followerName}</font>?
               </p>
               <p className="text-[13px] text-[#E9D8C8] opacity-80 mb-[10px]">
-                Any configured trade alerts and trade copiers relating to this signal will be deleted.
+                Any configured trade alerts and trade copiers relating to this strategy will be deleted.
               </p>
               <p className="text-[13px] text-[#E9D8C8] opacity-80 mb-[10px]">
                 <b>This process can not be undone.</b>
@@ -844,7 +844,7 @@ function SignalFollowers() {
   );
 }
 
-export default SignalFollowers;
+export default StrategyFollowers;
 
 
 

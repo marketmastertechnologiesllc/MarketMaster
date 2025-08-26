@@ -3,7 +3,6 @@ import axios from 'axios';
 // Create an instance of axios
 const api = axios.create({
   baseURL: 'https://marketmasterapi.marketmaster.com/api',
-  // baseURL: 'https://tradecopiersignalsbackend.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },

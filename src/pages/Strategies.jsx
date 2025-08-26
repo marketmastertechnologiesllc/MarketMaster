@@ -22,7 +22,7 @@ import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import DeleteSignalModal from '../components/modals/DeleteSignalModal';
+import DeleteStrategyModal from '../components/modals/DeleteStrategyModal';
 import useToast from '../hooks/useToast';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
@@ -99,7 +99,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const initialHeaders = [
-  { id: 'signal', label: 'Signal', checked: true },
+  { id: 'strategy', label: 'Strategy', checked: true },
   { id: 'accounts', label: 'Provider Name', checked: true },
   { id: 'description', label: 'Description', checked: true },
   { id: 'created_at', label: 'Created At', checked: true },
@@ -107,7 +107,7 @@ const initialHeaders = [
   { id: 'actions', label: 'Actions', checked: true },
 ];
 
-export default function Signals() {
+export default function Strategies() {
   const { showToast } = useToast();
   const { loading } = useLoading();
   const [headers, setHeaders] = React.useState(initialHeaders);
@@ -119,18 +119,18 @@ export default function Signals() {
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedSignalData, setSelectedSignalData] = React.useState({});
-  const [deleteSignalModalShow, setDeleteSignalModalShow] = React.useState(false);
+  const [selectedStrategyData, setSelectedStrategyData] = React.useState({});
+  const [deleteStrategyModalShow, setDeleteStrategyModalShow] = React.useState(false);
   const [deletePermission, setDeletePermission] = React.useState(false);
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showFilterItems, setShowFilterItems] = React.useState(true);
   const filterModalRef = React.useRef(null);
 
   const handleChangeRowsPerPage = (e) => {
-    let config = JSON.parse(sessionStorage.getItem('signals'));
+    let config = JSON.parse(sessionStorage.getItem('strategies'));
     config.pagecount = e.target.value;
     config.page = 1;
-    sessionStorage.setItem('signals', JSON.stringify(config));
+    sessionStorage.setItem('strategies', JSON.stringify(config));
 
     setRowsPerPage(e.target.value);
     handlePageChange(null, 1);
@@ -141,9 +141,9 @@ export default function Signals() {
 
     try {
       loading(true);
-      let config = JSON.parse(sessionStorage.getItem('signals'));
+      let config = JSON.parse(sessionStorage.getItem('strategies'));
       config.page = value;
-      sessionStorage.setItem('signals', JSON.stringify(config));
+      sessionStorage.setItem('strategies', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config;
       const res = await api.get(
@@ -158,22 +158,22 @@ export default function Signals() {
     }
   };
 
-  const handleDeleteSignalButtonClicked = (accountData) => {
-    setSelectedSignalData(accountData);
-    setDeleteSignalModalShow(true);
+  const handleDeleteStrategyButtonClicked = (accountData) => {
+    setSelectedStrategyData(accountData);
+    setDeleteStrategyModalShow(true);
   };
 
-  const handleDeleteSignalModalButtonClicked = async () => {
+  const handleDeleteStrategyModalButtonClicked = async () => {
     try {
       loading(true);
-      await api.delete(`/strategy/${selectedSignalData.strategyId}`);
-      showToast('Signal deleted successfully!', 'success');
+      await api.delete(`/strategy/${selectedStrategyData.strategyId}`);
+      showToast('Strategy deleted successfully!', 'success');
       handlePageChange(null, page);
     } catch (err) {
-      showToast('Signal deletion failed!', 'error');
+      showToast('Strategy deletion failed!', 'error');
       console.log(err);
     } finally {
-      setDeleteSignalModalShow(false);
+      setDeleteStrategyModalShow(false);
       loading(false);
     }
   };
@@ -239,7 +239,7 @@ export default function Signals() {
   }, [showFilterModal]);
 
   React.useEffect(() => {
-    let config = JSON.parse(sessionStorage.getItem('signals'));
+    let config = JSON.parse(sessionStorage.getItem('strategies'));
 
     if (!config) {
       config = {
@@ -249,7 +249,7 @@ export default function Signals() {
         type: '',
       };
 
-      sessionStorage.setItem('signals', JSON.stringify(config));
+      sessionStorage.setItem('strategies', JSON.stringify(config));
     }
 
     setPage(config.page);
@@ -282,12 +282,12 @@ export default function Signals() {
 
   return (
     <div className="w-auto text-[#E9D8C8] pb-[100px]">
-      {deleteSignalModalShow && (
-        <DeleteSignalModal
-          deleteSignalModalShow={setDeleteSignalModalShow}
-          selectedSignalName={selectedSignalData.name}
-          handleDeleteSignalModalButtonClicked={
-            handleDeleteSignalModalButtonClicked
+      {deleteStrategyModalShow && (
+        <DeleteStrategyModal
+          deleteStrategyModalShow={setDeleteStrategyModalShow}
+          selectedStrategyName={selectedStrategyData.name}
+          handleDeleteStrategyModalButtonClicked={
+            handleDeleteStrategyModalButtonClicked
           }
         />
       )}
@@ -582,7 +582,7 @@ export default function Signals() {
                     .filter((item) => item.checked && item.id !== 'actions')
                     .map(({ label, id }, i) => (
                       <TableCell
-                        key={`signals_table_header_${i}`}
+                        key={`strategies_table_header_${i}`}
                         align="center"
                         sx={{
                           padding: '12px 8px',
@@ -626,7 +626,7 @@ export default function Signals() {
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={`signals_table_row_${index}`}
+                        key={`strategies_table_row_${index}`}
                         sx={{
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
@@ -642,7 +642,7 @@ export default function Signals() {
                             let value = row[id];
                             if (id === 'accounts') {
                               value = value ? `${value.users.fullName}` : "none";
-                            } else if (id === 'signal') {
+                            } else if (id === 'strategy') {
                               value = `${row.name}`;
                             }
                             if (id === 'created_at' || id === 'updated_at') {
@@ -712,7 +712,7 @@ export default function Signals() {
                                     },
                                   }}
                                   onClick={() =>
-                                    handleDeleteSignalButtonClicked({
+                                    handleDeleteStrategyButtonClicked({
                                       name: row.name,
                                       accountId: row.accountId,
                                       strategyId: row.strategyId,

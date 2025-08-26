@@ -11,7 +11,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const SignalFollowersTable = ({ data, type = 'followers' }) => {
+const StrategyFollowersTable = ({ data, type = 'followers' }) => {
   const getColumns = () => {
     if (type === 'deleted') {
       return [
@@ -117,4 +117,4 @@ const SignalFollowersTable = ({ data, type = 'followers' }) => {
   );
 };
 
-export default SignalFollowersTable; 
+export default StrategyFollowersTable; 

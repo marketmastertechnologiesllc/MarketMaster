@@ -184,7 +184,7 @@ function RiskSettings() {
               )} */}
             </div>
           </div>
-          <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
+          {/* <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
             <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Slippage
             </label>
@@ -197,8 +197,8 @@ function RiskSettings() {
                 onChange={handleInputChange}
               />
             </div>
-          </div>
-          <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
+          </div> */}
+          {/* <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
             <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Max Lot
             </label>
@@ -211,8 +211,8 @@ function RiskSettings() {
                 onChange={handleInputChange}
               />
             </div>
-          </div>
-          <div className="flex justify-start">
+          </div> */}
+          {/* <div className="flex justify-start">
             <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Force Min Lot
             </label>
@@ -227,13 +227,13 @@ function RiskSettings() {
                 <option value={false} className="bg-[#0B1220] text-[#E9D8C8]">No</option>
                 <option value={true} className="bg-[#0B1220] text-[#E9D8C8]">Yes</option>
               </select>
-              {/* {values.platform == '' && createButtonClicked && (
+              {values.platform == '' && createButtonClicked && (
                 <p className="mt-2 text-xs text-red-600 dark:text-red-500">
                   Platform required!
                 </p>
-              )} */}
+              )}
             </div>
-          </div>
+          </div> */}
         </div>
         <footer className="px-[15px] py-[10px] bg-[#0B1220] rounded-b-xl border-t border-[#11B3AE] border-opacity-20">
           <div className="grid grid-cols-12 gap-3">

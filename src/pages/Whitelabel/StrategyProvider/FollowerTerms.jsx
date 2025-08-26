@@ -3,8 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function FollowerTerms() {
   const { showToast } = useToast();
@@ -35,7 +35,7 @@ function FollowerTerms() {
         // const result = await api.post('/strategy/register-strategy', values);
         showToast('Terms added successfully!', 'success');
         setIsLoading(false);
-        navigate(`/signal-provider/edit/${strategyId}`);
+        navigate(`/strategy-provider/edit/${strategyId}`);
       }
     } catch (err) {
       showToast('Terms addition failed!', 'error');
@@ -56,14 +56,14 @@ function FollowerTerms() {
       <div className="py-0 px-[200px]">
         <div className="pb-3">
           <Link
-            to={`/signal-provider/edit/${strategyId}`}
+            to={`/strategy-provider/edit/${strategyId}`}
             className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'currentColor', fontWeight: 'bold' }}
             />
-            <h1 className="text-lg pl-2"> Manage Signals</h1>
+            <h1 className="text-lg pl-2"> Manage Strategies</h1>
           </Link>
         </div>
         <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">

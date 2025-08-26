@@ -114,12 +114,12 @@ function MainListItems({ open }) {
           <ListItemText primary="Dashboard" />
         </ListItemButton>
       </Link>
-      <Link className="flex flex-row" to={'/signals'}>
+      <Link className="flex flex-row" to={'/strategies'}>
         <ListItemButton>
           <ListItemIcon>
             <SignalCellularAltIcon sx={{ color: '#E9D8C8' }} />
           </ListItemIcon>
-          <ListItemText primary="Signals" />
+          <ListItemText primary="Strategies" />
         </ListItemButton>
       </Link>
       <ListItemButton 
@@ -159,12 +159,12 @@ function MainListItems({ open }) {
               <ListItemText primary="Accounts" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/connect-signal'}>
+          <Link className="flex flex-row" to={'/connect-strategy'}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ShareIcon sx={{ color: '#E9D8C8' }} />
               </ListItemIcon>
-              <ListItemText primary="Connect Signal" />
+              <ListItemText primary="Connect Strategy" />
             </ListItemButton>
           </Link>
           <Link className="flex flex-row" to={'/equity-monitors'}>
@@ -194,7 +194,7 @@ function MainListItems({ open }) {
         </ListItemButton>
       </Link>
       {
-        user.role === "Admin" &&
+        (user.role === "Admin" || user.role === 'Provider') &&
         <>
           <ListItemButton 
             onClick={handleWhitelabelClick}
@@ -257,20 +257,20 @@ function MainListItems({ open }) {
                   <ListItemText primary="Settings" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/signal-followers'}>
+              <Link className="flex flex-row" to={'/strategy-followers'}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <ForwardRoundedIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
-                  <ListItemText primary="Signal Followers" />
+                  <ListItemText primary="Strategy Followers" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/signal-provider'}>
+              <Link className="flex flex-row" to={'/strategy-provider'}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <SwapHorizRoundedIcon sx={{ color: '#E9D8C8' }} />
                   </ListItemIcon>
-                  <ListItemText primary="Signal Provider" />
+                  <ListItemText primary="Strategy Provider" />
                 </ListItemButton>
               </Link>
             </List>

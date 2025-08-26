@@ -1,7 +1,7 @@
 import * as React from 'react';
 import KnowledgeBaseToggle from '../../components/KnowledgeBase/KnowledgeBaseToggle';
 import DashboardOverview from '../../components/KnowledgeBase/Dashboard';
-import SignalsOverview from '../../components/KnowledgeBase/Signals';
+import StrategiesOverview from '../../components/KnowledgeBase/Strategies';
 import AccountsOverview from '../../components/KnowledgeBase/Accounts';
 import AccountsAddAccount from '../../components/KnowledgeBase/Accounts/AccountsAddAccount';
 import AccountsConnectionResponse from '../../components/KnowledgeBase/Accounts/AccountsConnectionResponse';
@@ -35,8 +35,8 @@ function KnowledgeBase() {
     switch (selectedOption) {
       case 'dashboard':
         return 'Dashboard';
-      case 'signals':
-        return 'Signals';
+      case 'strategies':
+        return 'strategies';
       case 'accounts':
         return 'Accounts';
       case 'tradeCopiers':
@@ -81,7 +81,7 @@ function KnowledgeBase() {
               }}
             >
               <option value="dashboard">Dashboard</option>
-              <option value="signals">Signals</option>
+              <option value="strategies">strategies</option>
               <option value="accounts">Accounts</option>
               <option value="tradeCopiers">Trade copiers</option>
               <option value="equityMonitors">Equity monitors</option>
@@ -112,14 +112,14 @@ function KnowledgeBase() {
                 </KnowledgeBaseToggle>
               </div>
             )}
-            {selectedOption === 'signals' && (
+            {selectedOption === 'strategies' && (
               <div className="mb-[130px]">
                 <KnowledgeBaseToggle
                   toggleName={'Overview'}
                   initialActive={true}
                   initialLastChildren={true}
                 >
-                  <SignalsOverview />
+                  <StrategiesOverview />
                 </KnowledgeBaseToggle>
               </div>
             )}

@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { Icon } from '@iconify/react';
 
-function SignalsOverview() {
+function StrategiesOverview() {
   return (
     <React.Fragment>
       <p className="py-2.5 text-[13px]">
-        From the signal page, you can view any signals you are following.
-        Signals are accounts you have either signed up to follow via a signal
+        From the strategy page, you can view any strategies you are following.
+        Strategies are accounts you have either signed up to follow via a strategy
         page or another user has granted you access to the account.
       </p>
-      <h4 className="my-2.5 text-[18px] text-white">My Signals</h4>
+      <h4 className="my-2.5 text-[18px] text-white">My Strategies</h4>
       <p className="py-2.5 text-[13px]">
-        Each signal shows the provider of the signal, access rights, access
+        Each strategy shows the provider of the strategy, access rights, access
         terms and expiry date (if applicable).
       </p>
       <p className="py-2.5 text-[13px]">
-        A signal will have specific access rights. The rights can be:
+        A strategy will have specific access rights. The rights can be:
       </p>
       <ul className="mb-0 pl-[8px] text-[13px]">
         <li className="flex flex-row justify-start items-center gap-1">
@@ -71,25 +71,25 @@ function SignalsOverview() {
         and/or Trade Copiers in the <strong>configurator</strong> section.
       </p>
       <p className="py-2.5 text-[13px]">
-        The access terms show if a signal requires a payment to maintain access.
+        The access terms show if a strategy requires a payment to maintain access.
       </p>
-      <h4 className="my-2.5 text-[18px] text-white">Manage Signals</h4>
+      <h4 className="my-2.5 text-[18px] text-white">Manage Strategies</h4>
       <p className="py-2.5 text-[13px]">
-        For a more detailed view of a particular signal, click{' '}
-        <strong>manage signal</strong> on any signal.
+        For a more detailed view of a particular strategy, click{' '}
+        <strong>manage strategy</strong> on any strategy.
       </p>
       <h4 className="my-2.5 text-[18px] text-white">Renewals</h4>
       <p className="py-2.5 text-[13px]">
-        Signal access can be paid for access. You can manage related
+        Strategy access can be paid for access. You can manage related
         payments/renewals by clicking <strong>manage renewals</strong>.
       </p>
-      <h4 className="my-2.5 text-[18px] text-white">Deleting Signals</h4>
+      <h4 className="my-2.5 text-[18px] text-white">Deleting Strategies</h4>
       <p className="py-2.5 text-[13px]">
-        If you no longer wish to follow a signal you can remove it by clicking
+        If you no longer wish to follow a strategy you can remove it by clicking
         the <strong>red trash can</strong>.
       </p>
     </React.Fragment>
   );
 }
 
-export default SignalsOverview;
+export default StrategiesOverview;

@@ -8,8 +8,8 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
 import { Icon } from '@iconify/react';
 import { styled } from '@mui/material/styles';
-import useToast from '../../hooks/useToast';
-import api from '../../utils/api';
+import useToast from '../../../hooks/useToast';
+import api from '../../../utils/api';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -28,7 +28,7 @@ function AddFollower() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    signalAccount: '',
+    strategyAccount: '',
     identifyBy: 'email',
     email: '',
     profileId: '',
@@ -39,18 +39,18 @@ function AddFollower() {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [signalAccounts, setSignalAccounts] = useState([]);
+  const [strategyAccounts, setStrategyAccounts] = useState([]);
 
   useEffect(() => {
-    const fetchSignalAccounts = async () => {
+    const fetchStrategyAccounts = async () => {
       try {
         const response = await api.get('/strategy/strategy-list');
-        setSignalAccounts(response.data);
+        setStrategyAccounts(response.data);
       } catch (error) {
         console.error('Error fetching subscriber strategies:', error);
       }
     }
-    fetchSignalAccounts();
+    fetchStrategyAccounts();
   }, []);
 
   const handleInputChange = (field, value) => {
@@ -70,9 +70,9 @@ function AddFollower() {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate Signal Account
-    if (!formData.signalAccount.trim()) {
-      newErrors.signalAccount = 'Signal Account is required';
+    // Validate Strategy Account
+    if (!formData.strategyAccount.trim()) {
+      newErrors.strategyAccount = 'Strategy Account is required';
     }
 
     // Validate Email or Profile ID based on identifyBy selection
@@ -111,7 +111,7 @@ function AddFollower() {
       // await api.post('/followers', formData);
       console.log(formData);
       showToast('Follower added successfully!', 'success');
-      navigate('/signal-followers');
+      navigate('/strategy-followers');
     } catch (error) {
       console.error('Error adding follower:', error);
       showToast('Failed to add follower', 'error');
@@ -125,42 +125,44 @@ function AddFollower() {
       <div className="py-0 px-[200px]">
         <div className="pb-3">
           <Link
-            to={'/signal-followers'}
+            to={'/strategy-followers'}
             className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'currentColor', fontWeight: 'bold' }}
             />
-            <h1 className="text-lg pl-2"> Signal Followers</h1>
+            <h1 className="text-lg pl-2"> Strategy Followers</h1>
           </Link>
         </div>
         <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
           <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
-            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Add Signal Follower</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Add Strategy Follower</h2>
           </header>
           <div className="box-border p-[15px] bg-[#0B1220]">
             <form onSubmit={handleSubmit}>
-              {/* Signal Account */}
+              {/* Strategy Account */}
               <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
                 <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#E9D8C8] text-[13px] font-medium">
-                  Signal Account
+                  Strategy Account
                 </label>
                 <div className="w-1/2 px-[15px]">
                   <FormControl fullWidth>
                     <Select
-                      value={formData.signalAccount}
-                      onChange={(e) => handleInputChange('signalAccount', e.target.value)}
+                      value={formData.strategyAccount}
+                      onChange={(e) => handleInputChange('strategyAccount', e.target.value)}
                       input={<OutlinedInput sx={{ 
                         color: '#E9D8C8', 
                         backgroundColor: '#0B1220', 
                         height: '40px',
                         borderRadius: '8px',
-                        borderColor: 'rgba(17, 179, 174, 0.3)',
-                        '&:hover': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(17, 179, 174, 0.3)',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
                           borderColor: 'rgba(17, 179, 174, 0.5)',
                         },
-                        '&.Mui-focused': {
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                           borderColor: '#11B3AE',
                           boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
                         },
@@ -175,6 +177,7 @@ function AddFollower() {
                             maxHeight: '200px',
                             '& .MuiMenuItem-root': {
                               color: '#E9D8C8',
+                              borderBottom: '1px solid rgba(17, 179, 174, 0.1)',
                               '&:hover': {
                                 backgroundColor: 'rgba(17, 179, 174, 0.2)',
                                 color: '#E9D8C8',
@@ -186,12 +189,15 @@ function AddFollower() {
                                   backgroundColor: '#0F9A95',
                                 },
                               },
+                              '&:last-child': {
+                                borderBottom: 'none',
+                              },
                             },
                           },
                         },
                       }}
                     >
-                      {signalAccounts.map((account, index) => {
+                      {strategyAccounts.map((account, index) => {
                         return (
                           <MenuItem key={index} value={account.accountId}>
                             {account.name} ({account.accounts.login})
@@ -200,9 +206,9 @@ function AddFollower() {
                       })}
                     </Select>
                   </FormControl>
-                  {errors.signalAccount && (
+                  {errors.strategyAccount && (
                     <p className="mt-2 text-sm text-[#fa5252] font-medium">
-                      {errors.signalAccount}
+                      {errors.strategyAccount}
                     </p>
                   )}
                 </div>
@@ -301,11 +307,13 @@ function AddFollower() {
                         backgroundColor: '#0B1220', 
                         height: '40px',
                         borderRadius: '8px',
-                        borderColor: 'rgba(17, 179, 174, 0.3)',
-                        '&:hover': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(17, 179, 174, 0.3)',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
                           borderColor: 'rgba(17, 179, 174, 0.5)',
                         },
-                        '&.Mui-focused': {
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                           borderColor: '#11B3AE',
                           boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
                         },
@@ -319,6 +327,7 @@ function AddFollower() {
                             maxHeight: '200px',
                             '& .MuiMenuItem-root': {
                               color: '#E9D8C8',
+                              borderBottom: '1px solid rgba(17, 179, 174, 0.1)',
                               '&:hover': {
                                 backgroundColor: 'rgba(17, 179, 174, 0.2)',
                                 color: '#E9D8C8',
@@ -329,6 +338,9 @@ function AddFollower() {
                                 '&:hover': {
                                   backgroundColor: '#0F9A95',
                                 },
+                              },
+                              '&:last-child': {
+                                borderBottom: 'none',
                               },
                             },
                           },
@@ -357,11 +369,13 @@ function AddFollower() {
                         backgroundColor: '#0B1220', 
                         height: '40px',
                         borderRadius: '8px',
-                        borderColor: 'rgba(17, 179, 174, 0.3)',
-                        '&:hover': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(17, 179, 174, 0.3)',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
                           borderColor: 'rgba(17, 179, 174, 0.5)',
                         },
-                        '&.Mui-focused': {
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                           borderColor: '#11B3AE',
                           boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
                         },
@@ -375,6 +389,7 @@ function AddFollower() {
                             maxHeight: '200px',
                             '& .MuiMenuItem-root': {
                               color: '#E9D8C8',
+                              borderBottom: '1px solid rgba(17, 179, 174, 0.1)',
                               '&:hover': {
                                 backgroundColor: 'rgba(17, 179, 174, 0.2)',
                                 color: '#E9D8C8',
@@ -385,6 +400,9 @@ function AddFollower() {
                                 '&:hover': {
                                   backgroundColor: '#0F9A95',
                                 },
+                              },
+                              '&:last-child': {
+                                borderBottom: 'none',
                               },
                             },
                           },
@@ -413,11 +431,13 @@ function AddFollower() {
                         backgroundColor: '#0B1220', 
                         height: '40px',
                         borderRadius: '8px',
-                        borderColor: 'rgba(17, 179, 174, 0.3)',
-                        '&:hover': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(17, 179, 174, 0.3)',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
                           borderColor: 'rgba(17, 179, 174, 0.5)',
                         },
-                        '&.Mui-focused': {
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                           borderColor: '#11B3AE',
                           boxShadow: '0 0 0 2px rgba(17, 179, 174, 0.2)',
                         },
@@ -431,6 +451,7 @@ function AddFollower() {
                             maxHeight: '200px',
                             '& .MuiMenuItem-root': {
                               color: '#E9D8C8',
+                              borderBottom: '1px solid rgba(17, 179, 174, 0.1)',
                               '&:hover': {
                                 backgroundColor: 'rgba(17, 179, 174, 0.2)',
                                 color: '#E9D8C8',
@@ -441,6 +462,9 @@ function AddFollower() {
                                 '&:hover': {
                                   backgroundColor: '#0F9A95',
                                 },
+                              },
+                              '&:last-child': {
+                                borderBottom: 'none',
                               },
                             },
                           },

@@ -61,6 +61,7 @@ function AddAccount() {
       ...values,
       [name]: value,
     });
+    console.log(user.role);
   };
 
   React.useEffect(() => {

@@ -5,7 +5,7 @@ import EditUser from '../pages/Whitelabel/WhitelabelUsers/EditUser';
 
 const DefaultLayout = Loadable(lazy(() => import('../layouts/DefaultLayout')));
 const Dashboard = Loadable(lazy(() => import('../pages/Dashboard')));
-const Signals = Loadable(lazy(() => import('../pages/Signals')));
+const Strategies = Loadable(lazy(() => import('../pages/Strategies')));
 const Accounts = Loadable(lazy(() => import('../pages/Configurator/Accounts')));
 const AddAccount = Loadable(
   lazy(() => import('../pages/Configurator/Accounts/AddAccount'))
@@ -41,27 +41,27 @@ const TradingStatsPage = Loadable(
 const TimeAnalysisPage = Loadable(
   lazy(() => import('../pages/Analysis/TimeAnalysisPage'))
 );
-const SignalFollowers = Loadable(
-  lazy(() => import('../pages/SignalFollowers'))
+const StrategyFollowers = Loadable(
+  lazy(() => import('../pages/StrategyFollowers'))
 );
 const AddFollower = Loadable(
-  lazy(() => import('../pages/SignalFollowers/AddFollower'))
+  lazy(() => import('../pages/Whitelabel/StrategyFollowers/AddFollower'))
 );
 const FollowerDetails = Loadable(
-  lazy(() => import('../pages/SignalFollowers/FollowerDetails'))
+  lazy(() => import('../pages/Whitelabel/StrategyFollowers/FollowerDetails'))
 );
-const SignalProvider = Loadable(lazy(() => import('../pages/SignalProvider')));
+const StrategyProvider = Loadable(lazy(() => import('../pages/Whitelabel/StrategyProvider')));
 const ConfigurePaymentProcessor = Loadable(
-  lazy(() => import('../pages/SignalProvider/ConfigurePaymentProcessor'))
+  lazy(() => import('../pages/Whitelabel/StrategyProvider/ConfigurePaymentProcessor'))
 );
-const CreateSignalProvider = Loadable(
-  lazy(() => import('../pages/SignalProvider/CreateSignalProvider'))
+const CreateStrategyProvider = Loadable(
+  lazy(() => import('../pages/Whitelabel/StrategyProvider/CreateStrategyProvider'))
 );
 const FollowerTerms = Loadable(
-  lazy(() => import('../pages/SignalProvider/FollowerTerms'))
+  lazy(() => import('../pages/Whitelabel/StrategyProvider/FollowerTerms'))
 );
-const EditSignalProvider = Loadable(
-  lazy(() => import('../pages/SignalProvider/EditSignalProvider'))
+const EditStrategyProvider = Loadable(
+  lazy(() => import('../pages/Whitelabel/StrategyProvider/EditStrategyProvider'))
 );
 const WhitelabelDashboard = Loadable(
   lazy(() => import('../pages/Whitelabel/WhitelabelDashboard'))
@@ -134,42 +134,42 @@ const coreRoutes = {
       element: <Analysis />,
     },
     {
-      path: '/signal-followers',
-      title: 'Signal Followers',
-      element: <SignalFollowers />,
+      path: '/strategy-followers',
+      title: 'Strategy Followers',
+      element: <StrategyFollowers />,
     },
     {
-      path: '/signal-followers/add',
-      title: 'Add Signal Follower',
+      path: '/strategy-followers/add',
+      title: 'Add Strategy Follower',
       element: <AddFollower />,
     },
     {
-      path: '/signal-followers/details/:followerId',
+      path: '/strategy-followers/details/:followerId',
       title: 'Follower Details',
       element: <FollowerDetails />,
     },
     {
-      path: '/signal-provider',
-      title: 'Signal Provider',
-      element: <SignalProvider />,
+      path: '/strategy-provider',
+      title: 'Strategy Provider',
+      element: <StrategyProvider />,
     },
     {
-      path: '/signal-provider/create',
-      title: 'Create Signal Provider',
-      element: <CreateSignalProvider />,
+      path: '/strategy-provider/create',
+      title: 'Create Strategy Provider',
+      element: <CreateStrategyProvider />,
     },
     {
-      path: '/signal-provider/edit/:strategyId',
-      title: 'Manage Signal Provider',
-      element: <EditSignalProvider />,
+      path: '/strategy-provider/edit/:strategyId',
+      title: 'Manage Strategy Provider',
+      element: <EditStrategyProvider />,
     },
     {
-      path: '/signal-provider/follower-terms/:strategyId',
-      title: 'Manage Signal Provider',
+      path: '/strategy-provider/follower-terms/:strategyId',
+      title: 'Manage Strategy Provider',
       element: <FollowerTerms />,
     },
     {
-      path: '/signal-provider/configure-payment-processor',
+      path: '/strategy-provider/configure-payment-processor',
       title: 'Configure Payment Processor',
       element: <ConfigurePaymentProcessor />,
     },
@@ -194,22 +194,22 @@ const coreRoutes = {
       element: <KnowledgeBase />,
     },
     {
-      path: '/signals',
-      title: 'Signals',
-      element: <Signals />,
+      path: '/strategies',
+      title: 'Strategies',
+      element: <Strategies />,
     },
     {
-      path: '/connect-signal',
+      path: '/connect-strategy',
       title: 'Copiers',
       element: <TradeCopier />,
     },
     {
-      path: '/connect-signal/new-connect-signal',
-      title: 'Connect Signal',
+      path: '/connect-strategy/new-connect-strategy',
+      title: 'Connect Strategy',
       element: <CreateNewTradeCopier />,
     },
     {
-      path: '/connect-signal/edit/:subscriberId/:strategyId',
+      path: '/connect-strategy/edit/:subscriberId/:strategyId',
       title: 'Manage Copier',
       element: <EditTradeCopier />,
     },

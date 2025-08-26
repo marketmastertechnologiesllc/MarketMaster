@@ -2,10 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-function DeleteSignalModal({
-  deleteSignalModalShow,
-  selectedSignalName,
-  handleDeleteSignalModalButtonClicked,
+function DeleteStrategyModal({
+  deleteStrategyModalShow,
+  selectedStrategyName,
+  handleDeleteStrategyModalButtonClicked,
   isLoading,
 }) {
   const [checkboxSelected, setCheckboxSelected] = React.useState(false);
@@ -14,14 +14,14 @@ function DeleteSignalModal({
     <div className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201]">
       <div
         className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
-        onClick={() => deleteSignalModalShow(false)}
+        onClick={() => deleteStrategyModalShow(false)}
       ></div>
       <section className="mb-[20px] rounded bg-[#282D36] w-[400px] z-[100000]">
         <header className="p-[18px] text-white flex justify-between items-center">
-          <h2 className="mt-[5px] text-[20px] font-normal">Delete signal</h2>
+          <h2 className="mt-[5px] text-[20px] font-normal">Delete strategy</h2>
           <button
             className="bg-[#0099e6] w-[33px] h-[33px] rounded font-extrabold"
-            onClick={() => deleteSignalModalShow(false)}
+            onClick={() => deleteStrategyModalShow(false)}
           >
             ✖
           </button>
@@ -29,7 +29,7 @@ function DeleteSignalModal({
         <div className="p-[15px] bg-[#2E353E] text-white text-center">
           <p className="pb-[10px] text-sm">
             Are you sure you want to stop following{' '}
-            <b className="box-border ">{selectedSignalName}?</b>
+            <b className="box-border ">{selectedStrategyName}?</b>
           </p>
           <small className="text-[#ccc]">
             You may have to pay to regain access.
@@ -58,7 +58,7 @@ function DeleteSignalModal({
               paddingY: '6px',
               '&:disabled': { opacity: 0.5 },
             }}
-            onClick={handleDeleteSignalModalButtonClicked}
+            onClick={handleDeleteStrategyModalButtonClicked}
             loading={isLoading}
             disabled={!checkboxSelected}
           >
@@ -70,11 +70,11 @@ function DeleteSignalModal({
   );
 }
 
-DeleteSignalModal.propTypes = {
-  deleteSignalModalShow: PropTypes.func.isRequired,
-  selectedSignalName: PropTypes.string.isRequired,
-  handleDeleteSignalModalButtonClicked: PropTypes.func.isRequired,
+DeleteStrategyModal.propTypes = {
+  deleteStrategyModalShow: PropTypes.func.isRequired,
+  selectedStrategyName: PropTypes.string.isRequired,
+  handleDeleteStrategyModalButtonClicked: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 
-export default DeleteSignalModal;
+export default DeleteStrategyModal;

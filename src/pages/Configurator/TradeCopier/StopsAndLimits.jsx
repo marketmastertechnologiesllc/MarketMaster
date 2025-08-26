@@ -85,7 +85,7 @@ function StopsAndLimits() {
           <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Stops & Limits</h2>
         </header>
         <div className="p-[15px] bg-[#0B1220] box-border">
-          <div className="border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px] flex justify-start">
+          {/* <div className="border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px] flex justify-start">
             <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Skip Pending Orders
             </label>
@@ -101,7 +101,7 @@ function StopsAndLimits() {
                 <option value={true} className="bg-[#0B1220] text-[#E9D8C8]">Yes</option>
               </select>
             </div>
-          </div>
+          </div> */}
           <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#11B3AE] border-opacity-20">
             <label className="text-[#E9D8C8] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full font-medium">
               Copy Stop Loss

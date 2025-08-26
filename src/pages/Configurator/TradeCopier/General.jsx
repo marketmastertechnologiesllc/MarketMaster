@@ -4,15 +4,18 @@ import { useParams } from 'react-router-dom';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import { useLoading } from '../../../contexts/loadingContext';
+import useAuth from '../../../hooks/useAuth';
 
 function General() {
   const { showToast } = useToast();
   const { subscriberId, strategyId } = useParams();
-
+  const { loading } = useLoading();
+  const { user } = useAuth();
   const initialValues = {
     copyFrom: '',
     sendTo: '',
-    closeOnly: '',
+    copyExistingTrades: '',
     comment: '', // TODO: implement trade comment
     subscriberName: '',
   };
@@ -21,18 +24,30 @@ function General() {
 
   React.useEffect(() => {
     async function init() {
-      const accountData = await api.get(`/account/${subscriberId}`);
-      const subscriberData = await api.get(`/subscriber/${subscriberId}`);
-      const strategyData = await api.get(`/strategy/${strategyId}`);
-      setValues({
-        copyFrom: `${accountData.data.name}(${accountData.data.login})`,
-        sendTo: `${strategyData.data.name}(${strategyData.data.strategyId})`,
-        subscriberName: subscriberData.data.name,
-        closeOnly: subscriberData.data.subscriptions.map((data) => {
-          data.strategyId === strategyId;
-        }).closeOnly,
-        comment: accountData.data.comment,
-      });
+      try {
+        loading(true);
+        const strategyData = await api.get(
+          `/strategy/strategies-copier/${user.id}?page=1&pagecount=100&sort=&type=`
+        );
+        // const accountData = await api.get(`/account/${subscriberId}`);
+        // const subscriberData = await api.get(`/subscriber/${subscriberId}`);
+        // const strategyData = await api.get(`/strategy/${strategyId}`);
+        const strategyByAccountId = strategyData.data.data.find((data) => data.accountId === subscriberId);
+        setValues({
+          copyFrom: `${strategyByAccountId.strategyName} (${strategyByAccountId.strategyLogin})`,
+          sendTo: `${strategyByAccountId.accountName} (${strategyByAccountId.accountLogin})`,
+          subscriberName: strategyByAccountId.accountName,
+          // copyExistingTrades: subscriberData.data.subscriptions.map((data) => {
+          //   data.strategyId === strategyId;
+          // }).copyExistingTrades,
+          // comment: accountData.data.comment,
+        });
+      } catch (err) {
+        console.log(err);
+        showToast(err.response.data.msg, 'error');
+      } finally {
+        loading(false);
+      }
     }
     init();
   }, []);
@@ -51,7 +66,7 @@ function General() {
       const result = await api.put(`/subscriber/update-general-setting/${subscriberId}`, {
         name: values.subscriberName,
         subscriptions: [
-          { strategyId: strategyId, closeOnly: values.closeOnly },
+          { strategyId: strategyId, copyExistingTrades: values.copyExistingTrades },
         ],
         commentData: values.comment,
       });
@@ -72,7 +87,7 @@ function General() {
       <div className="p-[15px] bg-[#0B1220] box-border">
         <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
           <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
-            Copy From
+            Strategy From
           </label>
           <div className="w-1/2 px-[15px]">
             <label className="block w-full h-[40px] text-sm text-[#E9D8C8] px-3 py-1.5 rounded-lg bg-[#0B1220] border border-[#11B3AE] border-opacity-30">
@@ -82,7 +97,7 @@ function General() {
         </div>
         <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
           <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
-            Send To
+            Connect To
           </label>
           <div className="w-1/2 px-[15px]">
             <label className="block w-full h-[40px] text-sm text-[#E9D8C8] px-3 py-1.5 rounded-lg bg-[#0B1220] border border-[#11B3AE] border-opacity-30">
@@ -90,9 +105,9 @@ function General() {
             </label>
           </div>
         </div>
-        <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
+        <div className="flex justify-start">
           <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
-            Copier Mode
+            Copy existing trades
           </label>
           <div className="flex flex-col w-1/2 px-[15px] gap-2">
             <div className="flex items-center">
@@ -100,7 +115,7 @@ function General() {
                 id="on"
                 type="radio"
                 value=""
-                name="closeOnly"
+                name="copyExistingTrades"
                 className="w-4 h-4 text-[#11B3AE] bg-[#0B1220] border-[#11B3AE] border-opacity-30 rounded-full cursor-pointer focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
                 onChange={handleInputChange}
               />
@@ -113,26 +128,10 @@ function General() {
             </div>
             <div className="flex items-center">
               <input
-                id="monitor"
-                type="radio"
-                value="by-position"
-                name="closeOnly"
-                className="w-4 h-4 text-[#11B3AE] bg-[#0B1220] border-[#11B3AE] border-opacity-30 rounded-full cursor-pointer focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
-                onChange={handleInputChange}
-              />
-              <label
-                htmlFor="monitor"
-                className="ms-2 text-sm font-medium text-[#E9D8C8] dark:text-gray-300 cursor-pointer"
-              >
-                Monitor existing trades only
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
                 id="off"
                 type="radio"
                 value="immediately"
-                name="closeOnly"
+                name="copyExistingTrades"
                 className="w-4 h-4 text-[#11B3AE] bg-[#0B1220] border-[#11B3AE] border-opacity-30 rounded-full cursor-pointer focus:ring-2 focus:ring-[#11B3AE] focus:ring-opacity-20 transition-all duration-200"
                 onChange={handleInputChange}
               />
@@ -145,7 +144,7 @@ function General() {
             </div>
           </div>
         </div>
-        <div className="flex justify-start">
+        {/* <div className="flex justify-start">
           <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#E9D8C8] text-[13px] font-medium">
             Trade Comment (16 chars max)
           </label>
@@ -160,7 +159,7 @@ function General() {
               onChange={handleInputChange}
             />
           </div>
-        </div>
+        </div> */}
       </div>
       <footer className="px-[15px] py-[10px] bg-[#0B1220] rounded-b-xl border-t border-[#11B3AE] border-opacity-20">
         <div className="grid grid-cols-12 gap-3">

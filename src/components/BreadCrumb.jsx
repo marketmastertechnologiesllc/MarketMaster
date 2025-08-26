@@ -16,9 +16,9 @@ const breadcrumb = {
     { name: "Dashboard", url: "/dashboard" },
     { name: "Profile", url: "/profile" },
   ],
-  "/signals": [
+  "/strategies": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signals", url: "/signals" },
+    { name: "Strategies", url: "/strategies" },
   ],
   "/analysis/analysis-account": [
     { name: "Dashboard", url: "/dashboard" },
@@ -40,22 +40,22 @@ const breadcrumb = {
     { name: "Accounts", url: "/accounts" },
     { name: "Edit", url: "/accounts/edit/" },
   ],
-  "/connect-signal": [
+  "/connect-strategy": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
-    { name: "Connect Signal", url: "/connect-signal" },
+    { name: "Connect Strategy", url: "/connect-strategy" },
   ],
-  "/connect-signal/edit": [
+  "/connect-strategy/edit": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
-    { name: "Connect Signal", url: "/connect-signal" },
+    { name: "Connect Strategy", url: "/connect-strategy" },
     { name: "Edit", url: "" },
   ],
-  "/connect-signal/new-connect-signal": [
+  "/connect-strategy/new-connect-strategy": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
-    { name: "Connect Signal", url: "/connect-signal" },
-    { name: "New Connect Signal", url: "/connect-signal/new-connect-signal" },
+    { name: "Connect Strategy", url: "/connect-strategy" },
+    { name: "New Connect Strategy", url: "/connect-strategy/new-connect-strategy" },
   ],
   "/email-alerts": [
     { name: "Dashboard", url: "/dashboard" },
@@ -67,42 +67,42 @@ const breadcrumb = {
     { name: "Configurator", url: "" },
     { name: "Equity Monitors", url: "/equity-monitors" },
   ],
-  "/signal-followers": [
+  "/strategy-followers": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Followers", url: "/signal-followers" },
+    { name: "Strategy Followers", url: "/strategy-followers" },
   ],
-  "/signal-followers/add": [
+  "/strategy-followers/add": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Followers", url: "/signal-followers" },
-    { name: "Add Signal Follower", url: "/signal-followers/add" },
+    { name: "Strategy Followers", url: "/strategy-followers" },
+    { name: "Add Strategy Follower", url: "/strategy-followers/add" },
   ],
-  "/signal-followers/details": [
+  "/strategy-followers/details": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Followers", url: "/signal-followers" },
+    { name: "Strategy Followers", url: "/strategy-followers" },
     { name: "Follower Details", url: "" },
   ],
-  "/signal-provider": [
+  "/strategy-provider": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Strategy Provider", url: "/strategy-provider" },
   ],
-  "/signal-provider/create": [
+  "/strategy-provider/create": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Provider", url: "/signal-provider" },
-    { name: "Create Signal Provider", url: "/signal-provider/create" },
+    { name: "Strategy Provider", url: "/strategy-provider" },
+    { name: "Create Strategy Provider", url: "/strategy-provider/create" },
   ],
-  "/signal-provider/configure-payment-processor": [
+  "/strategy-provider/configure-payment-processor": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Strategy Provider", url: "/strategy-provider" },
     { name: "Configure Payment Processor", url: "" },
   ],
-  "/signal-provider/edit": [
+  "/strategy-provider/edit": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Strategy Provider", url: "/strategy-provider" },
     { name: "Edit", url: "" },
   ],
-  "/signal-provider/follower-terms": [
+  "/strategy-provider/follower-terms": [
     { name: "Dashboard", url: "/dashboard" },
-    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Strategy Provider", url: "/strategy-provider" },
     { name: "Follower Terms", url: "" },
   ],
   "/whitelabel/dashboard": [
@@ -173,12 +173,12 @@ export default function CustomSeparator() {
       return "/whitelabel/users/edit";
     } else if (_url.includes("/accounts/edit/")) {
       return "/accounts/edit/";
-    } else if (_url.includes("/connect-signal/edit")) {
-      return "/connect-signal/edit";
-    } else if (_url.includes("/signal-provider/edit")) {
-      return "/signal-provider/edit";
-    } else if (_url.includes("/signal-provider/follower-terms")) {
-      return "/signal-provider/follower-terms";
+    } else if (_url.includes("/connect-strategy/edit")) {
+      return "/connect-strategy/edit";
+    } else if (_url.includes("/strategy-provider/edit")) {
+      return "/strategy-provider/edit";
+    } else if (_url.includes("/strategy-provider/follower-terms")) {
+      return "/strategy-provider/follower-terms";
     } else if (_url.includes("/analysis/analysis-account")) {
       return "/analysis/analysis-account";
     } 

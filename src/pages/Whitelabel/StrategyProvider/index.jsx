@@ -20,10 +20,10 @@ import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import IconButton from '@mui/material/IconButton';
 
-import DeleteSignalModal from '../../components/modals/DeleteSignalModal';
-import useToast from '../../hooks/useToast';
-import api from '../../utils/api';
-import { useLoading } from '../../contexts/loadingContext';
+import DeleteStrategyModal from '../../../components/modals/DeleteStrategyModal';
+import useToast from '../../../hooks/useToast';
+import api from '../../../utils/api';
+import { useLoading } from '../../../contexts/loadingContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -95,7 +95,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const headers = [
-  { id: 'signal', label: 'Signal' },
+  { id: 'strategy', label: 'Strategy' },
   { id: 'accounts', label: 'provider Name' },
   { id: 'description', label: 'Description' },
   { id: 'created_at', label: 'CreatedAt' },
@@ -103,7 +103,7 @@ const headers = [
   { id: 'live', label: 'Live' },
 ];
 
-export default function SignalProvider() {
+export default function StrategyProvider() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const { loading } = useLoading();
@@ -115,44 +115,44 @@ export default function SignalProvider() {
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedSignalData, setSelectedSignalData] = React.useState({});
-  const [deleteSignalModalShow, setDeleteSignalModalShow] =
+  const [selectedStrategyData, setSelectedStrategyData] = React.useState({});
+  const [deleteStrategyModalShow, setDeleteStrategyModalShow] =
     React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleDeleteSignalButtonClicked = (accountData) => {
-    setSelectedSignalData(accountData);
-    setDeleteSignalModalShow(true);
+  const handleDeleteStrategyButtonClicked = (accountData) => {
+    setSelectedStrategyData(accountData);
+    setDeleteStrategyModalShow(true);
   };
 
   const handleConfigButtonClicked = (id) => {
-    navigate(`/signal-provider/edit/${id}`);
+    navigate(`/strategy-provider/edit/${id}`);
   };
 
   const handleConfigureButtonClicked = () => {
-    navigate('/signal-provider/configure-payment-processor');
+    navigate('/strategy-provider/configure-payment-processor');
   };
 
-  const handleDeleteSignalModalButtonClicked = async () => {
+  const handleDeleteStrategyModalButtonClicked = async () => {
     try {
       setIsLoading(true);
-      await api.delete(`/strategy/${selectedSignalData.strategyId}`);
-      showToast('Signal deleted successfully!', 'success');
+      await api.delete(`/strategy/${selectedStrategyData.strategyId}`);
+      showToast('Strategy deleted successfully!', 'success');
       handlePageChange(null, page);
     } catch (err) {
-      showToast('Signal deletion failed!', 'error');
+      showToast('Strategy deletion failed!', 'error');
       console.log(err);
     } finally {
-      setDeleteSignalModalShow(false);
+      setDeleteStrategyModalShow(false);
       setIsLoading(false);
     }
   };
 
   const handleChangeRowsPerPage = (e) => {
-    let config = JSON.parse(sessionStorage.getItem('signals'));
+    let config = JSON.parse(sessionStorage.getItem('strategies'));
     config.pagecount = e.target.value;
     config.page = 1;
-    sessionStorage.setItem('signals', JSON.stringify(config));
+    sessionStorage.setItem('strategies', JSON.stringify(config));
 
     setRowsPerPage(e.target.value);
     handlePageChange(null, 1);
@@ -163,9 +163,9 @@ export default function SignalProvider() {
 
     try {
       loading(true);
-      let config = JSON.parse(sessionStorage.getItem('signals'));
+      let config = JSON.parse(sessionStorage.getItem('strategies'));
       config.page = value;
-      sessionStorage.setItem('signals', JSON.stringify(config));
+      sessionStorage.setItem('strategies', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config;
       const res = await api.get(
@@ -181,7 +181,7 @@ export default function SignalProvider() {
   };
 
   React.useEffect(() => {
-    let config = JSON.parse(sessionStorage.getItem('signals'));
+    let config = JSON.parse(sessionStorage.getItem('strategies'));
 
     if (!config) {
       config = {
@@ -191,7 +191,7 @@ export default function SignalProvider() {
         type: '',
       };
 
-      sessionStorage.setItem('signals', JSON.stringify(config));
+      sessionStorage.setItem('strategies', JSON.stringify(config));
     }
 
     setPage(config.page);
@@ -222,12 +222,12 @@ export default function SignalProvider() {
 
   return (
     <div className="w-auto text-[#E9D8C8]">
-      {deleteSignalModalShow && (
-        <DeleteSignalModal
-          deleteSignalModalShow={setDeleteSignalModalShow}
-          selectedSignalName={selectedSignalData.name}
-          handleDeleteSignalModalButtonClicked={
-            handleDeleteSignalModalButtonClicked
+      {deleteStrategyModalShow && (
+        <DeleteStrategyModal
+          deleteStrategyModalShow={setDeleteStrategyModalShow}
+          selectedStrategyName={selectedStrategyData.name}
+          handleDeleteStrategyModalButtonClicked={
+            handleDeleteStrategyModalButtonClicked
           }
           isLoading={isLoading}
         />
@@ -251,9 +251,9 @@ export default function SignalProvider() {
         </div>
         <div className="col-span-9">
           <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t border border-[#11B3AE] border-b-0">
-            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Signal Pages</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Strategy Pages</h2>
             <Link
-              to={'/signal-provider/create'}
+              to={'/strategy-provider/create'}
               className="bg-[#11B3AE] hover:bg-[#0F9A95] h-[33px] rounded text-sm px-2 items-center flex text-white transition-all duration-200"
             >
               <Icon
@@ -262,7 +262,7 @@ export default function SignalProvider() {
                 height="16"
                 style={{ display: 'inline-block' }}
               />{' '}
-              Create Signal
+              Create Strategy
             </Link>
           </header>
           <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.3)] pb-[20px]">
@@ -401,7 +401,7 @@ export default function SignalProvider() {
                     >
                       {headers.map(({ label, id }, index) => (
                         <TableCell
-                          key={`signal_provider_header_${index}`}
+                          key={`strategy_provider_header_${index}`}
                           align="center"
                           sx={{
                             padding: '12px 8px',
@@ -454,7 +454,7 @@ export default function SignalProvider() {
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={`signal_provider_data_${index}`}
+                            key={`strategy_provider_data_${index}`}
                             sx={{
                               transition: 'all 0.2s ease-in-out',
                               '&:hover': {
@@ -468,7 +468,7 @@ export default function SignalProvider() {
                               let value = row[id];
                               if (id === 'accounts') {
                                 value = value ? `${value.users.fullName}` : "none";
-                              } else if (id === 'signal') {
+                              } else if (id === 'strategy') {
                                 value = `${row.name}`;
                               }
                               if (id === 'created_at' || id === 'updated_at') {
@@ -549,7 +549,7 @@ export default function SignalProvider() {
                                     },
                                   }}
                                   onClick={() =>
-                                    handleDeleteSignalButtonClicked({
+                                    handleDeleteStrategyButtonClicked({
                                       name: row.name,
                                       accountId: row.accountId,
                                       strategyId: row.strategyId,

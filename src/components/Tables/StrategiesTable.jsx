@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 const columns = [
-  { id: 'signal', label: 'Signal', minWidth: 125 },
+  { id: 'strategy', label: 'Strategy', minWidth: 125 },
   { id: 'providerName', label: 'Provier Name', minWidth: 110 },
   { id: 'description', label: 'Description' },
   {
@@ -21,27 +21,27 @@ const columns = [
   },
 ];
 
-function createData(signal, providerName, description, options) {
+function createData(strategy, providerName, description, options) {
   return {
-    signal,
+    strategy,
     providerName,
     description,
     options,
   };
 }
 
-export default function SignalsTable({ data }) {
+export default function StrategiesTable({ data }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
     if (data) {
-      const temp = data.map((signal) => {
+      const temp = data.map((strategy) => {
         return createData(
-          signal.signal,
-          signal.providerName,
-          signal.description
+          strategy.strategy,
+          strategy.providerName,
+          strategy.description
         );
       });
       setRows(temp);
@@ -102,7 +102,7 @@ export default function SignalsTable({ data }) {
             >
               {columns.map((column, index) => (
                 <TableCell
-                  key={`signals_table_row_${index}`}
+                  key={`strategies_table_row_${index}`}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{ padding: '5px' }}
@@ -128,7 +128,7 @@ export default function SignalsTable({ data }) {
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={`signals_table_row_${index}`}
+                    key={`strategies_table_row_${index}`}
                     // sx={{
                     //   '&:last-child td, &:last-child th': {
                     //     border: 1,

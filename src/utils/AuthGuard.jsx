@@ -8,7 +8,7 @@ import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
 
 // ==============================|| AUTH GUARD ||============================== //
-const admins = ['/whitelabel', '/signal-provider', '/signal-followers'];
+const admins = ['/whitelabel', '/strategy-provider', '/strategy-followers'];
 
 const verifyToken = (token) => {
   try {
@@ -39,7 +39,7 @@ const AuthGuard = ({ children }) => {
 
     if (Object.keys(user).length > 0) {
       admins.forEach((url) => {
-        if (pathname.includes(url) && user.role !== 'Admin') {
+        if (pathname.includes(url) && (user.role !== 'Admin' && user.role !== 'Provider')) {
           navigate('/auth/login');
         }
       });

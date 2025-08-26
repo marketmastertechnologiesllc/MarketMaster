@@ -8,7 +8,7 @@ import api from '../../utils/api';
 function AddFollowerModal({ onClose, onSuccess }) {
   const { showToast } = useToast();
   const [formData, setFormData] = useState({
-    signalAccount: '',
+    strategyAccount: '',
     identifyBy: 'email',
     email: '',
     profileId: '',
@@ -47,23 +47,23 @@ function AddFollowerModal({ onClose, onSuccess }) {
       <div className="bg-[#282D36] rounded-lg w-[500px] z-[1203] max-h-[90vh] overflow-y-auto">
         <div className="p-4 border-b border-gray-600">
           <div className="flex items-center mb-4">
-            <Link to="/signal-followers" className="flex items-center text-blue-500 hover:text-blue-400">
+            <Link to="/strategy-followers" className="flex items-center text-blue-500 hover:text-blue-400">
               <Icon icon="mdi:arrow-left" width="20" height="20" className="mr-2" />
               My Followers
             </Link>
           </div>
-          <h2 className="text-white text-xl font-semibold">Add Signal Follower</h2>
+          <h2 className="text-white text-xl font-semibold">Add Strategy Follower</h2>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6">
-          {/* Signal Account */}
+          {/* Strategy Account */}
           <div className="mb-4">
             <label className="block text-gray-300 text-sm font-medium mb-2">
-              Signal Account
+              Strategy Account
             </label>
             <select
-              value={formData.signalAccount}
-              onChange={(e) => handleInputChange('signalAccount', e.target.value)}
+              value={formData.strategyAccount}
+              onChange={(e) => handleInputChange('strategyAccount', e.target.value)}
               className="w-full p-2 bg-[#2E353E] border border-gray-600 rounded text-white"
               required
             >

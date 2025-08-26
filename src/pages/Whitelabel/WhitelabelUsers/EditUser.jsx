@@ -22,9 +22,10 @@ import IconButton from '@mui/material/IconButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 import LoadingButton from '@mui/lab/LoadingButton';
 import api from '../../../utils/api';
-import DeleteSignalModal from '../../../components/modals/DeleteSignalModal';
+import DeleteStrategyModal from '../../../components/modals/DeleteStrategyModal';
 import useToast from '../../../hooks/useToast';
 import { useLoading } from '../../../contexts/loadingContext';
+import useAuth from '../../../hooks/useAuth';
 const headers = [[
   { id: 'strategyId', label: 'Strategy ID' },
   { id: 'name', label: 'Name' },
@@ -49,17 +50,18 @@ const headers = [[
   { id: 'server', label: 'Server' },
   { id: 'created_at', label: 'CreatedAt' },
   { id: 'updated_at', label: 'UpdatedAt' },
-]];  // 0: signals, 1: accounts, 2: copiers
+]];  // 0: strategies, 1: accounts, 2: copiers
 
 export default function EditUser() {
   const { showToast } = useToast();
   const { loading } = useLoading();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isUpdateButtonClicked, setIsUpdateButtonClicked] =
     React.useState(false);
   const { id } = useParams();
   const [userInfo, setUserInfo] = React.useState({});
-  const [signals, setSignals] = React.useState([]);
+  const [strategies, setStrategies] = React.useState([]);
   const [accounts, setAccounts] = React.useState([]);
   const [copiers, setCopiers] = React.useState([]);
   const [values, setValues] = React.useState({
@@ -72,6 +74,11 @@ export default function EditUser() {
   const [maxAccount, setMaxAccount] = React.useState(0);
   const [tempMaxAccount, setTempMaxAccount] = React.useState(0);
 
+  // Print current user's role
+  // React.useEffect(() => {
+  //   console.log('Current user role:', user.role);
+  // }, [user.role]);
+
   React.useEffect(() => {
     async function fetchData() {
       try {
@@ -79,15 +86,15 @@ export default function EditUser() {
         const res = await api.get(`/users/detail/${id}`);
         if (res.data.status === 'OK') {
           setUserInfo(res.data.data.userInfo);
-          setSignals(res.data.data.strategies);
+          setStrategies(res.data.data.strategies);
           setAccounts(res.data.data.accounts);
           setCopiers(res.data.data.copiers);
-          setMaxAccount(res.data.data.maxAccount);
-          setTempMaxAccount(res.data.data.maxAccount);
+          setMaxAccount(res.data.data.userInfo.maxAccount);
+          setTempMaxAccount(res.data.data.userInfo.maxAccount);
           setValues({
             ...values,
-            role: res.data.data.role,
-            providerAccountLimit: res.data.data.providerAccountLimit,
+            role: res.data.data.userInfo.role,
+            providerAccountLimit: res.data.data.userInfo.providerAccountLimit,
           });
         }
       } catch (err) {
@@ -229,6 +236,9 @@ export default function EditUser() {
                     <option className="text-base" value={'Provider'}>
                       Provider
                     </option>
+                    <option className="text-base" disabled={user.role !== 'Admin'} value={'Admin'}>
+                      Admin
+                    </option>
                   </select>
                 </div>
               </div>
@@ -284,7 +294,7 @@ export default function EditUser() {
         <div className="col-span-9 flex flex-col gap-5">
           <div>
             <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t-xl border border-[#11B3AE] border-b-0 shadow-[0_0_16px_rgba(17,179,174,0.5)]">
-              <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">Signals</h2>
+              <h2 className="mt-[5px] text-[20px] font-normal text-[#FFFFFF]">Strategies</h2>
             </header>
             <div className="text-[#E9D8C8] bg-[#0B1220] p-5 rounded-b-xl border border-[#11B3AE] border-t-0 shadow-[0_0_16px_rgba(17,179,174,0.5)] pb-[10px]">
               <Paper
@@ -381,9 +391,9 @@ export default function EditUser() {
                       }}
                     >
                       {
-                        signals &&
-                        signals.length > 0 &&
-                        signals.map((row) => {
+                        strategies &&
+                        strategies.length > 0 &&
+                        strategies.map((row) => {
                           return (
                             <TableRow
                               hover
@@ -403,7 +413,7 @@ export default function EditUser() {
                                 let value = row[id];
                                 if (id === 'account') {
                                   value = `${value[0].name}(${value[0].login})`;
-                                } else if (id === 'signal') {
+                                } else if (id === 'strategy') {
                                   value = `${row.name}(${row.strategyId})`;
                                 }
                                 if (
@@ -576,7 +586,7 @@ export default function EditUser() {
                                 let value = row[id];
                                 if (id === 'account') {
                                   value = `${value[0].name}(${value[0].login})`;
-                                } else if (id === 'signal') {
+                                } else if (id === 'strategy') {
                                   value = `${row.name}(${row.strategyId})`;
                                 }
                                 if (
@@ -749,7 +759,7 @@ export default function EditUser() {
                                 let value = row[id];
                                 if (id === 'account') {
                                   value = `${value[0].name}(${value[0].login})`;
-                                } else if (id === 'signal') {
+                                } else if (id === 'strategy') {
                                   value = `${row.name}(${row.strategyId})`;
                                 }
                                 if (

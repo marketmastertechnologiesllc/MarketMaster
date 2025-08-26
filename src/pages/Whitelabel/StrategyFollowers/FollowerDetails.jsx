@@ -16,8 +16,8 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import { Icon } from '@iconify/react';
 import { styled } from '@mui/material/styles';
-import useToast from '../../hooks/useToast';
-import api from '../../utils/api';
+import useToast from '../../../hooks/useToast';
+import api from '../../../utils/api';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 
 const initialHeaders = {
@@ -128,14 +128,14 @@ function FollowerDetails() {
       <div className="py-0 px-0">
         <div className="pb-3">
           <Link
-            to={'/signal-followers'}
+            to={'/strategy-followers'}
             className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'currentColor', fontWeight: 'bold' }}
             />
-            <h1 className="text-lg pl-2"> Signal Followers</h1>
+            <h1 className="text-lg pl-2"> Strategy Followers</h1>
           </Link>
         </div>
 
@@ -365,7 +365,7 @@ function FollowerDetails() {
             </header>
             <div className="p-[15px] bg-[#0B1220] text-[#E9D8C8]">
               <p className="pb-[10px] text-sm opacity-80">
-                By default signal followers that have trade copy rights, can only create one trade copier per signal account. If required you can manually override the maximum amount of trade copiers to a required value.
+                By default strategy followers that have trade copy rights, can only create one trade copier per strategy account. If required you can manually override the maximum amount of trade copiers to a required value.
               </p>
 
               <div className="mb-[25px]">

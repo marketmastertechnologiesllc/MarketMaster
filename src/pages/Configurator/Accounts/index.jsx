@@ -371,7 +371,7 @@ export default function Accounts() {
           </Link>
         </div>
         <div className="flex gap-2 justify-center sm:justify-end">
-          {user.role !== 'Admin' && (
+          {(user.role !== 'Admin' && user.role !== 'Provider') && (
             <LoadingButton
               variant="contained"
               size="small"

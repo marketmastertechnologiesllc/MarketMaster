@@ -152,7 +152,7 @@ export default function TradesTable() {
   const filterModalRef = React.useRef(null);
 
   const handleConfigButtonClicked = (subscriberId, strategyId) => {
-    navigate(`/connect-signal/edit/${subscriberId}/${strategyId}`);
+    navigate(`/connect-strategy/edit/${subscriberId}/${strategyId}`);
   };
 
   const handleCreateCopierClick = async () => {
@@ -160,7 +160,7 @@ export default function TradesTable() {
       setIsCreateButtonLoading(true);
       // Simulate a small delay to show loading state
       await new Promise(resolve => setTimeout(resolve, 500));
-      navigate('/connect-signal/new-connect-signal');
+      navigate('/connect-strategy/new-connect-strategy');
     } catch (error) {
       console.error('Navigation error:', error);
     } finally {
@@ -762,6 +762,26 @@ export default function TradesTable() {
                               }}
                             >
                               {loadingRows[`${row.strategyId}-${row.accountId}`] ? <Icon icon="mdi:loading" color="white" style={{ animation: 'spin 1s linear infinite' }} /> : row.enabled ? <Icon icon="mdi:pause" color="white" /> : <Icon icon="mdi:play" color="white" />}
+                            </IconButton>
+
+                            <IconButton
+                              size="small"
+                              color="inherit"
+                              sx={{
+                                backgroundColor: '#11B3AE',
+                                borderRadius: '8px',
+                                fontSize: 18,
+                                padding: '10px 10px!important',
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                  backgroundColor: '#0F9A95',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
+                                },
+                              }}
+                              onClick={() => handleConfigButtonClicked(row.accountId, row.strategyId)}
+                            >
+                              <Icon icon="fa:cogs" color="white" />
                             </IconButton>
 
                             <IconButton

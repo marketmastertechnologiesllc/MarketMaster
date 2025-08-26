@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
-import SignalProviderTermsModal from '../../components/modals/SignalProviderTermsModal';
-import { useLoading } from '../../contexts/loadingContext';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
+import StrategyProviderTermsModal from '../../../components/modals/StrategyProviderTermsModal';
+import { useLoading } from '../../../contexts/loadingContext';
 
-function CreateSignalProvider() {
+function CreateStrategyProvider() {
   const { showToast } = useToast();
   const { loading } = useLoading();
   const initialValues = {
@@ -18,10 +18,10 @@ function CreateSignalProvider() {
   };
   const [values, setValues] = React.useState(initialValues);
   const [accountData, setAccountData] = React.useState([]);
-  const [createSignalButtonClicked, setCreateSignalButtonClicked] =
+  const [createStrategyButtonClicked, setCreateStrategyButtonClicked] =
     React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [signalProviderTermsModalShow, setSignalProviderTermsModalShow] =
+  const [strategyProviderTermsModalShow, setStrategyProviderTermsModalShow] =
     React.useState(false);
 
   const navigate = useNavigate();
@@ -42,9 +42,9 @@ function CreateSignalProvider() {
     fetchData();
   }, []);
 
-  const handleCreateSignalProviderButtonClicked = () => {
+  const handleCreateStrategyProviderButtonClicked = () => {
     try {
-      setCreateSignalButtonClicked(true);
+      setCreateStrategyButtonClicked(true);
       if (
         values.providerID == '' ||
         values.StrategyName == '' ||
@@ -53,7 +53,7 @@ function CreateSignalProvider() {
         showToast('Please fill in all the information!', 'error');
         console.log('something error');
       } else {
-        setSignalProviderTermsModalShow(true);
+        setStrategyProviderTermsModalShow(true);
       }
     } catch (err) {
       console.log(err);
@@ -68,13 +68,13 @@ function CreateSignalProvider() {
     });
   };
 
-  const handleCreateSignalProviderModalButtonClicked = async () => {
+  const handleCreateStrategyProviderModalButtonClicked = async () => {
     try {
       setIsLoading(true);
       const result = await api.post('/strategy/register-strategy', values);
       showToast('Strategy registered successfully!', 'success');
       setIsLoading(false);
-      navigate('/signal-provider');
+      navigate('/strategy-provider');
     } catch (err) {
       showToast('Strategy registration failed!', 'error');
       console.log(err);
@@ -85,11 +85,11 @@ function CreateSignalProvider() {
 
   return (
     <div className="w-auto text-[#E9D8C8]">
-      {signalProviderTermsModalShow && (
-        <SignalProviderTermsModal
-          signalProviderTermsModalShow={setSignalProviderTermsModalShow}
-          handleCreateSignalProviderModalButtonClicked={
-            handleCreateSignalProviderModalButtonClicked
+      {strategyProviderTermsModalShow && (
+        <StrategyProviderTermsModal
+          strategyProviderTermsModalShow={setStrategyProviderTermsModalShow}
+          handleCreateStrategyProviderModalButtonClicked={
+            handleCreateStrategyProviderModalButtonClicked
           }
           isLoading={isLoading}
         />
@@ -97,24 +97,24 @@ function CreateSignalProvider() {
       <div className="py-0 px-[200px]">
         <div className="pb-3">
           <Link
-            to={'/signal-provider'}
+            to={'/strategy-provider'}
             className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'currentColor', fontWeight: 'bold' }}
             />
-            <h1 className="text-lg pl-2"> Signal Provider</h1>
+            <h1 className="text-lg pl-2"> Strategy Provider</h1>
           </Link>
         </div>
         <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
           <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
-            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Create Signal</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Create Strategy</h2>
           </header>
           <div className="box-border p-[15px] bg-[#0B1220]">
             <div className="flex justify-start border-b-[1px] border-[#11B3AE] border-opacity-20 pb-[15px] mb-[15px]">
               <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#E9D8C8] text-[13px] font-medium">
-                Signal Account
+                Strategy Account
               </label>
               <div className="w-1/2 px-[15px]">
                 <select
@@ -152,9 +152,9 @@ function CreateSignalProvider() {
                         >{`${account.name}(${account.login})`}</option>
                       ))}
                 </select>
-                {values.providerID == '' && createSignalButtonClicked && (
+                {values.providerID == '' && createStrategyButtonClicked && (
                   <p className="mt-2 text-sm text-[#fa5252] font-medium">
-                    Signal Account required!
+                    Strategy Account required!
                   </p>
                 )}
               </div>
@@ -172,7 +172,7 @@ function CreateSignalProvider() {
                   onChange={handleInputChange}
                   placeholder="Enter strategy name"
                 />
-                {values.StrategyName == '' && createSignalButtonClicked && (
+                {values.StrategyName == '' && createStrategyButtonClicked && (
                   <p className="mt-2 text-sm text-[#fa5252] font-medium">
                     Strategy Name required!
                   </p>
@@ -193,7 +193,7 @@ function CreateSignalProvider() {
                   placeholder="Enter strategy description"
                 />
                 {values.strategyDescription == '' &&
-                  createSignalButtonClicked && (
+                  createStrategyButtonClicked && (
                     <p className="mt-2 text-sm text-[#fa5252] font-medium">
                       Strategy Description required!
                     </p>
@@ -221,9 +221,9 @@ function CreateSignalProvider() {
                       boxShadow: '0 4px 12px rgba(17, 179, 174, 0.3)',
                     },
                   }}
-                  onClick={handleCreateSignalProviderButtonClicked}
+                  onClick={handleCreateStrategyProviderButtonClicked}
                 >
-                  Create signal page
+                  Create strategy page
                 </Button>
               </div>
             </div>
@@ -234,4 +234,4 @@ function CreateSignalProvider() {
   );
 }
 
-export default CreateSignalProvider;
+export default CreateStrategyProvider;

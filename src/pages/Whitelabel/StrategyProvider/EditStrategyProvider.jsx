@@ -5,11 +5,11 @@ import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 import { Icon } from '@iconify/react';
 import copy from 'copy-to-clipboard';
 
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
-import { BASE_URL } from '../../config';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
+import { BASE_URL } from '../../../config';
 
-function EditSignalProvider() {
+function EditStrategyProvider() {
   const { showToast } = useToast();
   const { strategyId } = useParams();
 
@@ -37,10 +37,10 @@ function EditSignalProvider() {
   };
 
   const [values, setValues] = React.useState(initialValues);
-  const [createSignalButtonClicked, setCreateSignalButtonClicked] =
+  const [createStrategyButtonClicked, setCreateStrategyButtonClicked] =
     React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [signalProviderTermsModalShow, setSignalProviderTermsModalShow] =
+  const [strategyProviderTermsModalShow, setStrategyProviderTermsModalShow] =
     React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
 
@@ -59,10 +59,10 @@ function EditSignalProvider() {
 
   React.useEffect(() => {
     async function init() {
-      const signalProviderData = await api.get(
+      const strategyProviderData = await api.get(
         `/strategy/strategies/${strategyId}`
       );
-      setValues(signalProviderData.data);
+      setValues(strategyProviderData.data);
     }
     init();
   }, []);
@@ -95,13 +95,13 @@ function EditSignalProvider() {
     }
   };
 
-  const handleCreateSignalProviderButtonClicked = async () => {
+  const handleCreateStrategyProviderButtonClicked = async () => {
     try {
       setIsLoading(true);
       const result = await api.put(`/strategy/${values.id}`, values);
       showToast('Strategy updated successfully!', 'success');
 
-      navigate('/signal-provider');
+      navigate('/strategy-provider');
     } catch (err) {
       showToast('Strategy updated failed!', 'error');
       console.log(err);
@@ -115,19 +115,19 @@ function EditSignalProvider() {
       <div className="py-0 px-[100px] pb-[50px]">
         <div className="pb-3">
           <Link
-            to={'/signal-provider'}
+            to={'/strategy-provider'}
             className="flex flex-row items-center font-extrabold text-[#E9D8C8] hover:text-[#11B3AE] transition-colors"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'currentColor', fontWeight: 'bold' }}
             />
-            <h1 className="text-lg pl-2"> Signal Provider</h1>
+            <h1 className="text-lg pl-2"> Strategy Provider</h1>
           </Link>
         </div>
         <div className="mb-[20px] rounded-xl bg-[#0B1220] text-[#E9D8C8] border border-[#11B3AE] shadow-[0_0_16px_rgba(17,179,174,0.3)]">
           <header className="p-[18px] border-b border-[#11B3AE] border-opacity-20">
-            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Signal Page</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Strategy Page</h2>
           </header>
           <div className="flex justify-between box-border p-[15px] bg-[#0B1220] rounded-b text-[#E9D8C8]">
             <div className="mb-3">
@@ -176,7 +176,7 @@ function EditSignalProvider() {
           <header className="p-[18px] text-[#E9D8C8] flex justify-between items-center bg-[#0B1220] rounded-t border-b border-[#11B3AE] border-opacity-20">
             <h2 className="mt-[5px] text-[20px] font-normal text-[#E9D8C8]">Follower Terms</h2>
             <Link
-              to={`/signal-provider/follower-terms/${strategyId}`}
+              to={`/strategy-provider/follower-terms/${strategyId}`}
               className="bg-[#11B3AE] hover:bg-[#0F9A95] h-[33px] rounded text-sm px-2 items-center flex text-white transition-all duration-200"
             >
               <Icon
@@ -376,7 +376,7 @@ function EditSignalProvider() {
                       color: '#999!important',
                     },
                   }}
-                  onClick={handleCreateSignalProviderButtonClicked}
+                  onClick={handleCreateStrategyProviderButtonClicked}
                   loading={isLoading}
                 >
                   Update
@@ -390,4 +390,4 @@ function EditSignalProvider() {
   );
 }
 
-export default EditSignalProvider;
+export default EditStrategyProvider;

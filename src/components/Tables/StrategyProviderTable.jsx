@@ -35,21 +35,21 @@ function createData(
   };
 }
 
-export default function SignalProviderTable({ data }) {
+export default function StrategyProviderTable({ data }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
     if (data) {
-      const temp = data.map((signal) => {
+      const temp = data.map((strategy) => {
         return createData(
-          signal.account,
-          signal.providerName
-          // signal.description
-          // signal.login,
-          // signal.name,
-          // signal.server
+          strategy.account,
+          strategy.providerName
+          // strategy.description
+          // strategy.login,
+          // strategy.name,
+          // strategy.server
         );
       });
       setRows(temp);
@@ -110,7 +110,7 @@ export default function SignalProviderTable({ data }) {
             >
               {columns.map((column, index) => (
                 <TableCell
-                  key={`signal_provider_talble_header_${index}`}
+                  key={`strategy_provider_talble_header_${index}`}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{ padding: '5px' }}
@@ -136,7 +136,7 @@ export default function SignalProviderTable({ data }) {
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={`signal_provider_table_row_${index}`}
+                    key={`strategy_provider_table_row_${index}`}
                     // sx={{
                     //   '&:last-child td, &:last-child th': {
                     //     border: 1,

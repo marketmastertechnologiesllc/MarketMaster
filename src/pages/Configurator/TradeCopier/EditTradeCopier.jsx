@@ -63,7 +63,7 @@ function EditTradeCopier() {
           >
             Stops & Limits
           </button>
-          <button
+          {/* <button
             className={`w-full rounded-lg px-3 py-2 text-[#E9D8C8] text-sm font-medium transition-all duration-200 ${
               activeTab === 4 
                 ? 'bg-[#11B3AE] text-[#FFFFFF] shadow-[0_4px_12px_rgba(17,179,174,0.3)]' 
@@ -82,7 +82,7 @@ function EditTradeCopier() {
             onClick={() => handleTabClick(5)}
           >
             Map Symbols
-          </button>
+          </button> */}
         </div>
         <div className="col-span-9">
           {activeTab === 1 && <General />}
