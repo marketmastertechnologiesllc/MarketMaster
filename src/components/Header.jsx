@@ -27,11 +27,21 @@ function Header() {
   const [data, setData] = React.useState([]);
   const [lastMessage, setLastMessage] = React.useState(null);
 
-  if (user.role === 'Admin') {
-    socket.once('alert', (msg) => {
-      setLastMessage(msg);
-    });
-  }
+  // Set up socket event listener only once when component mounts
+  React.useEffect(() => {
+    if (user.role === 'Admin' && socket) {
+      const handleAlert = (msg) => {
+        setLastMessage(msg);
+      };
+      
+      socket.on('alert', handleAlert);
+      
+      // Cleanup function to remove event listener
+      return () => {
+        socket.off('alert', handleAlert);
+      };
+    }
+  }, [user.role, socket]);
 
   React.useEffect(() => {
     if (lastMessage !== null) {

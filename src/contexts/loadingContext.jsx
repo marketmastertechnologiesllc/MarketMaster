@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import LoadingTradeMesh from '../components/LoadingTradeMesh';
 
 const LoadingContext = createContext();
@@ -110,7 +110,10 @@ export const LoadingProvider = ({ children }) => {
     );
   }, [loadingStates]);
 
-  const value = {
+  const isLoading = useCallback((key = 'default') => loadingStates[key]?.isLoading || false, [loadingStates]);
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     loadingStates,
     showLoading,
     hideLoading,
@@ -119,8 +122,8 @@ export const LoadingProvider = ({ children }) => {
     LoadingOverlay,
     LoadingSpinner,
     GlobalLoading, // Global loading component
-    isLoading: useCallback((key = 'default') => loadingStates[key]?.isLoading || false, [loadingStates])
-  };
+    isLoading
+  }), [loadingStates, showLoading, hideLoading, setLoadingText, loading, LoadingOverlay, LoadingSpinner, GlobalLoading, isLoading]);
 
   return (
     <LoadingContext.Provider value={value}>
@@ -128,4 +131,4 @@ export const LoadingProvider = ({ children }) => {
       <GlobalLoading />
     </LoadingContext.Provider>
   );
-}; 
+};

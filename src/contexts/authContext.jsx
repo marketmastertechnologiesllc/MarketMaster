@@ -1,7 +1,7 @@
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 // import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
 import { jwtDecode } from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
@@ -48,57 +48,57 @@ const AuthProvider = ({ children }) => {
     '/auth/verify-email-update'
   ];
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const token = window.localStorage.getItem('token');
+  const init = useCallback(async () => {
+    try {
+      const token = window.localStorage.getItem('token');
 
-        // Check if current path is a public route
-        const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
-        
-        if (isPublicRoute) {
-          // Don't redirect for public routes, just mark as initialized
-          setIsInitialized(true);
-          return;
-        }
-
-        if (token && verifyToken(token)) {
-          // setSession(token);
-          setAuthToken(token);
-          const response = await api.get('/users/me');
-          const user = response.data;
-          setUser(user);
-          setIsAuthenticated(true);
-        } else {
-          if (token) {
-            localStorage.setItem('expired', true);
-          }
-          setIsAuthenticated(false);
-          setUser({});
-          navigate('/auth/login');
-        }
-      } catch (err) {
-        console.log(err);
-        console.error(err);
-      } finally {
+      // Check if current path is a public route
+      const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+      
+      if (isPublicRoute) {
+        // Don't redirect for public routes, just mark as initialized
         setIsInitialized(true);
+        return;
       }
-    };
 
+      if (token && verifyToken(token)) {
+        // setSession(token);
+        setAuthToken(token);
+        const response = await api.get('/users/me');
+        const user = response.data;
+        setUser(user);
+        setIsAuthenticated(true);
+      } else {
+        if (token) {
+          localStorage.setItem('expired', true);
+        }
+        setIsAuthenticated(false);
+        setUser({});
+        navigate('/auth/login');
+      }
+    } catch (err) {
+      console.log(err);
+      console.error(err);
+    } finally {
+      setIsInitialized(true);
+    }
+  }, [pathname, navigate, publicRoutes]);
+
+  useEffect(() => {
     if (pathname.substring(0, 11) !== '/auth/view/') {
       init();
     }
-  }, [pathname, navigate]);
+  }, [init]);
 
-  const signOut = () => {
+  const signOut = useCallback(() => {
     setIsAuthenticated(false);
     setUser({});
     setAuthToken();
 
     navigate('/auth/login');
-  };
+  }, [navigate]);
 
-  const login = (data) =>
+  const login = useCallback((data) =>
     new Promise((resolve, reject) => {
       api
         .post('/users/login', data)
@@ -113,12 +113,19 @@ const AuthProvider = ({ children }) => {
           }
         })
         .catch((err) => reject(err));
-    });
+    }), [navigate]);
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    isAuthenticated,
+    user,
+    login,
+    signOut,
+    isInitialized
+  }), [isAuthenticated, user, login, signOut, isInitialized]);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, user, login, signOut, isInitialized }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

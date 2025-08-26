@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../utils/api';
 import useAuth from '../hooks/useAuth';
 
@@ -150,7 +150,8 @@ function PromotionProvider({ children }) {
     }
   }, [isAuthenticated]);
 
-  const value = {
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     isModalVisible,
     currentTitle,
     currentContent,
@@ -163,7 +164,19 @@ function PromotionProvider({ children }) {
     currentPromotionIndex,
     promotions,
     totalPromotions: promotions.length
-  };
+  }), [
+    isModalVisible,
+    currentTitle,
+    currentContent,
+    titles,
+    isLoading,
+    showPromotionModal,
+    hidePromotionModal,
+    fetchTitlesAndContent,
+    nextPromotion,
+    currentPromotionIndex,
+    promotions
+  ]);
 
   return (
     <PromotionContext.Provider value={value}>
@@ -171,4 +184,4 @@ function PromotionProvider({ children }) {
     </PromotionContext.Provider>
   );
 };
-export { PromotionContext, PromotionProvider }; 
+export { PromotionContext, PromotionProvider };
