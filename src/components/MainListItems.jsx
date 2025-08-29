@@ -23,15 +23,41 @@ import { Link } from 'react-router-dom';
 import LabelIcon from '@mui/icons-material/Label';
 import HouseIcon from '@mui/icons-material/House';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { keyframes } from '@mui/system';
 
 import useAuth from '../hooks/useAuth';
 
-function MainListItems({ open }) {
+function MainListItems({ open, onItemClick }) {
   const [openConfigurator, setOpenConfigurator] = React.useState(false);
   const [openHelpCenter, setOpenHelpCenter] = React.useState(false);
   const [whitelabel, setWhitelabel] = React.useState(false);
 
   const { user } = useAuth();
+  
+  // Check if we're on mobile and get fullscreen state from parent
+  const isMobile = window.innerWidth < 640;
+  const isFullScreen = isMobile && open;
+
+  // Animation keyframes
+  const slideInFromLeft = keyframes`
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  `;
+
+  const fadeIn = keyframes`
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  `;
 
   const handleConfiguratorClick = () => {
     setOpenConfigurator(!openConfigurator);
@@ -59,13 +85,23 @@ function MainListItems({ open }) {
         bgcolor: '#0B1220',
         flexGrow: 1,
         paddingLeft: { xs: 'auto', sm: '7px' },
+        paddingTop: 0,
+        marginTop: 0,
+        position: isFullScreen ? 'absolute' : 'relative',
+        top: isFullScreen ? '64px' : 'auto',
+        left: isFullScreen ? 0 : 'auto',
+        zIndex: isFullScreen ? 1400 : 'auto',
+        height: isFullScreen ? 'calc(100vh - 64px)' : 'auto',
+        overflowY: isFullScreen ? 'auto' : 'visible',
+        borderRight: '2px solid #11B3AE',
+        animation: isFullScreen ? `${slideInFromLeft} 0.3s ease-out, ${fadeIn} 0.4s ease-out` : 'none',
         '& .MuiListItemButton-root': {
           borderRadius: '8px',
           margin: '2px 2px',
           transition: 'all 0.2s ease-in-out',
           '&:hover': {
             backgroundColor: 'rgba(17, 179, 174, 0.1)',
-            transform: 'translateX(4px)',
+            transform: isMobile ? 'translateY(-2px)' : 'translateX(4px)',
             boxShadow: '0 2px 2px rgba(17, 179, 174, 0.2)',
           },
           '&.Mui-selected': {
@@ -86,19 +122,21 @@ function MainListItems({ open }) {
         '& .MuiListItemText-primary': {
           color: '#E9D8C8',
           fontWeight: 500,
-          fontSize: '0.875rem',
+          fontSize: isMobile ? '1rem' : '0.875rem',
           transition: 'all 0.2s ease-in-out',
+          display: !isMobile && !open ? 'none' : 'block',
         },
         '& .MuiCollapse-root': {
           backgroundColor: 'rgba(17, 179, 174, 0.05)',
           borderRadius: '8px',
           margin: '2px 2px',
+          display: !isMobile && !open ? 'none' : 'block',
           '& .MuiListItemButton-root': {
             margin: '1px 8px',
-            paddingLeft: '32px',
+            paddingLeft: isMobile ? '48px' : '32px',
             '&:hover': {
               backgroundColor: 'rgba(17, 179, 174, 0.1)',
-              transform: 'translateX(2px)',
+              transform: isMobile ? 'translateY(-1px)' : 'translateX(2px)',
             },
           },
         },
@@ -106,7 +144,7 @@ function MainListItems({ open }) {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
-      <Link className="flex flex-row" to={'/dashboard'}>
+      <Link className="flex flex-row" to={'/dashboard'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
         <ListItemButton>
           <ListItemIcon >
             <SpeedIcon sx={{ color: '#E9D8C8' }} />
@@ -114,7 +152,7 @@ function MainListItems({ open }) {
           <ListItemText primary="Dashboard" />
         </ListItemButton>
       </Link>
-      <Link className="flex flex-row" to={'/strategies'}>
+      <Link className="flex flex-row" to={'/strategies'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
         <ListItemButton>
           <ListItemIcon>
             <SignalCellularAltIcon sx={{ color: '#E9D8C8' }} />
@@ -151,7 +189,7 @@ function MainListItems({ open }) {
         }}
       >
         <List component="div" disablePadding>
-          <Link className="flex flex-row" to={'/accounts'}>
+          <Link className="flex flex-row" to={'/accounts'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ListIcon sx={{ color: '#E9D8C8' }} />
@@ -159,7 +197,7 @@ function MainListItems({ open }) {
               <ListItemText primary="Accounts" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/connect-strategy'}>
+          <Link className="flex flex-row" to={'/connect-strategy'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ShareIcon sx={{ color: '#E9D8C8' }} />
@@ -167,7 +205,7 @@ function MainListItems({ open }) {
               <ListItemText primary="Connect Strategy" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/equity-monitors'}>
+          <Link className="flex flex-row" to={'/equity-monitors'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <MonitorHeartIcon sx={{ color: '#E9D8C8' }} />
@@ -175,7 +213,7 @@ function MainListItems({ open }) {
               <ListItemText primary="Equity Monitors" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/email-alerts'}>
+          <Link className="flex flex-row" to={'/email-alerts'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <EmailIcon sx={{ color: '#E9D8C8' }} />
@@ -185,7 +223,7 @@ function MainListItems({ open }) {
           </Link>
         </List>
       </Collapse>
-      <Link className="flex flex-row" to={'/analysis'}>
+      <Link className="flex flex-row" to={'/analysis'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
         <ListItemButton>
           <ListItemIcon>
             <SearchIcon sx={{ color: '#E9D8C8' }} />
@@ -225,7 +263,7 @@ function MainListItems({ open }) {
             }}
           >
             <List component="div" disablePadding>
-              <Link className="flex flex-row" to={'/whitelabel/dashboard'}>
+              <Link className="flex flex-row" to={'/whitelabel/dashboard'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <SpeedIcon sx={{ color: '#E9D8C8' }} />
@@ -233,7 +271,7 @@ function MainListItems({ open }) {
                   <ListItemText primary="Dashboard" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/whitelabel/users'}>
+              <Link className="flex flex-row" to={'/whitelabel/users'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <GroupsIcon sx={{ color: '#E9D8C8' }} />
@@ -241,7 +279,7 @@ function MainListItems({ open }) {
                   <ListItemText primary="Users" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/whitelabel/homepage'}>
+              <Link className="flex flex-row" to={'/whitelabel/homepage'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <HouseIcon sx={{ color: '#E9D8C8' }} />
@@ -249,7 +287,7 @@ function MainListItems({ open }) {
                   <ListItemText primary="Homepage" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/whitelabel/settings'}>
+              <Link className="flex flex-row" to={'/whitelabel/settings'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <SettingsSuggestIcon sx={{ color: '#E9D8C8' }} />
@@ -257,7 +295,7 @@ function MainListItems({ open }) {
                   <ListItemText primary="Settings" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/strategy-followers'}>
+              <Link className="flex flex-row" to={'/strategy-followers'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <ForwardRoundedIcon sx={{ color: '#E9D8C8' }} />
@@ -265,7 +303,7 @@ function MainListItems({ open }) {
                   <ListItemText primary="Strategy Followers" />
                 </ListItemButton>
               </Link>
-              <Link className="flex flex-row" to={'/strategy-provider'}>
+              <Link className="flex flex-row" to={'/strategy-provider'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <SwapHorizRoundedIcon sx={{ color: '#E9D8C8' }} />
@@ -306,7 +344,7 @@ function MainListItems({ open }) {
         }}
       >
         <List component="div" disablePadding>
-          <Link className="flex flex-row" to={'/knowledge-base'}>
+          <Link className="flex flex-row" to={'/knowledge-base'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <LibraryBooksIcon sx={{ color: '#E9D8C8' }} />
@@ -314,7 +352,7 @@ function MainListItems({ open }) {
               <ListItemText primary="Knowledge Base" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/contact-support'}>
+          <Link className="flex flex-row" to={'/contact-support'} onClick={isMobile && onItemClick ? onItemClick : undefined}>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ChatBubbleIcon sx={{ color: '#E9D8C8' }} />
@@ -325,7 +363,7 @@ function MainListItems({ open }) {
         </List>
       </Collapse>
     </List>
-  );
-}
+    );
+  }
 
 export default MainListItems;

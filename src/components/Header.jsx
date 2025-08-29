@@ -8,7 +8,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Icon } from '@iconify/react';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-
+import CircularProgress from '@mui/material/CircularProgress';
 import Logo from '../assets/img/TradeMesh-MainLogo.png';
 import useAuth from '../hooks/useAuth';
 import useSocket from '../hooks/useSocket';
@@ -24,6 +24,7 @@ function Header() {
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = React.useState(false);
+  const [isNotificationLoading, setIsNotificationLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [lastMessage, setLastMessage] = React.useState(null);
 
@@ -33,9 +34,9 @@ function Header() {
       const handleAlert = (msg) => {
         setLastMessage(msg);
       };
-      
+
       socket.on('alert', handleAlert);
-      
+
       // Cleanup function to remove event listener
       return () => {
         socket.off('alert', handleAlert);
@@ -74,12 +75,14 @@ function Header() {
 
   const handleNotificationButtonClicked = async () => {
     try {
+      setIsNotificationLoading(true);
       const notificationData = await api.get('/notification');
       setData(notificationData.data.data);
       setIsNotificationOpen(true);
-      // const res = await api.put('/notification');
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsNotificationLoading(false);
     }
   };
 
@@ -110,8 +113,8 @@ function Header() {
               sx={{ mr: '5px' }}
               onClick={handleNotificationButtonClicked}
             >
-              <NotificationsIcon 
-                sx={{ 
+              <NotificationsIcon
+                sx={{
                   fontSize: 30,
                   color: '#E9D8C8',
                   cursor: 'pointer',
@@ -120,53 +123,71 @@ function Header() {
                     color: '#11B3AE',
                     transform: 'translateY(-1px)',
                   }
-                }} 
+                }}
               />
             </Badge>
             <div
               id="notificationDropdown"
-              className={`z-[1205] right-[200px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-44 border border-[rgba(17,179,174,0.3)] ${
-                !isNotificationOpen && 'hidden'
-              }`}
+              className={`z-[1205] right-[200px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-52 border border-[rgba(17,179,174,0.3)] ${!isNotificationOpen && 'hidden'
+                }`}
             >
-              <ul
-                className="py-1 text-sm text-[#E9D8C8]"
-                aria-labelledby="avatarButton"
-              >
-                {data.length > 0 ? (
-                  data.map((item, idx) => {
-                    // Check if item.users exists before accessing its properties
-                    if (!item.users) {
-                      return null; // Skip rendering this item if users is undefined
-                    }
-                    
-                    return (
-                      <li
-                        key={idx}
-                        className="flex justify-between font-medium text-[#E9D8C8] truncate p-2 text-right text-base rounded cursor-pointer hover:bg-[#11B3AE] hover:text-white transition-all duration-200"
-                        onClick={() =>
-                          handleNotificationUserClicked(item.users.id)
-                        }
-                      >
-                        <Avatar
-                          alt="Remy Sharp"
-                          src="/static/images/avatar/2.jpg"
-                          sx={{
-                            position: 'relative',
-                            width: 26,
-                            height: 26,
-                          }}
-                        />
-                        {item.users.fullName}
-                      </li>
-                    );
-                  }).filter(Boolean) // Remove null items from the array
-                ) : (
+              {isNotificationLoading ? (
+                <ul
+                  className="py-1 text-sm text-[#E9D8C8]"
+                  aria-labelledby="avatarButton"
+                >
                   <li className="flex justify-center font-medium text-[#E9D8C8] truncate p-2 text-base rounded">
-                    No Notifications
+                    <CircularProgress
+                      size={20}
+                      sx={{
+                        color: '#11B3AE',
+                        '& .MuiCircularProgress-circle': {
+                          strokeLinecap: 'round',
+                        }
+                      }}
+                    />
                   </li>
-                )}
-              </ul>
+                </ul>
+              ) : (
+                <ul
+                  className="py-1 text-sm text-[#E9D8C8]"
+                  aria-labelledby="avatarButton"
+                >
+                  {data.length > 0 ? (
+                    data.map((item, idx) => {
+                      // Check if item.users exists before accessing its properties
+                      if (!item.users) {
+                        return null; // Skip rendering this item if users is undefined
+                      }
+
+                      return (
+                        <li
+                          key={idx}
+                          className="flex justify-between font-medium text-[#E9D8C8] truncate p-2 text-right text-base rounded cursor-pointer hover:bg-[#11B3AE] hover:text-white transition-all duration-200"
+                          onClick={() =>
+                            handleNotificationUserClicked(item.users.id)
+                          }
+                        >
+                          <Avatar
+                            alt="Remy Sharp"
+                            src="/static/images/avatar/2.jpg"
+                            sx={{
+                              position: 'relative',
+                              width: 26,
+                              height: 26,
+                            }}
+                          />
+                          {item.users.fullName}
+                        </li>
+                      );
+                    }).filter(Boolean) // Remove null items from the array
+                  ) : (
+                    <li className="flex justify-center font-medium text-[#E9D8C8] truncate p-2 text-base rounded">
+                      No Notifications
+                    </li>
+                  )}
+                </ul>
+              )}
             </div>
             <Avatar
               alt={`${user.fullName.toUpperCase()} avatar`}
@@ -184,9 +205,8 @@ function Header() {
               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </Box>
             <div
-              className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1203] ${
-                !isOpen && !isNotificationOpen && 'hidden'
-              }`}
+              className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1203] ${!isOpen && !isNotificationOpen && 'hidden'
+                }`}
               onClick={() => {
                 setIsOpen(false);
                 setIsNotificationOpen(false);
@@ -195,13 +215,15 @@ function Header() {
             ></div>
             <div
               id="userDropdown"
-              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-44 border border-[rgba(17,179,174,0.3)] ${
-                !isOpen && 'hidden'
-              }`}
+              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-52 border border-[rgba(17,179,174,0.3)] ${!isOpen && 'hidden'
+                }`}
             >
               <div className="px-4 py-3 text-sm">
                 <div className="font-medium text-[#E9D8C8] truncate">
                   {user.email}
+                </div>
+                <div className="text-xs text-[#E9D8C8] opacity-75 capitalize mt-1">
+                  Role: {user.role}
                 </div>
               </div>
               <hr className="bg-[rgba(17,179,174,0.3)] h-[1px] border-0 my-0 mx-1" />
@@ -258,20 +280,21 @@ function Header() {
               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </Box>
             <div
-              className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1203] ${
-                !isOpen && 'hidden'
-              }`}
+              className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1203] ${!isOpen && 'hidden'
+                }`}
               onClick={() => setIsOpen(false)}
             ></div>
             <div
               id="userDropdown"
-              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-44 border border-[rgba(17,179,174,0.3)] ${
-                !isOpen && 'hidden'
-              }`}
+              className={`z-[1205] right-[10px] top-[70px] absolute bg-[#0B1220] divide-gray-100 rounded-lg shadow-xl w-52 border border-[rgba(17,179,174,0.3)] ${!isOpen && 'hidden'
+                }`}
             >
               <div className="px-4 py-3 text-sm">
                 <div className="font-medium text-[#E9D8C8] truncate">
                   {user.email}
+                </div>
+                <div className="text-xs text-[#E9D8C8] opacity-75 capitalize mt-1">
+                  Role: {user.role}
                 </div>
               </div>
               <hr className="bg-[rgba(17,179,174,0.3)] h-[1px] border-0 my-0 mx-1" />

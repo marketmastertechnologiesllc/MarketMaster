@@ -77,11 +77,17 @@ const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [openManual, setOpenManual] = React.useState(false);
+  const [isFullScreen, setIsFullScreen] = React.useState(false);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  
   const toggleDrawer = () => {
-    setOpen(!open);
-    setOpenManual(!openManual);
+    if (window.innerWidth < 640) { // sm breakpoint
+      setIsFullScreen(!isFullScreen);
+    } else {
+      setOpen(!open);
+      setOpenManual(!openManual);
+    }
   };
 
   if (isAuthenticated) {
@@ -158,14 +164,23 @@ const DefaultLayout = () => {
                 <Drawer
                   variant="permanent"
                   open={open}
-                  onMouseEnter={() => setOpen(true)}
+                  onMouseEnter={() => {
+                    if (window.innerWidth >= 640) setOpen(true);
+                  }}
                   onMouseLeave={() => {
-                    if (!openManual) setOpen(false);
+                    if (window.innerWidth >= 640 && !openManual) setOpen(false);
                   }}
                   sx={{
                     backgroundColor: '#0B1220',
                     position: 'sticky',
                     top: '0px',
+                    display: window.innerWidth < 640 ? 'none' : 'block',
+                    '& .MuiDrawer-paper': {
+                      width: window.innerWidth >= 640 && !open ? '64px' : drawerWidth,
+                      backgroundColor: '#0B1220',
+                      color: '#E9D8C8',
+                      borderRight: '1px solid rgba(17, 179, 174, 0.3)',
+                    },
                   }}
                 >
                   <Toolbar
@@ -202,7 +217,7 @@ const DefaultLayout = () => {
                         transition: 'all 0.2s ease-in-out',
                       }}
                     >
-                      <ChevronLeftIcon />
+                      {window.innerWidth < 640 ? <ChevronLeftIcon /> : <ChevronLeftIcon />}
                     </IconButton>
                   </Toolbar>
                   <MainListItems open={open} />
@@ -214,14 +229,19 @@ const DefaultLayout = () => {
                     flexGrow: 1,
                     overflowY: 'scroll',
                     height: '100vh',
-                    width: 'calc(100vw - 240px)',
+                    width: window.innerWidth < 640 ? '100vw' : (window.innerWidth >= 640 && !open ? 'calc(100vw - 64px)' : 'calc(100vw - 240px)'),
                   }}
                 >
                   <Toolbar />
-                  <div className="m-10">
+                  <div className="m-4">
                     <Outlet />
                   </div>
                 </Box>
+                
+                {/* Mobile MainListItems overlay */}
+                {window.innerWidth < 640 && isFullScreen && (
+                  <MainListItems open={true} onItemClick={() => setIsFullScreen(false)} />
+                )}
               </Box>
             </ThemeProvider>
           </div>

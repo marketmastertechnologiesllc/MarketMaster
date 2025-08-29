@@ -72,12 +72,13 @@ function CreateStrategyProvider() {
     try {
       setIsLoading(true);
       const result = await api.post('/strategy/register-strategy', values);
-      showToast('Strategy registered successfully!', 'success');
-      setIsLoading(false);
-      navigate('/strategy-provider');
+      if (result.status === 200) {
+        showToast('Strategy registered successfully!', 'success');
+        setIsLoading(false);
+        navigate('/strategy-provider');
+      }
     } catch (err) {
-      showToast('Strategy registration failed!', 'error');
-      console.log(err);
+      showToast(`${err.response.data.msg}`, 'error');
     } finally {
       setIsLoading(false);
     }
