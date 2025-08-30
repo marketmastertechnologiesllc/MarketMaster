@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Overlay = styled.div`
-  display: ${({ loading }) => (loading ? "flex" : "none")};
+  display: ${({ $loading }) => ($loading ? "flex" : "none")};
   position: fixed;
   top: 0;
   left: 0;
@@ -119,7 +119,7 @@ export default function TradeMeshLoader({ loading }) {
 
   if (!w || !h) {
     return (
-      <Overlay loading={loading}>
+      <Overlay $loading={loading}>
         <ModalContainer ref={boxRef}>
           <TradeMeshText>TradeMesh</TradeMeshText>
         </ModalContainer>
@@ -128,7 +128,7 @@ export default function TradeMeshLoader({ loading }) {
   }
 
   return (
-    <Overlay loading={loading}>
+    <Overlay $loading={loading}>
       <ModalContainer ref={boxRef}>
         <TradeMeshText>
           Trade<span style={{ color: "#17b9bd" }}>Mesh</span>

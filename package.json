@@ -18,7 +18,7 @@
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.14.19",
     "@reduxjs/toolkit": "^2.0.1",
-    "apexcharts": "^3.45.1",
+    "apexcharts": "^4.0.0",
     "axios": "^1.6.2",
     "babel-plugin-macros": "^3.1.0",
     "copy-to-clipboard": "^3.3.3",
