@@ -438,8 +438,8 @@ function TimeAnalysisPage() {
     <div className="w-full text-[#E9D8C8] pb-[100px] space-y-2 sm:space-y-2 lg:px-2">
       {/* Header Section */}
       <div className="bg-[#0B1220] border border-[#11B3AE] rounded-xl p-3 sm:p-4 lg:p-6 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-2 sm:gap-3">
-          <div className="w-full xl:w-auto">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2 sm:gap-3">
+          <div className="w-full lg:w-auto">
             <Link
               to={'/analysis'}
               className="flex flex-row items-center font-extrabold hover:opacity-80 transition-opacity mb-2"
@@ -475,7 +475,7 @@ function TimeAnalysisPage() {
               </div>
             )}
           </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
             {/* Symbol Filter */}
             {availableSymbols.length > 0 && (
               <FormControl size="small" sx={{
@@ -731,9 +731,9 @@ function TimeAnalysisPage() {
               </div>
 
               {/* Trade Win % */}
-              <div className="bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-                <div className="text-center">
-                  <div className="relative w-16 h-16 mx-auto mb-2">
+              <div className="flex items-center bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                <div className="flex flex-row w-full justify-between items-center text-center">
+                  <div className="relative w-16 h-16">
                     <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
                       <path
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -753,18 +753,20 @@ function TimeAnalysisPage() {
                       <span className="text-md font-bold text-white">{dashboardMetrics.winRate.toFixed(1)}%</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-400">Trade Win %</p>
-                  <div className="flex justify-center gap-2 mt-2 text-xs">
-                    <span className="text-green-400">{accountInfo.winCount || 0} wins</span>
-                    <span className="text-red-400">{accountInfo.loseCount || 0} losses</span>
+                  <div className="flex flex-col items-end justify-center">
+                    <p className="text-sm text-gray-400">Trade Win %</p>
+                    <div className="mt-2 text-xs">
+                      <span className="text-green-400">{accountInfo.winCount || 0} wins</span>
+                      <span className="text-red-400 ml-2">{accountInfo.loseCount || 0} losses</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Profit Factor */}
-              <div className="bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-                <div className="text-center">
-                  <div className="relative w-16 h-16 mx-auto mb-2">
+              <div className="flex items-center bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                <div className="flex flex-row w-full justify-between items-center text-center">
+                  <div className="relative w-16 h-16">
                     <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
                       <path
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -784,18 +786,44 @@ function TimeAnalysisPage() {
                       <span className="text-md font-bold text-white">{dashboardMetrics.profitFactor.toFixed(2)}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-400">Profit Factor</p>
+                  <div className="flex flex-col items-end justify-center">
+                    <p className="text-sm text-gray-400">Profit Factor</p>
+                    <div className="mt-2 text-xs">
+                      <span className={`${dashboardMetrics.profitFactor >= 1 ? 'text-green-400' : dashboardMetrics.profitFactor === 0 ? 'text-gray-400' : 'text-red-400'}`}>{dashboardMetrics.profitFactor.toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Avg Win/Loss Trade */}
-              <div className="bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
-                <div className="text-center">
-                  <p className="text-xl font-bold text-white mb-1">{dashboardMetrics.avgWinLoss.toFixed(2)}</p>
-                  <p className="text-sm text-gray-400 mb-2">Avg Win/Loss Trade</p>
-                  <div className="space-y-1 text-xs">
-                    <p className="text-green-400">${Number(dashboardMetrics.avgWin).toFixed(2)} avg win</p>
-                    <p className="text-red-400">-${Number(dashboardMetrics.avgLoss).toFixed(2)} avg loss</p>
+              <div className="flex items-center bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
+                <div className="flex flex-row w-full justify-between items-center text-center">
+                  <div className="relative w-16 h-16">
+                    <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke="rgba(17, 179, 174, 0.2)"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke="#11B3AE"
+                        strokeWidth="2"
+                        strokeDasharray={`${Math.min(dashboardMetrics.avgWinLoss * 100, 100)}, 100`}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-md font-bold text-white">{dashboardMetrics.avgWinLoss.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end justify-center">
+                    <p className="text-sm text-gray-400">Avg Win/Loss Trade</p>
+                    <div className="mt-2 text-xs">
+                      <span className="text-green-400">${Number(dashboardMetrics.avgWin).toFixed(2)} avg win</span>
+                      <span className="text-red-400 block">-${Number(dashboardMetrics.avgLoss).toFixed(2)} avg loss</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -808,7 +836,7 @@ function TimeAnalysisPage() {
               {/* Performance Score */}
               <div className="bg-[#0B1220] border border-[#11B3AE] rounded-xl p-4 shadow-[0_0_16px_rgba(17,179,174,0.3)]">
                 <h3 className="text-md font-semibold text-white mb-4">Performance Score</h3>
-                <div className="h-64">
+                <div className="h-48">
                   {performanceData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart data={performanceData}>
